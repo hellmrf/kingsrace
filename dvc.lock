@@ -14,13 +14,13 @@ stages:
       size: 271292455
     - path: src/kingsrace/ingest/tse.py
       hash: md5
-      md5: a161b1b8fc800af2a2ee7e68957dd038
-      size: 3026
+      md5: f76291431544d2d1e3ecbd0d4e152d3b
+      size: 3079
     outs:
     - path: data/interim/tse/detalhe_munzona/ano=2022
       hash: md5
-      md5: 7f4d5ca7058537a87d5cc00fd7ac06b2.dir
-      size: 329931
+      md5: c2e3e70746ccfb27a28cbb438cefe946.dir
+      size: 330602
       nfiles: 1
     - path: data/interim/tse/votacao_secao/ano=2022
       hash: md5
@@ -41,16 +41,83 @@ stages:
       size: 161616519
     - path: src/kingsrace/ingest/tse.py
       hash: md5
-      md5: a161b1b8fc800af2a2ee7e68957dd038
-      size: 3026
+      md5: f76291431544d2d1e3ecbd0d4e152d3b
+      size: 3079
     outs:
     - path: data/interim/tse/detalhe_munzona/ano=2026
       hash: md5
-      md5: 8b15a9e9ef92b091778028df1d34455d.dir
-      size: 162713
+      md5: 81586376aeca7fa1939d635932ce3176.dir
+      size: 163076
       nfiles: 1
     - path: data/interim/tse/votacao_secao/ano=2026
       hash: md5
       md5: 8969857af2bf80286e5fd54e8b0e3f59.dir
       size: 26991720
       nfiles: 1
+  municipios:
+    cmd: python -m kingsrace.harmonize.municipios
+    deps:
+    - path: data/interim/tse/detalhe_munzona
+      hash: md5
+      md5: 478fda97feb6f94ea9033bfc83e2f85c.dir
+      size: 493678
+      nfiles: 2
+    - path: data/raw/ibge/municipios.json
+      hash: md5
+      md5: 436ca4776176cd4d13786e7bf750dd37
+      size: 2372050
+    - path: data/reference/amc.csv
+      hash: md5
+      md5: ddb0446390f718707f0affbe82b11879
+      size: 266
+    - path: data/reference/municipios_overrides.csv
+      hash: md5
+      md5: a396390c411dcb3b8f31f0d83edda6c5
+      size: 935
+    - path: src/kingsrace/harmonize/municipios.py
+      hash: md5
+      md5: ff39e9b9a42adab666444d964eb1a663
+      size: 4566
+    outs:
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: e5a80f7eb7e6a816cc2b1c8c69021350
+      size: 98704
+  painel:
+    cmd: python -m kingsrace.features.painel
+    deps:
+    - path: data/interim/tse/detalhe_munzona
+      hash: md5
+      md5: 478fda97feb6f94ea9033bfc83e2f85c.dir
+      size: 493678
+      nfiles: 2
+    - path: data/interim/tse/votacao_secao
+      hash: md5
+      md5: cef80e0f46a12bdcb3487cf80c667463.dir
+      size: 73595488
+      nfiles: 2
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: e5a80f7eb7e6a816cc2b1c8c69021350
+      size: 98704
+    - path: data/reference/candidatos.csv
+      hash: md5
+      md5: a04f7b221eb33ca4a4e5695d73dd12c6
+      size: 170
+    - path: src/kingsrace/features/painel.py
+      hash: md5
+      md5: cfd14efacfe5b2be87549f2e6ec8ea79
+      size: 5896
+    outs:
+    - path: data/processed/painel_amc.parquet
+      hash: md5
+      md5: 1f816b66c7cdd5d8d9e3c2ea430d710d
+      size: 1193336
+    - path: data/processed/painel_municipio.parquet
+      hash: md5
+      md5: e1857f39944f1787d220524dbb3857d1
+      size: 1193505
+    - path: data/processed/votos_municipio.parquet
+      hash: md5
+      md5: 3b93cba30e2e23123695bfc1ea380382
+      size: 477494

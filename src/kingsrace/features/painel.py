@@ -2,19 +2,22 @@
 
 import polars as pl
 
+from kingsrace import paths
+
 BRANCO, NULO = 95, 96
 
-CONTAGENS = [
+# aptos = comparecimento + abstencoes + eleitores_nao_instalados (seções não instaladas)
+# comparecimento = validos + brancos + nulos (nulos inclui votos anulados)
+TURNOUT = [
     "aptos",
     "comparecimento",
     "abstencoes",
+    "eleitores_nao_instalados",
     "validos",
     "brancos",
     "nulos",
-    "votos_pt",
-    "votos_adv",
-    "votos_outros",
 ]
+CONTAGENS = [*TURNOUT, "votos_pt", "votos_adv", "votos_outros"]
 
 
 def classifica_votos(votos: pl.DataFrame, candidatos: pl.DataFrame) -> pl.DataFrame:
@@ -52,8 +55,8 @@ def monta_painel(
     """Uma linha por município IBGE × ano × turno; exclui o exterior.
 
     votos: ano, turno, uf, cd_tse, nr_votavel, votos, papel (seção ou zona).
-    detalhe: ano, turno, uf, cd_tse, aptos, comparecimento, abstencoes, validos,
-    brancos, nulos (por zona). Falha se pt + adversário + outros ≠ válidos.
+    detalhe: ano, turno, uf, cd_tse + colunas de TURNOUT (por zona).
+    Falha se pt + adversário + outros ≠ válidos.
     """
     chave = ["ano", "turno", "cd_tse"]
     por_papel = (
@@ -67,7 +70,7 @@ def monta_painel(
     turnout = (
         detalhe.filter(pl.col("uf") != "ZZ")
         .group_by([*chave, "uf"])
-        .agg(pl.col(c).sum() for c in CONTAGENS[:6])
+        .agg(pl.col(c).sum() for c in TURNOUT)
     )
     painel = (
         turnout.join(por_papel, on=chave, how="left")
@@ -95,3 +98,56 @@ def agrega_amc(painel: pl.DataFrame, municipios: pl.DataFrame) -> pl.DataFrame:
         .agg(pl.col("uf").first(), *(pl.col(c).sum() for c in CONTAGENS))
         .sort("amc_id", "ano", "turno")
     )
+
+
+def votos_por_municipio(secao: pl.LazyFrame, candidatos: pl.DataFrame) -> pl.DataFrame:
+    """Agrega a votação por seção em município × candidato, com papel (inclui exterior)."""
+    votos = (
+        secao.group_by("ano", "turno", "uf", "cd_tse", "nr_votavel", "nm_votavel")
+        .agg(pl.col("votos").sum())
+        .collect()
+    )
+    return classifica_votos(votos, candidatos).sort("ano", "turno", "uf", "cd_tse", "nr_votavel")
+
+
+def executa() -> None:
+    interim = paths.INTERIM / "tse"
+    secao = pl.scan_parquet(interim / "votacao_secao" / "*" / "*.parquet").select(
+        pl.col("ano_eleicao").cast(pl.Int16).alias("ano"),
+        pl.col("nr_turno").alias("turno"),
+        pl.col("sg_uf").alias("uf"),
+        pl.col("cd_municipio").alias("cd_tse"),
+        "nr_votavel",
+        "nm_votavel",
+        pl.col("qt_votos").alias("votos"),
+    )
+    detalhe = pl.read_parquet(interim / "detalhe_munzona" / "*" / "*.parquet").select(
+        pl.col("ano_eleicao").cast(pl.Int16).alias("ano"),
+        pl.col("nr_turno").alias("turno"),
+        pl.col("sg_uf").alias("uf"),
+        pl.col("cd_municipio").alias("cd_tse"),
+        pl.col("qt_aptos").alias("aptos"),
+        pl.col("qt_comparecimento").alias("comparecimento"),
+        pl.col("qt_abstencoes").alias("abstencoes"),
+        pl.col("qt_eleitores_secoes_nao_instaladas").alias("eleitores_nao_instalados"),
+        pl.col("qt_total_votos_validos").alias("validos"),
+        pl.col("qt_votos_brancos").alias("brancos"),
+        pl.col("qt_total_votos_nulos").alias("nulos"),
+    )
+    candidatos = pl.read_csv(paths.REFERENCE / "candidatos.csv").with_columns(
+        pl.col("ano").cast(pl.Int16)
+    )
+    municipios = pl.read_parquet(paths.PROCESSED / "municipios.parquet")
+
+    votos = votos_por_municipio(secao, candidatos).join(
+        municipios.select("cd_tse", "cd_ibge"), on="cd_tse", how="left"
+    )
+    painel = monta_painel(votos, detalhe, municipios).sort("cd_ibge", "ano", "turno")
+
+    votos.write_parquet(paths.PROCESSED / "votos_municipio.parquet")
+    painel.write_parquet(paths.PROCESSED / "painel_municipio.parquet")
+    agrega_amc(painel, municipios).write_parquet(paths.PROCESSED / "painel_amc.parquet")
+
+
+if __name__ == "__main__":
+    executa()

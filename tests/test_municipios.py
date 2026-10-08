@@ -107,3 +107,27 @@ def test_atribui_amc_usa_o_proprio_codigo_quando_nao_listado():
         5107925: 9000001,
         3550308: 3550308,
     }
+
+
+def test_overrides_com_colunas_de_documentacao():
+    tse = pl.DataFrame({"cd_tse": [92690], "uf": ["GO"], "nome": ["BOM JESUS"]})
+    overrides = pl.DataFrame(
+        {"cd_tse": [92690], "cd_ibge": [5203500], "uf": ["GO"], "motivo": ["renomeado"]}
+    )
+
+    res = casa_municipios(tse, _ibge(), overrides)
+
+    assert res.rows() == [(92690, 5203500)]
+
+
+def test_tipos_inteiros_diferentes_entre_tse_e_overrides():
+    # parquet do TSE traz Int32; CSV de overrides é lido como Int64
+    tse = pl.DataFrame(
+        {"cd_tse": [92690, 20], "uf": ["GO", "PI"], "nome": ["BOM JESUS", "BOM JESUS"]},
+        schema_overrides={"cd_tse": pl.Int32},
+    )
+    overrides = pl.DataFrame({"cd_tse": [92690], "cd_ibge": [5203500]})
+
+    res = casa_municipios(tse, _ibge(), overrides)
+
+    assert res.rows() == [(20, 2201804), (92690, 5203500)]

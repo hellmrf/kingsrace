@@ -86,13 +86,14 @@ def _secao():
 
 def _detalhe():
     linhas = [
-        ("SP", 100, 1, 50, 40, 10, 40, 0, 0),
-        ("SP", 100, 2, 50, 30, 20, 25, 2, 3),
-        ("SP", 200, 9, 10, 7, 3, 7, 0, 0),
-        ("ZZ", 999, 1, 8, 4, 4, 4, 0, 0),
+        # zona 2 tem uma seção não instalada com 4 eleitores (nem comparecimento nem abstenção)
+        ("SP", 100, 1, 50, 40, 10, 0, 40, 0, 0),
+        ("SP", 100, 2, 54, 30, 20, 4, 25, 2, 3),
+        ("SP", 200, 9, 10, 7, 3, 0, 7, 0, 0),
+        ("ZZ", 999, 1, 8, 4, 4, 0, 4, 0, 0),
     ]
-    cols = ["uf", "cd_tse", "nr_zona", "aptos", "comparecimento", "abstencoes", "validos"]
-    cols += ["brancos", "nulos"]
+    cols = ["uf", "cd_tse", "nr_zona", "aptos", "comparecimento", "abstencoes"]
+    cols += ["eleitores_nao_instalados", "validos", "brancos", "nulos"]
     return pl.DataFrame(linhas, schema=cols, orient="row").with_columns(
         ano=pl.lit(2026), turno=pl.lit(1)
     )
@@ -103,10 +104,11 @@ def test_monta_painel_soma_zonas_separa_papeis_e_exclui_exterior():
 
     painel = monta_painel(votos, _detalhe(), _municipios())
 
-    cols = ["cd_ibge", "aptos", "validos", "votos_pt", "votos_adv", "votos_outros", "nulos"]
+    cols = ["cd_ibge", "aptos", "eleitores_nao_instalados", "validos"]
+    cols += ["votos_pt", "votos_adv", "votos_outros", "nulos"]
     assert painel.sort("cd_ibge").select(cols).rows() == [
-        (1000001, 100, 65, 50, 10, 5, 3),
-        (2000002, 10, 7, 0, 7, 0, 0),
+        (1000001, 104, 4, 65, 50, 10, 5, 3),
+        (2000002, 10, 0, 7, 0, 7, 0, 0),
     ]
 
 
@@ -127,6 +129,7 @@ def test_agrega_amc_soma_votos_antes_de_calcular_proporcoes():
             "aptos": [1200, 150],
             "comparecimento": [1000, 100],
             "abstencoes": [200, 50],
+            "eleitores_nao_instalados": [0, 0],
             "validos": [1000, 100],
             "brancos": [0, 0],
             "nulos": [0, 0],

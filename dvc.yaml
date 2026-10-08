@@ -13,3 +13,27 @@ stages:
             cache: false
         - data/interim/tse/detalhe_munzona/ano=${item}:
             cache: false
+
+  municipios:
+    cmd: python -m kingsrace.harmonize.municipios
+    deps:
+      - src/kingsrace/harmonize/municipios.py
+      - data/raw/ibge/municipios.json
+      - data/reference/municipios_overrides.csv
+      - data/reference/amc.csv
+      - data/interim/tse/detalhe_munzona
+    outs:
+      - data/processed/municipios.parquet
+
+  painel:
+    cmd: python -m kingsrace.features.painel
+    deps:
+      - src/kingsrace/features/painel.py
+      - data/reference/candidatos.csv
+      - data/processed/municipios.parquet
+      - data/interim/tse/votacao_secao
+      - data/interim/tse/detalhe_munzona
+    outs:
+      - data/processed/votos_municipio.parquet
+      - data/processed/painel_municipio.parquet
+      - data/processed/painel_amc.parquet
