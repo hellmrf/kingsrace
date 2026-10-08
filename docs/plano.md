@@ -225,10 +225,10 @@ Carregar a skill `dataviz` antes de escrever o código dos gráficos, para palet
 | Marco | Quando | Entregas |
 |---|---|---|
 | **M0a: fundação** | ✅ 08/10 | Mover este plano para `docs/plano.md`; `git init` + `.gitignore`; `uv` com o esqueleto da seção 3; DVC inicializado (remoto R2 a configurar com as credenciais); `nbstripout`; docs de decisões, hipóteses e dicionário.  |
-| **M0b: ingestão e painel** | até ~15/10 | Ingestão TSE 2006–2026 (presidente: munzona, detalhe; seção para 2018/2022/2026). Correspondência, AMC, `candidatos.csv`, `painel_municipio.parquet`. Testes de reconciliação. |
+| **M0b: ingestão e painel** | ✅ 08/10 | Escopo reduzido a **2022 e 2026** (baixar só o que se usa agora). Votação por seção + detalhe por zona (presidente), correspondência TSE↔IBGE própria, AMC, `candidatos.csv`, `painel_municipio`/`painel_amc`, testes de reconciliação. Ver `decisoes.md` (D4). |
 | **M1a: 2022 → 2026** | até ~24/10 | Covariáveis do núcleo (Censo, PIB, Bolsa Família, prefeitos 2024). EDA da seção A. Replicar o achado A1 com controles. **Previsão do 2T congelada e commitada antes de 25/10** (B4). |
 | **M1b: entre turnos** | depois de 25/10, quando o TSE atualizar os arquivos | Ingestão do 2T de 2026; inferência ecológica (B1); B2/B3; avaliação da previsão. |
-| **M1c: série histórica** | novembro | Seção C: coeficientes ao longo do tempo, decomposição de variância, trajetórias. |
+| **M1c: série histórica** | novembro | Ingestão de 2006–2018 (incluir os anos em `params.yaml` e revisar `candidatos.csv`, overrides e AMC). Seção C: coeficientes ao longo do tempo, decomposição de variância, trajetórias. |
 | **M1d: intraurbano** | depois de M1c | Seção D em 2 ou 3 capitais (por exemplo SP, Salvador, Recife). |
 | **M1e: relatório** | ao fim | Quarto consolidando os achados, com mapas e gráficos interativos. |
 | **M2: portal público** | futuro | Fora do escopo agora. O painel em parquet + `viz/` já ficam reaproveitáveis. |

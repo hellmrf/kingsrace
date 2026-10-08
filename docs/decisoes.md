@@ -48,6 +48,27 @@ entram no `pyproject.toml` no marco em que forem usadas.
 
 ---
 
+## D4 — Correspondência de municípios e contabilidade do TSE
+
+**Data:** 2026-10-08 · **Status:** em vigor
+
+- **Correspondência TSE↔IBGE construída por nós**, por UF + nome normalizado contra a API
+  de localidades do IBGE, com 11 overrides documentados. O CSV comunitário
+  `betafcc/Municipios-Brasileiros-TSE` foi descartado: tem 5 municípios da BA com códigos
+  rodados entre si (Laje, Lagoa Real, Lajedão, Lajedinho, Lajedo do Tabocal), 2 de SC
+  trocados (Santiago do Sul ↔ Santa Terezinha do Progresso) e não tem Boa Esperança do Norte.
+- **Fonte dos votos:** `votacao_secao_{ano}_BR` (só presidente), agregada; não usamos
+  `votacao_candidato_munzona` (~1 GB/ano com todos os cargos).
+- **Votos anulados:** o nº 28 em 2026 (Leonardo Alves de Araujo, 5.246 votos) não entra
+  nos válidos; o TSE o soma aos nulos. Marcado como `anulado` em `candidatos.csv`. O
+  pipeline falha se pt + adversário + outros ≠ válidos, o que denuncia casos novos.
+- **Seções não instaladas:** seus eleitores contam em `aptos` mas não em comparecimento
+  nem em abstenções; viram a coluna `eleitores_nao_instalados`.
+- **AMC 2022–2026:** Boa Esperança do Norte (MT), instalado em 2025, foi desmembrado de
+  Nova Ubiratã (~80%) e Sorriso (~20%); os três formam a AMC 9000001.
+
+---
+
 ## Armadilhas metodológicas (valem para todas as análises)
 
 - **Falácia ecológica:** escrever conclusões em nível de lugar ("municípios com X"),
