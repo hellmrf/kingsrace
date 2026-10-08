@@ -1,0 +1,13 @@
+md5: 72284b472c5c87b6ad8f98ca970afb6e
+frozen: true
+deps:
+- checksum: '"2633d9-65d597fda8802"'
+  size: 2503641
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_2026.zip
+outs:
+- md5: cac88158d4e2533280b2928cf886c982
+  size: 2503641
+  hash: md5
+  path: detalhe_votacao_munzona_2026.zip

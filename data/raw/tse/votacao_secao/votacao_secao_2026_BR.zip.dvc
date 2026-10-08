@@ -1,0 +1,13 @@
+md5: e78d0ae2262e3a4f651d0262a04ec150
+frozen: true
+deps:
+- checksum: '"9a21287-65d30ec9f3a44"'
+  size: 161616519
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2026_BR.zip
+outs:
+- md5: c3144ad81e341d6b594d46bc6e73e07d
+  size: 161616519
+  hash: md5
+  path: votacao_secao_2026_BR.zip

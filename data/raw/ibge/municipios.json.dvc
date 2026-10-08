@@ -1,0 +1,12 @@
+md5: 6b4f9cc82eb24070726dd15409a6c5e6
+frozen: true
+deps:
+- checksum: '139954085464976804438681553040854822952'
+  hash: md5
+  path: 
+    https://servicodados.ibge.gov.br/api/v1/localidades/municipios?view=nivelado
+outs:
+- md5: 436ca4776176cd4d13786e7bf750dd37
+  size: 2372050
+  hash: md5
+  path: municipios.json

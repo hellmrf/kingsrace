@@ -1,0 +1,13 @@
+md5: 77fc26997aa3afc3d355fa11f4fa6e4d
+frozen: true
+deps:
+- checksum: '"102b9827-5ee383298b080"'
+  size: 271292455
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2022_BR.zip
+outs:
+- md5: 01441309cd9d5a3b6aefda22571bd1b6
+  size: 271292455
+  hash: md5
+  path: votacao_secao_2022_BR.zip
