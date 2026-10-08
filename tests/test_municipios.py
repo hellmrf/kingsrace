@@ -1,7 +1,12 @@
 import polars as pl
 import pytest
 
-from kingsrace.harmonize.municipios import ErroCorrespondencia, casa_municipios, normaliza_nome
+from kingsrace.harmonize.municipios import (
+    ErroCorrespondencia,
+    atribui_amc,
+    casa_municipios,
+    normaliza_nome,
+)
 
 
 @pytest.mark.parametrize(
@@ -90,3 +95,15 @@ def test_falha_quando_um_codigo_tse_casa_com_dois_ibge():
 
     with pytest.raises(ErroCorrespondencia, match=r"código TSE com mais de um código IBGE: 7 →"):
         casa_municipios(tse, ibge, _sem_overrides())
+
+
+def test_atribui_amc_usa_o_proprio_codigo_quando_nao_listado():
+    municipios = pl.DataFrame({"cd_ibge": [5107925, 3550308]})
+    amc = pl.DataFrame({"amc_id": [9000001], "cd_ibge": [5107925]})
+
+    res = atribui_amc(municipios, amc)
+
+    assert dict(res.select("cd_ibge", "amc_id").iter_rows()) == {
+        5107925: 9000001,
+        3550308: 3550308,
+    }

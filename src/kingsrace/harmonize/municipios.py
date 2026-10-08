@@ -59,3 +59,10 @@ def casa_municipios(tse: pl.DataFrame, ibge: pl.DataFrame, overrides: pl.DataFra
             )
 
     return res.sort("cd_tse")
+
+
+def atribui_amc(municipios: pl.DataFrame, amc: pl.DataFrame) -> pl.DataFrame:
+    """Acrescenta `amc_id`: o de data/reference/amc.csv, ou o próprio `cd_ibge`."""
+    return municipios.join(amc.select("cd_ibge", "amc_id"), on="cd_ibge", how="left").with_columns(
+        pl.coalesce("amc_id", "cd_ibge").alias("amc_id")
+    )
