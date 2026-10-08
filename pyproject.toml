@@ -1,0 +1,39 @@
+[project]
+name = "kingsrace"
+version = "0.1.0"
+description = "Análise do comportamento eleitoral presidencial no Brasil (2006–2026)"
+readme = "README.md"
+authors = [
+    { name = "Heliton Martins", email = "helitonmrf@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=1.5.6",
+    "httpx>=0.28.1",
+    "pandera[polars]>=0.34.1",
+    "polars>=2.0.0",
+    "pyarrow>=25.0.1",
+]
+
+[build-system]
+requires = ["uv_build>=0.9.13,<0.10.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "dvc[s3]>=3.67.1",
+    "ipykernel>=7.4.0",
+    "nbstripout>=0.9.1",
+    "pytest>=9.1.1",
+    "ruff>=0.16.10",
+]
+
+[tool.ruff]
+line-length = 100
+extend-include = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

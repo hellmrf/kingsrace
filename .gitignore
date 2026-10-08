@@ -218,3 +218,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# --- kingsrace ---
+# Dados: o bruto (data/raw) é versionado pelo DVC — o git guarda só os .dvc;
+# os derivados são reconstruídos com `dvc repro`. Ver docs/decisoes.md (D1).
+/data/interim/*
+/data/processed/*
+!/data/*/.gitkeep

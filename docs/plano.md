@@ -24,7 +24,7 @@ Decisões tomadas:
 - **Python**.
 - Primeiro marco: **notebooks + relatório Quarto**. Um portal público fica para um marco futuro, então convém manter o processamento já pensado para ser republicável.
 
-O workspace `/home/hellmrf/proj/kingsrace` só tem o `README.md` e ainda não é repositório git.
+Versionamento de dados: DVC com remoto no Cloudflare R2 (ver `docs/decisoes.md`, D1).
 
 ---
 
@@ -89,11 +89,13 @@ O workspace `/home/hellmrf/proj/kingsrace` só tem o `README.md` e ainda não é
 ```
 kingsrace/
 ├── pyproject.toml            # uv; Python 3.12
-├── justfile / Makefile       # ingest → harmonize → features → models → report
-├── data/                     # fora do git
-│   ├── raw/{tse,ibge,mds,...}/   # imutável + manifest.json (url, data, sha256)
-│   ├── interim/
-│   └── processed/            # parquet: painel_municipio, painel_local, candidatos
+├── justfile                  # receitas do dia a dia (setup, test, lint, repro, push/pull)
+├── dvc.yaml                  # pipeline: ingest → harmonize → features (a partir do M0b)
+├── data/
+│   ├── raw/{tse,ibge,mds,...}/   # imutável; versionado pelo DVC (git guarda só os .dvc)
+│   ├── interim/              # descartável
+│   ├── processed/            # parquet: painel_municipio, painel_local (saídas do dvc.yaml)
+│   └── reference/            # tabelas pequenas feitas à mão, no git (candidatos.csv, previsão 2T)
 ├── src/kingsrace/
 │   ├── ingest/               # um módulo por fonte, idempotente
 │   ├── harmonize/            # correspondência, AMC, mapeamento de candidatos
@@ -119,7 +121,10 @@ kingsrace/
 | ML | `lightgbm`, `shap`, `scikit-learn` |
 | Visualização | `altair`/`plotly` (interativo), `matplotlib` (estático) |
 | Relatório | Quarto |
-| Acesso a dados | `sidrapy`, `basedosdados` |
+| Acesso a dados | `sidrapy`, `basedosdados`, `httpx` |
+| Versionamento de dados | DVC com remoto no Cloudflare R2; `nbstripout` para notebooks (ver `decisoes.md`, D1) |
+
+As bibliotecas de análise entram no `pyproject.toml` no marco em que forem usadas.
 
 ---
 
@@ -219,8 +224,8 @@ Carregar a skill `dataviz` antes de escrever o código dos gráficos, para palet
 
 | Marco | Quando | Entregas |
 |---|---|---|
-| **M0a:** | | Mover este plano para `docs/plano.md`; `git init` + `.gitignore`; `uv` com o esqueleto da seção 3.  |
-| **M0b:** | | Ingestão TSE 2006–2026 (presidente: munzona, detalhe; seção para 2018/2022/2026). Correspondência, AMC, `candidatos.csv`, `painel_municipio.parquet`. Testes de reconciliação. |
+| **M0a: fundação** | ✅ 08/10 | Mover este plano para `docs/plano.md`; `git init` + `.gitignore`; `uv` com o esqueleto da seção 3; DVC inicializado (remoto R2 a configurar com as credenciais); `nbstripout`; docs de decisões, hipóteses e dicionário.  |
+| **M0b: ingestão e painel** | até ~15/10 | Ingestão TSE 2006–2026 (presidente: munzona, detalhe; seção para 2018/2022/2026). Correspondência, AMC, `candidatos.csv`, `painel_municipio.parquet`. Testes de reconciliação. |
 | **M1a: 2022 → 2026** | até ~24/10 | Covariáveis do núcleo (Censo, PIB, Bolsa Família, prefeitos 2024). EDA da seção A. Replicar o achado A1 com controles. **Previsão do 2T congelada e commitada antes de 25/10** (B4). |
 | **M1b: entre turnos** | depois de 25/10, quando o TSE atualizar os arquivos | Ingestão do 2T de 2026; inferência ecológica (B1); B2/B3; avaliação da previsão. |
 | **M1c: série histórica** | novembro | Seção C: coeficientes ao longo do tempo, decomposição de variância, trajetórias. |
@@ -236,5 +241,5 @@ Carregar a skill `dataviz` antes de escrever o código dos gráficos, para palet
 - **Consistência entre níveis:** soma das seções = soma de munzona = total da UF, para cada pleito.
 - **Correspondência completa:** zero códigos sem par entre TSE e IBGE; número de AMC estável entre os anos.
 - **Esquemas:** `pandera` em cada parquet do `processed/`, rodando no `pytest`.
-- **Reprodutibilidade:** `just all` refaz tudo de `raw/` até `processed/`; `manifest.json` com URL e sha256 de cada arquivo bruto.
+- **Reprodutibilidade:** `dvc repro` refaz tudo de `raw/` até `processed/`; cada arquivo bruto tem um `.dvc` com URL e hash, e `dvc pull` em outra máquina reproduz o mesmo estado.
 - **Sanidade da modelagem:** replicar um fato conhecido antes de buscar coisas novas. Por exemplo, a correlação negativa entre IDH e voto em Lula em 2022 e a inversão regional de 2006 descrita por Singer.
