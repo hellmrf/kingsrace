@@ -22,32 +22,40 @@ def normaliza_nome(nome: str) -> str:
 
 
 def casa_municipios(tse: pl.DataFrame, ibge: pl.DataFrame, overrides: pl.DataFrame) -> pl.DataFrame:
-    """Devolve `cd_tse, cd_ibge` para cada município do TSE.
+    """Devolve `cd_tse, cd_ibge` para cada código de município do TSE.
 
-    tse: cd_tse, uf, nome · ibge: cd_ibge, uf, nome · overrides: cd_tse, cd_ibge
+    tse: cd_tse, uf, nome — pode ter vários nomes por código (renomeações entre pleitos);
+    basta um casar. ibge: cd_ibge, uf, nome. overrides: cd_tse, cd_ibge — têm precedência.
     """
     chave = pl.col("nome").map_elements(normaliza_nome, return_dtype=pl.String).alias("_nome")
-    por_nome = tse.with_columns(chave).join(
-        ibge.with_columns(chave).select("uf", "_nome", "cd_ibge"),
-        on=["uf", "_nome"],
-        how="left",
+    por_nome = (
+        tse.with_columns(chave)
+        .join(ibge.with_columns(chave).select("uf", "_nome", "cd_ibge"), on=["uf", "_nome"])
+        .join(overrides, on="cd_tse", how="anti")
+        .select("cd_tse", "cd_ibge")
     )
-    res = (
-        por_nome.join(overrides.rename({"cd_ibge": "_override"}), on="cd_tse", how="left")
-        .with_columns(pl.coalesce("_override", "cd_ibge").alias("cd_ibge"))
-        .select("cd_tse", "uf", "nome", "cd_ibge")
-    )
+    res = pl.concat(
+        [por_nome, overrides.join(tse.select("cd_tse"), on="cd_tse", how="semi")]
+    ).unique()
 
-    sem_par = res.filter(pl.col("cd_ibge").is_null())
+    sem_par = tse.join(res, on="cd_tse", how="anti")
     if sem_par.height:
-        lista = ", ".join(f"{r['cd_tse']} {r['nome']}/{r['uf']}" for r in sem_par.iter_rows(named=True))
+        lista = ", ".join(
+            f"{r['cd_tse']} {r['nome']}/{r['uf']}" for r in sem_par.iter_rows(named=True)
+        )
         raise ErroCorrespondencia(f"códigos TSE sem par no IBGE: {lista}")
 
-    repetidos = res.filter(pl.col("cd_ibge").is_duplicated())
-    if repetidos.height:
-        lista = ", ".join(
-            f"{r['cd_ibge']} ← {r['cd_tse']} {r['nome']}" for r in repetidos.iter_rows(named=True)
+    for origem, destino in (("cd_tse", "cd_ibge"), ("cd_ibge", "cd_tse")):
+        multiplos = (
+            res.group_by(origem).agg(pl.col(destino).sort()).filter(pl.col(destino).list.len() > 1)
         )
-        raise ErroCorrespondencia(f"código IBGE com mais de um código TSE: {lista}")
+        if multiplos.height:
+            lista = "; ".join(
+                f"{o} → {', '.join(map(str, d))}" for o, d in multiplos.sort(origem).iter_rows()
+            )
+            tipo = {"cd_tse": "TSE", "cd_ibge": "IBGE"}
+            raise ErroCorrespondencia(
+                f"código {tipo[origem]} com mais de um código {tipo[destino]}: {lista}"
+            )
 
-    return res.select("cd_tse", "cd_ibge")
+    return res.sort("cd_tse")

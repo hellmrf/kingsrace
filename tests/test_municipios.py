@@ -20,7 +20,7 @@ def test_normaliza_nome_iguala_grafias_tse_e_ibge(nome, esperado):
 def _ibge():
     return pl.DataFrame(
         {
-            "cd_ibge": [2201804, 4302501, 5203559, 2905008],
+            "cd_ibge": [2201804, 4302501, 5203500, 2905008],
             "uf": ["PI", "RS", "GO", "BA"],
             "nome": ["Bom Jesus", "Bom Jesus", "Bom Jesus de Goiás", "Barra d'Alcântara"],
         }
@@ -41,11 +41,11 @@ def test_casa_por_uf_e_nome():
 
 def test_override_resolve_municipio_renomeado():
     tse = pl.DataFrame({"cd_tse": [92690], "uf": ["GO"], "nome": ["BOM JESUS"]})
-    overrides = pl.DataFrame({"cd_tse": [92690], "cd_ibge": [5203559]})
+    overrides = pl.DataFrame({"cd_tse": [92690], "cd_ibge": [5203500]})
 
     res = casa_municipios(tse, _ibge(), overrides)
 
-    assert dict(res.select("cd_tse", "cd_ibge").iter_rows()) == {92690: 5203559}
+    assert dict(res.select("cd_tse", "cd_ibge").iter_rows()) == {92690: 5203500}
 
 
 def test_override_prevalece_sobre_casamento_por_nome():
@@ -69,3 +69,24 @@ def test_falha_quando_dois_codigos_tse_apontam_para_o_mesmo_ibge():
 
     with pytest.raises(ErroCorrespondencia, match="2201804"):
         casa_municipios(tse, _ibge(), _sem_overrides())
+
+
+def test_codigo_com_varios_nomes_casa_se_algum_nome_casar():
+    # o TSE renomeia municípios entre pleitos; o código é o mesmo
+    tse = pl.DataFrame(
+        {"cd_tse": [92690, 92690], "uf": ["GO", "GO"], "nome": ["BOM JESUS", "BOM JESUS DE GOIÁS"]}
+    )
+
+    res = casa_municipios(tse, _ibge(), _sem_overrides())
+
+    assert res.rows() == [(92690, 5203500)]
+
+
+def test_falha_quando_um_codigo_tse_casa_com_dois_ibge():
+    tse = pl.DataFrame({"cd_tse": [7, 7], "uf": ["RS", "RS"], "nome": ["BOM JESUS", "BOM  JESUS"]})
+    ibge = pl.DataFrame(
+        {"cd_ibge": [4302501, 4399999], "uf": ["RS", "RS"], "nome": ["Bom Jesus", "Bom  Jesus"]}
+    )
+
+    with pytest.raises(ErroCorrespondencia, match=r"código TSE com mais de um código IBGE: 7 →"):
+        casa_municipios(tse, ibge, _sem_overrides())
