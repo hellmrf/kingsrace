@@ -3,4 +3,4 @@
     remote = r2
 ['remote "r2"']
     url = s3://kingsrace/dvc
-    endpointurl = https://ea7d1b90a37d6856a68649d74a763c5e.r2.cloudflarestorage.com
+    endpointurl = https://ea7d1b90a37d6856a68649d74a763c5e.eu.r2.cloudflarestorage.com
