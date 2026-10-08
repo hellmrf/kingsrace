@@ -1,0 +1,3 @@
+# Pleitos presidenciais incluídos no pipeline. Para adicionar um ano: importar os
+# arquivos brutos (dvc import-url) e incluí-lo aqui.
+anos: [2022, 2026]

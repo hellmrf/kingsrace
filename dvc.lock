@@ -1,0 +1,56 @@
+schema: '2.0'
+stages:
+  converte_tse@2022:
+    cmd: python -m kingsrace.ingest.tse 2022
+    deps:
+    - path: 
+        data/raw/tse/detalhe_votacao_munzona/detalhe_votacao_munzona_2022.zip
+      hash: md5
+      md5: d423cb262c9c438322876b6daceea501
+      size: 4421287
+    - path: data/raw/tse/votacao_secao/votacao_secao_2022_BR.zip
+      hash: md5
+      md5: 01441309cd9d5a3b6aefda22571bd1b6
+      size: 271292455
+    - path: src/kingsrace/ingest/tse.py
+      hash: md5
+      md5: a161b1b8fc800af2a2ee7e68957dd038
+      size: 3026
+    outs:
+    - path: data/interim/tse/detalhe_munzona/ano=2022
+      hash: md5
+      md5: 7f4d5ca7058537a87d5cc00fd7ac06b2.dir
+      size: 329931
+      nfiles: 1
+    - path: data/interim/tse/votacao_secao/ano=2022
+      hash: md5
+      md5: 76e8595856967dde8353882e8131069a.dir
+      size: 46603768
+      nfiles: 1
+  converte_tse@2026:
+    cmd: python -m kingsrace.ingest.tse 2026
+    deps:
+    - path: 
+        data/raw/tse/detalhe_votacao_munzona/detalhe_votacao_munzona_2026.zip
+      hash: md5
+      md5: cac88158d4e2533280b2928cf886c982
+      size: 2503641
+    - path: data/raw/tse/votacao_secao/votacao_secao_2026_BR.zip
+      hash: md5
+      md5: c3144ad81e341d6b594d46bc6e73e07d
+      size: 161616519
+    - path: src/kingsrace/ingest/tse.py
+      hash: md5
+      md5: a161b1b8fc800af2a2ee7e68957dd038
+      size: 3026
+    outs:
+    - path: data/interim/tse/detalhe_munzona/ano=2026
+      hash: md5
+      md5: 8b15a9e9ef92b091778028df1d34455d.dir
+      size: 162713
+      nfiles: 1
+    - path: data/interim/tse/votacao_secao/ano=2026
+      hash: md5
+      md5: 8969857af2bf80286e5fd54e8b0e3f59.dir
+      size: 26991720
+      nfiles: 1

@@ -1,0 +1,15 @@
+stages:
+  converte_tse:
+    foreach: ${anos}
+    do:
+      cmd: python -m kingsrace.ingest.tse ${item}
+      deps:
+        - src/kingsrace/ingest/tse.py
+        - data/raw/tse/votacao_secao/votacao_secao_${item}_BR.zip
+        - data/raw/tse/detalhe_votacao_munzona/detalhe_votacao_munzona_${item}.zip
+      outs:
+        # intermediários: reconstruíveis, não vão para o cache nem para o R2
+        - data/interim/tse/votacao_secao/ano=${item}:
+            cache: false
+        - data/interim/tse/detalhe_munzona/ano=${item}:
+            cache: false
