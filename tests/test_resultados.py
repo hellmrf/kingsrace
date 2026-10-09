@@ -90,3 +90,16 @@ def test_todo_notebook_tem_etapa():
         etapa = etapas[f"nb_{nb.stem}"]
         assert f"notebooks/{nb.name}" in etapa["deps"]
         assert f"resultados/{nb.stem}/metrics.json" in [next(iter(m)) for m in etapa["metrics"]]
+
+
+def test_raiz_segue_o_dvc(monkeypatch, tmp_path):
+    """Num `dvc exp run --temp`, os notebooks leem e gravam na cópia, não na área de trabalho."""
+    import importlib
+
+    monkeypatch.setenv("DVC_ROOT", str(tmp_path))
+    try:
+        raiz = importlib.reload(paths).ROOT
+        assert raiz == tmp_path
+    finally:
+        monkeypatch.delenv("DVC_ROOT")
+        importlib.reload(paths)
