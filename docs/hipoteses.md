@@ -10,9 +10,9 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | ID | Hipótese | Status | Teste / critério | Resultado | Notebook |
 |---|---|---|---|---|---|
 | A1 | Lula cai mais (Δ dois maiores, 2022→2026 1T) quanto menor o município, mesmo dentro da UF | **testada** | ver [A1](#a1) | **Sustentada.** M3: β = +0,024 (IC 95% +0,021 a +0,028); metade do gradiente bruto é composição | `02_tamanho.ipynb` |
-| A2 | Queda maior onde o agro pesa mais e onde a soja avançou | aberta | | | |
-| A3 | Participação evangélica (nível 2022 e Δ 2010–2022) prevê a queda | aberta | | | |
-| A4 | Coeficiente da cobertura do Bolsa Família muda de sinal ou cresce entre 2022 e 2026 | aberta | | | |
+| A2 | Queda maior onde o agro pesa mais e onde a soja avançou | registrada | ver [A2–A4](#a2-a3-e-a4) | | `05_composicao.ipynb` |
+| A3 | Participação evangélica (nível 2022 e Δ 2010–2022) prevê a queda | registrada | ver [A2–A4](#a2-a3-e-a4) | | `05_composicao.ipynb` |
+| A4 | Coeficiente da cobertura do Bolsa Família muda de sinal ou cresce entre 2022 e 2026 | registrada | ver [A2–A4](#a2-a3-e-a4) | | `05_composicao.ipynb` |
 | A5 | Prefeito do PL/centrão eleito em 2024 aumenta o afastamento de Lula (RDD) | aberta | | | |
 | A6 | Parte relevante da perda de Lula é desmobilização (abstenção), não conversão | **testada** | ver [A6](#a6) | **Não se sustenta.** Comparecimento + válidos = 5,9% da perda; o resto é fatia. A6b (abstenção maior nos redutos do PT) se sustenta, efeito pequeno | `04_decomposicao.ipynb` |
 | A7 | Saldo de empregos formais 2022–2026 associado a queda menor | aberta | | | |
@@ -140,3 +140,36 @@ votos (1º turno, sem exterior). Contribuições: eleitorado +0,88 mi; compareci
 brancos e nulos −0,27 mi; fatia de Lula −4,07 mi. **A6 não se sustenta** (5,9% < 25%).
 A6b: −0,014 (IC 95% −0,026 a −0,003), sustentada com efeito pequeno (~−0,25 pp de
 comparecimento por +1 logit de PT em 2022). **A8 se sustenta:** razão 1,34.
+
+### A2, A3 e A4
+
+**Registradas em 2026-10-09, antes de qualquer regressão com as medidas novas.** As três
+pistas vieram dos controles do M3 da A1 (`02_tamanho.ipynb`): agro (`pct_va_agro_2021`),
+religião (`pct_evangelica`) e transferências (`pct_renda_outras_fontes`). Para não testar
+com os dados que as sugeriram, cada uma usa uma **medida nova**, e a medida antiga fica
+como controle.
+
+**Base comum (= M3 da A1):** AMC, Δ logit(`pt_2p`) 1º turno 2022 → 2026; MQO sem pesos;
+efeitos fixos e erros agrupados por região imediata; controles log(aptos 2022),
+logit(`pt_2p` 2022), `pct_urbana`, `idade_mediana`, `pct_evangelica`, log(renda mediana),
+`taxa_alfabetizacao`, `pct_preta_parda`, `pct_va_agro_2021`, `pct_renda_outras_fontes`.
+
+- **A2 · soja:** acrescenta `exp_soja_pct_territorio` (expansão da área de soja 2021→2025,
+  em pp do território) e `soja_2021_pct_territorio` como controle de nível. Hipótese:
+  coeficiente da expansão **negativo**. Sustenta-se se o IC 95% estiver abaixo de zero.
+- **A3 · religião:** acrescenta `delta_evangelica` (crescimento 2010→2022, pp), com o nível
+  de 2022 já entre os controles. Hipótese: coeficiente **negativo** (onde os evangélicos
+  cresceram mais, o PT perdeu mais). Sustenta-se se o IC 95% estiver abaixo de zero.
+  Amostra: AMCs com dado de 2010.
+- **A4 · transferências (principal, a formulação original):** o PT passou a ganhar mais
+  onde o programa é maior, quando o programa virou "dele"? Painel empilhado 2022 e 2026 com
+  logit(`pt_2p`) no nível como desfecho; cobertura = famílias no programa por 100
+  habitantes (Auxílio Brasil em set/2022; Bolsa Família em set/2026); todos os controles
+  da base (menos o logit de 2022) interagidos com o ano; efeitos fixos região imediata ×
+  ano. Hipótese: interação cobertura × 2026 **positiva**. Sustenta-se se o IC 95% estiver
+  acima de zero.
+- **A4a · complementar:** no modelo de Δ da base, acrescenta `familias_bf_100hab_2026`.
+  Hipótese: coeficiente **positivo** (mais Bolsa Família, queda menor).
+
+São quatro testes. Sem correção formal para comparações múltiplas, mas os p-valores são
+reportados e um resultado com p entre 0,01 e 0,05 é tratado como fraco.
