@@ -1,5 +1,6 @@
 {
     "recommendations": [
-        "lakefs.lakefs-dvc"
+        "lakefs.lakefs-dvc",
+        "ms-toolsai.datawrangler"
     ]
 }
