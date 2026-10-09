@@ -21,10 +21,11 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | B2 | Variação da abstenção entre turnos e a quem beneficiou | aberta | | | |
 | B3 | Transferências heterogêneas por região/perfil | aberta | | | |
 | B4 | Previsão do 2T por município, congelada antes de 25/10/2026 | registrada | ver [B4](#b4) | | `03_previsao_2t.ipynb` |
-| C1 | Clivagem do lulismo (renda, Nordeste, escolaridade, religião) ao longo de 2006–2026 | aberta | | | |
-| C2 | Nacionalização vs. regionalização do voto do PT (decomposição de variância) | aberta | | | |
-| C3 | Tipologia de trajetórias municipais 2006–2026 | aberta | | | |
-| C4 | Uniformidade da variação entre pleitos | aberta | | | |
+| C1 | Clivagem do lulismo (renda, Nordeste, escolaridade, religião) ao longo de 2006–2026 | registrada | ver [C](#série-histórica-c1-c2-c4-c5) | | `06_serie.ipynb` |
+| C2 | Nacionalização vs. regionalização do voto do PT (decomposição de variância) | registrada | ver [C](#série-histórica-c1-c2-c4-c5) | | `06_serie.ipynb` |
+| C3 | Tipologia de trajetórias municipais 2006–2026 | exploratória | ver [C](#série-histórica-c1-c2-c4-c5) | | `06_serie.ipynb` |
+| C4 | Uniformidade da variação entre pleitos | registrada | ver [C](#série-histórica-c1-c2-c4-c5) | | `06_serie.ipynb` |
+| C5 | O gradiente de tamanho da A1 se repete nas transições anteriores | registrada | ver [C](#série-histórica-c1-c2-c4-c5) | | `06_serie.ipynb` |
 | D1 | Queda de 2026 concentrada nas periferias evangélicas das capitais | aberta | | | |
 
 ---
@@ -185,3 +186,37 @@ reportados e um resultado com p entre 0,01 e 0,05 é tratado como fraco.
 
 Na A4a, 1 desvio-padrão de cobertura (~7,6 famílias por 100 habitantes) equivale a +0,034
 em Δ logit, mais que 1 desvio-padrão do tamanho do município (+0,027).
+
+### Série histórica (C1, C2, C4, C5)
+
+**Registradas em 2026-10-09, antes de qualquer análise da série** (até aqui só foram
+conferidos totais e consistência dos dados de 2006–2018).
+
+**Comum:** AMC (5.562, as mesmas em todos os pleitos); fatia do PT entre os dois maiores
+(`pt_2p`), em logit. Pleitos: 1º turno de 2006, 2010, 2014, 2018, 2022 e 2026 (o 2º turno
+como complemento). Candidatos do PT: Lula (2006, 2022, 2026), Dilma (2010, 2014), Haddad
+(2018). **Limite:** as covariáveis são do Censo 2022 (e 2010 para religião); para os pleitos
+antigos elas medem a estrutura dos municípios, não o retrato da época.
+
+- **C1 · a clivagem do lulismo.** Por pleito, MQO do logit de `pt_2p` em variáveis
+  padronizadas (log da renda mediana, alfabetização, % evangélica, % urbana, idade mediana)
+  e Nordeste, sem efeitos fixos, erros agrupados por região imediata. Hipóteses:
+  (a) renda com coeficiente **negativo em todos os pleitos**; (b) |renda| **maior em 2022 que
+  em 2006** (a clivagem de classe se aprofundou); (c) % evangélica **mais negativa em 2022 e
+  2026 que em 2006**.
+- **C2 · regionalização.** Decomposição da variância do logit de `pt_2p` (ponderada pelo
+  eleitorado) em entre UFs, entre regiões imediatas dentro da UF e dentro da região
+  imediata. Hipótese: a fração **entre UFs é maior em 2022 que em 2006** (o voto ficou mais
+  regional).
+- **C4 · uniformidade.** Para cada par de 1ºs turnos consecutivos, o desvio-padrão do
+  Δ logit entre AMCs (heterogeneidade) e a correlação entre os dois pleitos (estabilidade).
+  Hipótese: 2022→2026 é **mais uniforme** (menor desvio-padrão) que a média das quatro
+  transições anteriores.
+- **C5 · o gradiente de tamanho na série.** Para cada par de 1ºs turnos consecutivos,
+  Δ logit ~ log(aptos no pleito inicial) + logit(`pt_2p` inicial), efeitos fixos e erros
+  agrupados por região imediata (sem as covariáveis do Censo, que são posteriores aos
+  pleitos antigos). Hipótese: o coeficiente do tamanho é **positivo com IC 95% acima de zero
+  em pelo menos 3 das 4 transições anteriores** a 2022→2026. Senão, o gradiente é
+  específico do período recente.
+- **C3 · trajetórias (exploratória, sem teste):** agrupamento das AMCs pela trajetória do
+  logit de `pt_2p` nos seis 1ºs turnos.

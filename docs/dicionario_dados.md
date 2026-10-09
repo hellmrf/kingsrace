@@ -41,13 +41,13 @@ Pleitos disponíveis: os de `params.yaml` (2006–2022, 1º e 2º turnos, e 2026
 | Coluna | Tipo | Descrição |
 |---|---|---|
 | `cd_ibge`, `ano`, `turno`, `uf` | | chave |
-| `aptos` | Int32 | eleitores aptos = `comparecimento + abstencoes + eleitores_nao_instalados` |
-| `comparecimento` | Int32 | = `validos + brancos + nulos` |
-| `abstencoes` | Int32 | eleitores que não compareceram |
+| `aptos` | Int64 | eleitores aptos = `comparecimento + abstencoes + eleitores_nao_instalados` |
+| `comparecimento` | Int64 | = `validos + brancos + nulos` |
+| `abstencoes` | Int64 | eleitores que não compareceram |
 | `eleitores_nao_instalados` | Int64 | resíduo aptos − comparecimento − abstenções: eleitores de seções não instaladas (ex.: Manaus 2022, 84) e pequenas diferenças do TSE em 2006–2014 |
-| `validos` | Int32 | votos válidos = `votos_pt + votos_adv + votos_outros` |
+| `validos` | Int64 | votos válidos = `votos_pt + votos_adv + votos_outros` |
 | `brancos`, `nulos` | Int64 | `nulos` é o resíduo comparecimento − válidos − brancos: nulos, votos de candidatos indeferidos e anulados apurados em separado |
-| `votos_pt`, `votos_adv`, `votos_outros` | Int32 | votos do PT, do principal adversário e dos demais válidos |
+| `votos_pt`, `votos_adv`, `votos_outros` | Int64 | votos do PT, do principal adversário e dos demais válidos |
 | `pt_validos`, `adv_validos` | Float64 | proporção nos válidos |
 | `pt_2p` | Float64 | PT / (PT + adversário) — métrica principal entre pleitos |
 | `pt_2p_logit` | Float64 | logit de `pt_2p` |
