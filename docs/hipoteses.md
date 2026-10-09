@@ -14,9 +14,9 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | A3 | Participação evangélica (nível 2022 e Δ 2010–2022) prevê a queda | aberta | | | |
 | A4 | Coeficiente da cobertura do Bolsa Família muda de sinal ou cresce entre 2022 e 2026 | aberta | | | |
 | A5 | Prefeito do PL/centrão eleito em 2024 aumenta o afastamento de Lula (RDD) | aberta | | | |
-| A6 | Parte relevante da perda de Lula é desmobilização (abstenção), não conversão | registrada | ver [A6](#a6) | | `04_decomposicao.ipynb` |
+| A6 | Parte relevante da perda de Lula é desmobilização (abstenção), não conversão | **testada** | ver [A6](#a6) | **Não se sustenta.** Comparecimento + válidos = 5,9% da perda; o resto é fatia. A6b (abstenção maior nos redutos do PT) se sustenta, efeito pequeno | `04_decomposicao.ipynb` |
 | A7 | Saldo de empregos formais 2022–2026 associado a queda menor | aberta | | | |
-| A8 | Peso dos municípios pequenos na perda nacional de votos (contribuição) | registrada | ver [A8](#a8) | | `04_decomposicao.ipynb` |
+| A8 | Peso dos municípios pequenos na perda nacional de votos (contribuição) | **testada** | ver [A8](#a8) | **Sustentada.** AMCs < 20 mil eleitores: 21,6% do eleitorado, 28,9% da perda (1,34×); mas 71% da perda veio das maiores | `04_decomposicao.ipynb` |
 | B1 | Transferências 1T→2T de 2026 favorecem Flávio, ao contrário de 2022 | aberta | | | |
 | B2 | Variação da abstenção entre turnos e a quem beneficiou | aberta | | | |
 | B3 | Transferências heterogêneas por região/perfil | aberta | | | |
@@ -134,3 +134,9 @@ pergunta é se, mesmo assim, a mobilização diferencial explica parte da perda.
   da perda nacional **maior** que a sua fração do eleitorado de 2022.
 - **Critério:** sustenta-se se fração da perda > fração do eleitorado. Também se reporta a
   razão entre as duas (quantas vezes o peso eleitoral) e a tabela completa por grupo.
+
+**Resultado A6 e A8 (2026-10-09, `04_decomposicao.ipynb`):** Lula perdeu 3,40 milhões de
+votos (1º turno, sem exterior). Contribuições: eleitorado +0,88 mi; comparecimento +0,07 mi;
+brancos e nulos −0,27 mi; fatia de Lula −4,07 mi. **A6 não se sustenta** (5,9% < 25%).
+A6b: −0,014 (IC 95% −0,026 a −0,003), sustentada com efeito pequeno (~−0,25 pp de
+comparecimento por +1 logit de PT em 2022). **A8 se sustenta:** razão 1,34.

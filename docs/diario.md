@@ -5,6 +5,25 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-09 · para onde foram os votos de Lula (A6, A8)
+
+[`notebooks/04_decomposicao.ipynb`](../notebooks/04_decomposicao.ipynb)
+
+- **Não foi abstenção (A6 rejeitada).** Dos 3,4 milhões de votos que Lula perdeu, quase tudo
+  é queda da fatia dele entre os válidos (−4,1 mi); o comparecimento ficou igual e o
+  eleitorado cresceu (+0,9 mi), compensando parte. Com a ressalva ecológica: troca de
+  eleitores dentro do mesmo município aparece como "fatia".
+- **Os pequenos pesaram mais que o tamanho (A8 sustentada):** municípios com menos de 20 mil
+  eleitores têm 22% do eleitorado e 29% da perda. Mas 71% dos votos perdidos vieram dos
+  maiores.
+- **Achado exploratório, o mais interessante do dia:** a queda tem naturezas diferentes por
+  região. No **Nordeste e no Norte, Lula manteve os votos** e a fatia caiu porque o
+  adversário cresceu (+1,6 mi no Nordeste, absorvendo eleitores novos e ex-eleitores de
+  outros). No **Sudeste e no Sul, Lula perdeu votos** de fato (−1,8 e −1,0 mi). Candidata a
+  hipótese própria.
+
+---
+
 ## 2026-10-08 (madrugada) · previsão do 2º turno, versão 1
 
 [`notebooks/03_previsao_2t.ipynb`](../notebooks/03_previsao_2t.ipynb) · especificação e
