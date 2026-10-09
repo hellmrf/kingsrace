@@ -5,6 +5,33 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-08 (noite)
+
+### A1 testada: o tamanho importa, mas metade era composição
+
+[`notebooks/02_tamanho.ipynb`](../notebooks/02_tamanho.ipynb) roda a especificação
+registrada em [hipoteses.md](hipoteses.md#a1).
+
+- **A1 se sustenta.** Mesmo comparando municípios da mesma região imediata e com a mesma
+  composição (renda, religião, idade, agro, escolaridade, cor ou raça, transferências e o
+  voto do PT em 2022), os menores perderam mais. O coeficiente cai pela metade com os
+  controles (0,049 → 0,024 em logit), mas fica longe de zero, e todas as checagens de
+  robustez concordam.
+- **Em pp:** entre 3 mil e 300 mil eleitores, ~2,5 pp a mais de queda na menor (5,0 pp sem
+  controles).
+- **O Nordeste não é diferente** (A1b): o "Nordeste plano" do panorama era composição.
+- **Pistas exploratórias** (cada uma precisa de registro próprio antes de virar afirmação):
+  com o resto fixo, o PT caiu **mais** onde era mais forte em 2022, onde a renda é maior e
+  onde o agro pesa mais; caiu **menos** onde há mais renda de transferências/aposentadorias e,
+  contra a intuição, onde há mais evangélicos (condicional ao voto de 2022).
+
+### Incidente: repositório git corrompido por queda do WSL
+
+Um commit ficou com objetos vazios. Reparado sem perda (o conteúdo estava nos arquivos de
+trabalho); `core.fsync committed` ligado para evitar repetição.
+
+---
+
 ## 2026-10-08
 
 ### Notebook 01 · Panorama — gráficos interativos

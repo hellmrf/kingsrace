@@ -9,7 +9,7 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 
 | ID | Hipótese | Status | Teste / critério | Resultado | Notebook |
 |---|---|---|---|---|---|
-| A1 | Lula cai mais (Δ dois maiores, 2022→2026 1T) quanto menor o município, mesmo dentro da UF | registrada | ver [A1](#a1) | | `02_tamanho.ipynb` |
+| A1 | Lula cai mais (Δ dois maiores, 2022→2026 1T) quanto menor o município, mesmo dentro da UF | **testada** | ver [A1](#a1) | **Sustentada.** M3: β = +0,024 (IC 95% +0,021 a +0,028); metade do gradiente bruto é composição | `02_tamanho.ipynb` |
 | A2 | Queda maior onde o agro pesa mais e onde a soja avançou | aberta | | | |
 | A3 | Participação evangélica (nível 2022 e Δ 2010–2022) prevê a queda | aberta | | | |
 | A4 | Coeficiente da cobertura do Bolsa Família muda de sinal ou cresce entre 2022 e 2026 | aberta | | | |
@@ -57,3 +57,21 @@ padrão bruto; o que se testa aqui é se ele sobrevive à composição dos munic
   Censo; excluir AMCs com menos de 2 mil eleitores (ruído).
 - **Secundária, sugerida pela exploração (não confirmatória):** A1b, o gradiente é mais
   fraco no Nordeste (interação log(aptos) × Nordeste em M3).
+
+**Resultado (2026-10-08, `02_tamanho.ipynb`):**
+
+| Modelo | β de log(eleitorado) | IC 95% |
+|---|---|---|
+| M0 bruto | +0,049 | +0,045 a +0,054 |
+| M1 + EF de UF | +0,040 | +0,036 a +0,044 |
+| M2 + EF de região imediata | +0,036 | +0,033 a +0,038 |
+| **M3 + controles** | **+0,024** | **+0,021 a +0,028** |
+
+- **Veredito: A1 se sustenta.** As quatro checagens de robustez ficam entre +0,023 e
+  +0,027; em pp, +0,54 pp por unidade de log (IC +0,47 a +0,62).
+- Ordem de grandeza: entre duas AMCs comparáveis da mesma região imediata, uma com 3 mil e
+  outra com 300 mil eleitores, a menor perdeu ~2,5 pp a mais (5,0 pp sem controles).
+- **A1b não se confirma:** interação com Nordeste = +0,001 (IC −0,006 a +0,008).
+- Observações: todos os modelos usam a mesma amostra (5.569 AMCs, todas completas); o
+  `pyfixest` descarta grupos de efeito fixo unitários (n = 5.567–5.568). São 510 regiões
+  imediatas, não 509 como escrito acima (a definição não muda).
