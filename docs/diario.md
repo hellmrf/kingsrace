@@ -5,6 +5,34 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-09 · o que exatamente virou em 2018 (série E, etapa 0)
+
+[`notebooks/07_virada_2018.ipynb`](../notebooks/07_virada_2018.ipynb) (exploratório)
+
+Antes de procurar causas para a virada, um diagnóstico do que mudou, só com os dados que já
+tínhamos. Abre a **série E** (mecanismos da virada), cujo roteiro está em
+[hipoteses.md](hipoteses.md).
+
+- **A virada é nacional.** O efeito do tamanho muda de sinal nas cinco regiões.
+- **Sobrevive no 2º turno**, mais fraca (2018→2022: +0,013 contra +0,036 no 1º). Parte do
+  gradiente do 1º turno vinha da fragmentação: de 2010 a 2018 os outros candidatos tinham
+  27–33% dos válidos nas cidades grandes; em 2022, 6–12%.
+- **Não é efeito "filhos da terra":** sem SP, MG e RJ, os coeficientes quase não mudam.
+- **É mudança de voto, não comparecimento:** o gradiente está todo na fatia do PT.
+- **Não é uma inversão completa.** Desde 2014, o efeito acumulado do tamanho é −0,133 em
+  2018, −0,057 em 2022 e −0,026 em 2026: as cidades grandes voltaram ao PT só em parte. São
+  dois fenômenos: o choque urbano de 2014→2018 e, desde 2018, o afastamento dos pequenos.
+- **Bolsonaro herdou o mapa do PSDB** (correlação do adversário Aécio→Bolsonaro 0,874, como
+  nas trocas anteriores), e **o mapa congelou** a partir de 2018 (0,975 e 0,986). No 2º turno
+  o congelamento começa antes: o molde é o Dilma × Aécio de 2014.
+
+**Consequência para o desenho:** uma quebra igual no país todo é o que qualquer causa nacional
+produz, então a uniformidade não aponta para nenhuma. As hipóteses E1–E5 (máquinas locais e
+emendas, igrejas, internet móvel, recessão e Lava Jato, violência) vão ser testadas pela
+**pegada geográfica e temporal** de cada canal, com placebo nas transições anteriores a 2018.
+
+---
+
 ## 2026-10-09 · a série histórica 2006–2026
 
 [`notebooks/06_serie.ipynb`](../notebooks/06_serie.ipynb)

@@ -27,6 +27,7 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | C4 | Uniformidade da variação entre pleitos | **testada** | ver [C](#série-histórica-c1-c2-c4-c5) | **Sustentada.** dp 0,14 em 2022→2026 contra 0,40–0,49 antes | `06_serie.ipynb` |
 | C5 | O gradiente de tamanho da A1 se repete nas transições anteriores | **testada** | ver [C](#série-histórica-c1-c2-c4-c5) | **Não se sustenta: inverteu.** Negativo em 2006→18 (até −0,133), positivo desde 2018→22 | `06_serie.ipynb` |
 | D1 | Queda de 2026 concentrada nas periferias evangélicas das capitais | aberta | | | |
+| E0 | Diagnóstico da virada de 2018 (regiões, 2º turno, acumulado, estados de origem, comparecimento, estabilidade do mapa) | exploratória | — | Nacional, presente no 2º turno, mudança de voto; **não é inversão completa** (desde 2014: −0,133 → −0,026); mapa congelado desde 2018 | `07_virada_2018.ipynb` |
 
 ---
 
