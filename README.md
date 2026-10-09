@@ -51,3 +51,4 @@ tests/          esquemas e reconciliação com totais oficiais
 - **Reconstruir derivados:** `just repro`.
 
 Decisões de projeto e cuidados metodológicos em [docs/decisoes.md](docs/decisoes.md).
+O andamento e os achados ficam em [docs/diario.md](docs/diario.md).
