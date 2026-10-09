@@ -1,0 +1,13 @@
+md5: 688546ffec64dbe663eab57dddd29cd0
+frozen: true
+deps:
+- checksum: '330045616256723394526037950761764497628'
+  size: 246
+  hash: md5
+  path: 
+    https://apisidra.ibge.gov.br/values/t/9543/n6/all/v/2513/p/2022/c2/6794/c86/95251/c287/100362
+outs:
+- md5: f9267f891b5ff2627d6e5246cce41f6d
+  size: 2357299
+  hash: md5
+  path: alfabetizacao.json

@@ -1,0 +1,13 @@
+md5: e3e12d6aa65d7bf0458a532b0c51737f
+frozen: true
+deps:
+- checksum: '199389883061066077383419569042974579526'
+  size: 246
+  hash: md5
+  path: 
+    https://apisidra.ibge.gov.br/values/t/9537/n6/all/v/1000140/p/2022/c133/95263,95277,2836/c2/6794/c58/95253
+outs:
+- md5: 62abd9396ebae2880b8c32675778cf93
+  size: 7455438
+  hash: md5
+  path: religiao.json

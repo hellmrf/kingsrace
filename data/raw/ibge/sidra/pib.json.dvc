@@ -1,0 +1,13 @@
+md5: d47e91e2465c49593bea395fd5016d8c
+frozen: true
+deps:
+- checksum: '89789802762234963453759081538254435668'
+  size: 246
+  hash: md5
+  path: 
+    https://apisidra.ibge.gov.br/values/t/5938/n6/all/v/37,498,513,525/p/2021,2023
+outs:
+- md5: 21dbc6cd6c5b16029027c5ba29fb4962
+  size: 13566087
+  hash: md5
+  path: pib.json

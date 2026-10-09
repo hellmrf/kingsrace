@@ -121,3 +121,32 @@ stages:
       hash: md5
       md5: 89897adf7502322c78dedd2d65b19d00
       size: 476245
+  covariaveis:
+    cmd: python -m kingsrace.features.covariaveis
+    deps:
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: e5a80f7eb7e6a816cc2b1c8c69021350
+      size: 98704
+    - path: data/raw/ibge/sidra
+      hash: md5
+      md5: e5ad1f616b2058a1ac069ae6d80be349.dir
+      size: 48491619
+      nfiles: 19
+    - path: src/kingsrace/features/covariaveis.py
+      hash: md5
+      md5: d5756729e43c4a011761c57dcae96c03
+      size: 3171
+    - path: src/kingsrace/ingest/ibge.py
+      hash: md5
+      md5: 85d0f064c202e0d17b41fac1090de48b
+      size: 4108
+    outs:
+    - path: data/processed/covariaveis_amc.parquet
+      hash: md5
+      md5: eab6a30070ba2c13be89dd9c8a37425a
+      size: 588381
+    - path: data/processed/covariaveis_municipio.parquet
+      hash: md5
+      md5: d99f5827f7c50ce88ce63c1654f772ec
+      size: 556808

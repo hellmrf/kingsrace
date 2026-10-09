@@ -1,0 +1,12 @@
+md5: c5b002984abb770ddb4e2980beab57eb
+frozen: true
+deps:
+- checksum: '169226913759842439275761384672135280844'
+  size: 246
+  hash: md5
+  path: https://apisidra.ibge.gov.br/values/t/4714/n6/all/v/93,6318,614/p/2022
+outs:
+- md5: 69189386dbccb7c1cd1fda0c89a19c12
+  size: 4651939
+  hash: md5
+  path: populacao.json

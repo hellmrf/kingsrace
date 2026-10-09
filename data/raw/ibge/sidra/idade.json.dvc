@@ -1,0 +1,12 @@
+md5: 2be2bb01e84395974716ec1408e31858
+frozen: true
+deps:
+- checksum: '263268640485709328907351091687621154292'
+  size: 246
+  hash: md5
+  path: https://apisidra.ibge.gov.br/values/t/9515/n6/all/v/10612,10613/p/2022
+outs:
+- md5: c4c9905137bf5061fe26ff0c906c9fbd
+  size: 2893063
+  hash: md5
+  path: idade.json

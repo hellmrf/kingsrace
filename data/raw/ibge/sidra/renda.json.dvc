@@ -1,0 +1,13 @@
+md5: 62043c00e3dacce3ba5b4c4dca19797e
+frozen: true
+deps:
+- checksum: '64456363463603186845137053215034193436'
+  size: 246
+  hash: md5
+  path: 
+    https://apisidra.ibge.gov.br/values/t/10295/n6/all/v/13431,13534/p/2022/c2/6794/c86/95251/c58/95253
+outs:
+- md5: 556db4845c3e09704f342b945586324d
+  size: 6964561
+  hash: md5
+  path: renda.json

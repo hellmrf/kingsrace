@@ -59,3 +59,32 @@ Pleitos disponíveis: os de `params.yaml` (hoje 2022 1T/2T e 2026 1T).
 Mesmas colunas de `painel_municipio`, com `amc_id` no lugar de `cd_ibge`: contagens somadas
 por área mínima comparável e proporções recalculadas a partir das somas. Usar este para
 comparar pleitos; tem o mesmo número de linhas em todos os anos.
+
+## `covariaveis_municipio.parquet`
+
+- **Grão:** uma linha por município (5.571). Boa Esperança do Norte (5101837) fica sem
+  dados: o Censo 2022 e o PIB de 2023 são anteriores à sua instalação (2025).
+- **Origem:** etapa `covariaveis` — API do SIDRA/IBGE, consultas em
+  `src/kingsrace/ingest/ibge.py` (arquivos brutos em `data/raw/ibge/sidra/`).
+
+| Coluna | Fonte (tabela SIDRA) | Descrição |
+|---|---|---|
+| `populacao`, `area_km2`, `densidade` | 4714 | população residente (Censo 2022), área, hab/km² |
+| `pct_urbana` | 9923 | % da população em situação urbana |
+| `idade_mediana`, `indice_envelhecimento` | 9515 | idade mediana; idosos por 100 jovens |
+| `pct_branca`, `pct_preta`, `pct_parda`, `pct_preta_parda` | 9605 | cor ou raça, % da população |
+| `taxa_alfabetizacao` | 9543 | % alfabetizados entre 15+ anos |
+| `pct_catolica`, `pct_evangelica`, `pct_sem_religiao` | 9537 | religião, % da população de 10+ anos (resultados preliminares da amostra) |
+| `renda_pc_media`, `renda_pc_mediana` | 10295 | rendimento domiciliar per capita mensal (R$ de 2022) |
+| `pct_renda_outras_fontes` | 10297 | % do rendimento domiciliar que não vem do trabalho (aposentadorias, programas sociais, aluguéis…) |
+| `pib_2021`, `pib_2023`, `pib_pc_2021`, `pib_pc_2023` | 5938 | PIB (mil R$) e PIB per capita (R$, sobre a população de 2022) |
+| `va_2021`, `va_agro_2021`, `va_adm_2021` | 5938 | valor adicionado total, da agropecuária e da administração pública (mil R$) |
+| `pct_va_agro_2021`, `pct_va_adm_2021` | 5938 | participação no VA (%); nula se o VA total ≤ 0 (Cachoeira Dourada/GO) |
+
+O VA por setor de 2023 ainda não foi publicado por município; por isso os setores usam 2021.
+
+## `covariaveis_amc.parquet`
+
+As mesmas colunas por `amc_id`: população e área somadas, densidade recalculada, demais
+colunas pela média ponderada pela população (aproximação para taxas com denominadores
+diferentes, aceitável porque só agrupa municípios vizinhos).

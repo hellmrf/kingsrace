@@ -1,0 +1,13 @@
+md5: b2791d0e744744728e8a873c062891ca
+frozen: true
+deps:
+- checksum: '192942653809097750473581496988849080557'
+  size: 246
+  hash: md5
+  path: 
+    https://apisidra.ibge.gov.br/values/t/9605/n6/all/v/1000093/p/2022/c86/2776,2777,2779
+outs:
+- md5: bf6eec5d37a41f6eb44d1454f29384db
+  size: 5618356
+  hash: md5
+  path: cor_raca.json

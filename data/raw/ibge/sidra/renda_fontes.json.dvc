@@ -1,0 +1,13 @@
+md5: 6b4beb8711c4530c96d67a9fb08c58a9
+frozen: true
+deps:
+- checksum: '232896819338869442182193752235816754545'
+  size: 246
+  hash: md5
+  path: 
+    https://apisidra.ibge.gov.br/values/t/10297/n6/all/v/13504/p/2022/c11308/79452
+outs:
+- md5: 568febbddf02915f3044d182515a92bc
+  size: 3120278
+  hash: md5
+  path: renda_fontes.json

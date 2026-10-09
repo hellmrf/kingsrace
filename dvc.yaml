@@ -37,3 +37,14 @@ stages:
       - data/processed/votos_municipio.parquet
       - data/processed/painel_municipio.parquet
       - data/processed/painel_amc.parquet
+
+  covariaveis:
+    cmd: python -m kingsrace.features.covariaveis
+    deps:
+      - src/kingsrace/ingest/ibge.py
+      - src/kingsrace/features/covariaveis.py
+      - data/raw/ibge/sidra
+      - data/processed/municipios.parquet
+    outs:
+      - data/processed/covariaveis_municipio.parquet
+      - data/processed/covariaveis_amc.parquet

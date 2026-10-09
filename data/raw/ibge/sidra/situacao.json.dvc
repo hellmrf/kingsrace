@@ -1,0 +1,12 @@
+md5: f03571b646fce4a1361b6029273a2531
+frozen: true
+deps:
+- checksum: '252425009232892529130688234157588541642'
+  size: 246
+  hash: md5
+  path: https://apisidra.ibge.gov.br/values/t/9923/n6/all/v/1000093/p/2022/c1/1
+outs:
+- md5: 7384dc2d796711034cbbbade44165274
+  size: 1861526
+  hash: md5
+  path: situacao.json
