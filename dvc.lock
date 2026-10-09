@@ -487,3 +487,561 @@ stages:
       hash: md5
       md5: 9f936816d38e5f29f5deda42592a98da
       size: 395016
+  receita:
+    cmd: python -m kingsrace.ingest.receita todos
+    deps:
+    - path: src/kingsrace/ingest/receita.py
+      hash: md5
+      md5: 73073cca7f1ffdb8606fb1d4b766a35d
+      size: 11846
+    outs:
+    - path: data/interim/receita/mei_estoque.parquet
+      hash: md5
+      md5: 6726441b2ac1a639975908d5aac35093
+      size: 267429
+    - path: data/interim/receita/municipios_receita.parquet
+      hash: md5
+      md5: f92b3d0e8aa1e2fdb9828025b8fba66c
+      size: 80124
+    - path: data/interim/receita/religiosas.parquet
+      hash: md5
+      md5: c72e49d9e4e1c420317251d12fa929a3
+      size: 8585841
+  rais:
+    cmd: python -m kingsrace.ingest.rais
+    deps:
+    - path: data/raw/rais
+      hash: md5
+      md5: 318c5d6d7462d93bd6b21e3001be108b.dir
+      size: 870010410
+      nfiles: 21
+    - path: src/kingsrace/ingest/rais.py
+      hash: md5
+      md5: 65b5f60183062c75c4f3779205fa4c99
+      size: 3526
+    outs:
+    - path: data/interim/rais/emprego.parquet
+      hash: md5
+      md5: e08ed6865db06cef69c40316b657d481
+      size: 202801
+  sim:
+    cmd: python -m kingsrace.ingest.sim
+    deps:
+    - path: data/raw/datasus/sim
+      hash: md5
+      md5: 1316ac14a583d3d6cb05a8a02c6b3141.dir
+      size: 1764378689
+      nfiles: 37
+    - path: src/kingsrace/ingest/sim.py
+      hash: md5
+      md5: 5f0f28aba13eb67293f5f946fca0238b
+      size: 2731
+    outs:
+    - path: data/interim/sim/homicidios.parquet
+      hash: md5
+      md5: ce017c8bb748239c6e1eb77f37a6df84
+      size: 137632
+  cnpj:
+    cmd: python -m kingsrace.features.cnpj
+    deps:
+    - path: data/interim/receita/mei_estoque.parquet
+      hash: md5
+      md5: 6726441b2ac1a639975908d5aac35093
+      size: 267429
+    - path: data/interim/receita/municipios_receita.parquet
+      hash: md5
+      md5: f92b3d0e8aa1e2fdb9828025b8fba66c
+      size: 80124
+    - path: data/interim/receita/religiosas.parquet
+      hash: md5
+      md5: c72e49d9e4e1c420317251d12fa929a3
+      size: 8585841
+    - path: data/processed/covariaveis_amc.parquet
+      hash: md5
+      md5: f1d1b1f6e3724086cb2b7db075a8aab4
+      size: 848385
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/raw/ibge/municipios.json
+      hash: md5
+      md5: 436ca4776176cd4d13786e7bf750dd37
+      size: 2372050
+    - path: data/reference/denominacoes.csv
+      hash: md5
+      md5: 383682ef957ca592da6b5351b1e6f2f2
+      size: 2549
+    - path: data/reference/municipios_overrides_receita.csv
+      hash: md5
+      md5: 851cada8a229a3df0a60d57d2f35e760
+      size: 1280
+    - path: src/kingsrace/features/cnpj.py
+      hash: md5
+      md5: ff7d10215b65aab469a7d26308029d76
+      size: 5506
+    - path: src/kingsrace/harmonize/municipios.py
+      hash: md5
+      md5: 970148064f4e9a596893b17f5fdf79d2
+      size: 4986
+    outs:
+    - path: data/processed/cnpj_amc.parquet
+      hash: md5
+      md5: b367500feb8633d0b9a67837e703f7da
+      size: 1307202
+    - path: data/processed/igrejas_denominacao_amc.parquet
+      hash: md5
+      md5: 5017ddcbe0641206326d7c610c1189c3
+      size: 691128
+  mecanismos:
+    cmd: python -m kingsrace.features.mecanismos
+    deps:
+    - path: data/interim/rais/emprego.parquet
+      hash: md5
+      md5: e08ed6865db06cef69c40316b657d481
+      size: 202801
+    - path: data/interim/sim/homicidios.parquet
+      hash: md5
+      md5: ce017c8bb748239c6e1eb77f37a6df84
+      size: 137632
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: src/kingsrace/features/mecanismos.py
+      hash: md5
+      md5: 83556aad663fb0aba1df39fe96fe751b
+      size: 4709
+    outs:
+    - path: data/processed/emprego_amc.parquet
+      hash: md5
+      md5: 7689e9bb1758f32ee59624691c7f3db1
+      size: 194355
+    - path: data/processed/homicidios_amc.parquet
+      hash: md5
+      md5: a1143755ba4d8436d1c71f4dda813dc8
+      size: 85263
+  nb_01_panorama:
+    cmd: papermill notebooks/01_panorama.ipynb 
+      reports/notebooks/01_panorama.ipynb -k python3 --cwd notebooks 
+      --no-progress-bar --log-level WARNING
+    deps:
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/processed/painel_amc.parquet
+      hash: md5
+      md5: 9b6d4016f70cc1666e0e560c2ce9340e
+      size: 4026517
+    - path: data/processed/painel_municipio.parquet
+      hash: md5
+      md5: 2cb278f11df4f7974363fad152bcb6a3
+      size: 4030992
+    - path: data/processed/votos_municipio.parquet
+      hash: md5
+      md5: 4b722c875f390c3c9d15d5b0b681f084
+      size: 1548772
+    - path: notebooks/01_panorama.ipynb
+      hash: md5
+      md5: 4bc912bb727fbab2ec583e87232cd94b
+      size: 19233
+    - path: src/kingsrace/resultados.py
+      hash: md5
+      md5: 79c76d7e756cc6441fe647fa201dc943
+      size: 5012
+    - path: src/kingsrace/viz/tema.py
+      hash: md5
+      md5: f82a54c2cc4d73068d33dfabc9c9c10f
+      size: 2005
+    outs:
+    - path: reports/notebooks/01_panorama.ipynb
+      hash: md5
+      md5: 664ee6f58bccdd4242541d0951ad7f7d
+      size: 3238605
+    - path: resultados/01_panorama/metrics.json
+      hash: md5
+      md5: 434a7ee87115d12d693cc87bcc512d3f
+      size: 724
+    - path: resultados/01_panorama/plots/images
+      hash: md5
+      md5: c6f52b3563844f3a6647dcf5da810113.dir
+      size: 369395
+      nfiles: 3
+  nb_02_tamanho:
+    cmd: papermill notebooks/02_tamanho.ipynb reports/notebooks/02_tamanho.ipynb
+      -k python3 --cwd notebooks --no-progress-bar --log-level WARNING
+    deps:
+    - path: data/processed/covariaveis_amc.parquet
+      hash: md5
+      md5: f1d1b1f6e3724086cb2b7db075a8aab4
+      size: 848385
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/processed/painel_amc.parquet
+      hash: md5
+      md5: 9b6d4016f70cc1666e0e560c2ce9340e
+      size: 4026517
+    - path: notebooks/02_tamanho.ipynb
+      hash: md5
+      md5: fc092def63f4e36a989324341da7628c
+      size: 20956
+    - path: src/kingsrace/features/base.py
+      hash: md5
+      md5: c605e5a3fbaaef0f12cc91da761be482
+      size: 2136
+    - path: src/kingsrace/resultados.py
+      hash: md5
+      md5: 79c76d7e756cc6441fe647fa201dc943
+      size: 5012
+    - path: src/kingsrace/viz/tema.py
+      hash: md5
+      md5: f82a54c2cc4d73068d33dfabc9c9c10f
+      size: 2005
+    outs:
+    - path: reports/notebooks/02_tamanho.ipynb
+      hash: md5
+      md5: 54562fe373f5de68b57b19031978e985
+      size: 122850
+    - path: resultados/02_tamanho/metrics.json
+      hash: md5
+      md5: 411ade890848688c154107c8001db108
+      size: 2924
+    - path: resultados/02_tamanho/plots/custom
+      hash: md5
+      md5: 66523e7bdd0b9f096179770ff0b74f63.dir
+      size: 1216
+      nfiles: 1
+    - path: resultados/02_tamanho/plots/images
+      hash: md5
+      md5: 3bc93c41ba7faba29f45fa47203843b8.dir
+      size: 209688
+      nfiles: 3
+  nb_03_previsao_2t:
+    cmd: papermill notebooks/03_previsao_2t.ipynb 
+      reports/notebooks/03_previsao_2t.ipynb -k python3 --cwd notebooks 
+      --no-progress-bar --log-level WARNING
+    deps:
+    - path: data/processed/painel_municipio.parquet
+      hash: md5
+      md5: 2cb278f11df4f7974363fad152bcb6a3
+      size: 4030992
+    - path: data/processed/votos_municipio.parquet
+      hash: md5
+      md5: 4b722c875f390c3c9d15d5b0b681f084
+      size: 1548772
+    - path: data/reference/previsoes/previsao_2t_2026_v1.csv
+      hash: md5
+      md5: 86bd2ce035149be681c216f6e2e0a075
+      size: 354980
+    - path: data/reference/previsoes/previsao_2t_2026_v1.json
+      hash: md5
+      md5: 9f1d80c68f0ae7d7db827206c60fd1f8
+      size: 1693
+    - path: data/reference/transferencias_2t.csv
+      hash: md5
+      md5: 2250807d659656b111948ebd817ec1c3
+      size: 1263
+    - path: notebooks/03_previsao_2t.ipynb
+      hash: md5
+      md5: 99c75a56212a753630ddccb950220384
+      size: 16646
+    - path: src/kingsrace/models/previsao_2t.py
+      hash: md5
+      md5: 80067333841607c85357696952dc774a
+      size: 10375
+    - path: src/kingsrace/resultados.py
+      hash: md5
+      md5: 79c76d7e756cc6441fe647fa201dc943
+      size: 5012
+    - path: src/kingsrace/viz/tema.py
+      hash: md5
+      md5: f82a54c2cc4d73068d33dfabc9c9c10f
+      size: 2005
+    params:
+      params.yaml:
+        previsao_2t.versao: v1
+    outs:
+    - path: reports/notebooks/03_previsao_2t.ipynb
+      hash: md5
+      md5: d4d9e68a3f00d2cac082d53a4e46b3ff
+      size: 136023
+    - path: resultados/03_previsao_2t/metrics.json
+      hash: md5
+      md5: a380642cf095fce179b3ff928bcc7494
+      size: 3148
+    - path: resultados/03_previsao_2t/plots/images
+      hash: md5
+      md5: 069582fcd5a51397585caefacc3ed015.dir
+      size: 159719
+      nfiles: 3
+  nb_04_decomposicao:
+    cmd: papermill notebooks/04_decomposicao.ipynb 
+      reports/notebooks/04_decomposicao.ipynb -k python3 --cwd notebooks 
+      --no-progress-bar --log-level WARNING
+    deps:
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/processed/painel_amc.parquet
+      hash: md5
+      md5: 9b6d4016f70cc1666e0e560c2ce9340e
+      size: 4026517
+    - path: notebooks/04_decomposicao.ipynb
+      hash: md5
+      md5: 353b7a09d47ece2ee11cc556ec935384
+      size: 21722
+    - path: src/kingsrace/features/decomposicao.py
+      hash: md5
+      md5: 710c9e5761021540b6814f66b45979e1
+      size: 1381
+    - path: src/kingsrace/resultados.py
+      hash: md5
+      md5: 79c76d7e756cc6441fe647fa201dc943
+      size: 5012
+    - path: src/kingsrace/viz/tema.py
+      hash: md5
+      md5: f82a54c2cc4d73068d33dfabc9c9c10f
+      size: 2005
+    outs:
+    - path: reports/notebooks/04_decomposicao.ipynb
+      hash: md5
+      md5: 8ed6915d87cc681d5ec1753b51a41a19
+      size: 134182
+    - path: resultados/04_decomposicao/metrics.json
+      hash: md5
+      md5: d6836e6972807c6c4b7bf99a596e28e8
+      size: 1822
+    - path: resultados/04_decomposicao/plots/images
+      hash: md5
+      md5: e0f8ded6ac9487667d5a6c79c190e8c0.dir
+      size: 154292
+      nfiles: 3
+  nb_05_composicao:
+    cmd: papermill notebooks/05_composicao.ipynb 
+      reports/notebooks/05_composicao.ipynb -k python3 --cwd notebooks 
+      --no-progress-bar --log-level WARNING
+    deps:
+    - path: data/processed/covariaveis_amc.parquet
+      hash: md5
+      md5: f1d1b1f6e3724086cb2b7db075a8aab4
+      size: 848385
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/processed/painel_amc.parquet
+      hash: md5
+      md5: 9b6d4016f70cc1666e0e560c2ce9340e
+      size: 4026517
+    - path: notebooks/05_composicao.ipynb
+      hash: md5
+      md5: 7b47eca9a2b6da873f02cef24a43a040
+      size: 15266
+    - path: src/kingsrace/features/base.py
+      hash: md5
+      md5: c605e5a3fbaaef0f12cc91da761be482
+      size: 2136
+    - path: src/kingsrace/resultados.py
+      hash: md5
+      md5: 79c76d7e756cc6441fe647fa201dc943
+      size: 5012
+    - path: src/kingsrace/viz/tema.py
+      hash: md5
+      md5: f82a54c2cc4d73068d33dfabc9c9c10f
+      size: 2005
+    outs:
+    - path: reports/notebooks/05_composicao.ipynb
+      hash: md5
+      md5: 7aebe5daba4271e74300864956043956
+      size: 47973
+    - path: resultados/05_composicao/metrics.json
+      hash: md5
+      md5: bffde3f52a4f7ff9f6fba39f209dc9d8
+      size: 1224
+    - path: resultados/05_composicao/plots/custom
+      hash: md5
+      md5: 2fbb280969cc072fb1b9c82f718bd30a.dir
+      size: 786
+      nfiles: 2
+    - path: resultados/05_composicao/plots/images
+      hash: md5
+      md5: cfa9630c76e7d79c46c38379ad49fdf9.dir
+      size: 69854
+      nfiles: 2
+  nb_06_serie:
+    cmd: papermill notebooks/06_serie.ipynb reports/notebooks/06_serie.ipynb -k 
+      python3 --cwd notebooks --no-progress-bar --log-level WARNING
+    deps:
+    - path: data/processed/covariaveis_amc.parquet
+      hash: md5
+      md5: f1d1b1f6e3724086cb2b7db075a8aab4
+      size: 848385
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/processed/painel_amc.parquet
+      hash: md5
+      md5: 9b6d4016f70cc1666e0e560c2ce9340e
+      size: 4026517
+    - path: notebooks/06_serie.ipynb
+      hash: md5
+      md5: af80428bbf6d901c41dcd223f8535da7
+      size: 29587
+    - path: src/kingsrace/features/base.py
+      hash: md5
+      md5: c605e5a3fbaaef0f12cc91da761be482
+      size: 2136
+    - path: src/kingsrace/resultados.py
+      hash: md5
+      md5: 79c76d7e756cc6441fe647fa201dc943
+      size: 5012
+    - path: src/kingsrace/viz/tema.py
+      hash: md5
+      md5: f82a54c2cc4d73068d33dfabc9c9c10f
+      size: 2005
+    params:
+      params.yaml:
+        exploracao:
+          c3_grupos: 4
+          c3_semente: 0
+    outs:
+    - path: reports/notebooks/06_serie.ipynb
+      hash: md5
+      md5: e066267a15370a88bd5bf9bc7862ff7a
+      size: 195147
+    - path: resultados/06_serie/metrics.json
+      hash: md5
+      md5: 67c36da94c8df034368029ed3a431a69
+      size: 6399
+    - path: resultados/06_serie/plots/custom
+      hash: md5
+      md5: bb373d6736046c40284ce3d5a930e25a.dir
+      size: 6390
+      nfiles: 7
+    - path: resultados/06_serie/plots/images
+      hash: md5
+      md5: 860564d465de546875620d7a22dae714.dir
+      size: 282232
+      nfiles: 5
+  nb_07_virada_2018:
+    cmd: papermill notebooks/07_virada_2018.ipynb 
+      reports/notebooks/07_virada_2018.ipynb -k python3 --cwd notebooks 
+      --no-progress-bar --log-level WARNING
+    deps:
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/processed/painel_amc.parquet
+      hash: md5
+      md5: 9b6d4016f70cc1666e0e560c2ce9340e
+      size: 4026517
+    - path: notebooks/07_virada_2018.ipynb
+      hash: md5
+      md5: f22d7ca0e3a691104967cc2ec511553d
+      size: 33435
+    - path: src/kingsrace/features/base.py
+      hash: md5
+      md5: c605e5a3fbaaef0f12cc91da761be482
+      size: 2136
+    - path: src/kingsrace/features/decomposicao.py
+      hash: md5
+      md5: 710c9e5761021540b6814f66b45979e1
+      size: 1381
+    - path: src/kingsrace/resultados.py
+      hash: md5
+      md5: 79c76d7e756cc6441fe647fa201dc943
+      size: 5012
+    - path: src/kingsrace/viz/tema.py
+      hash: md5
+      md5: f82a54c2cc4d73068d33dfabc9c9c10f
+      size: 2005
+    outs:
+    - path: reports/notebooks/07_virada_2018.ipynb
+      hash: md5
+      md5: 4e7907da684739d3b9cfe85ef4a01a99
+      size: 264545
+    - path: resultados/07_virada_2018/metrics.json
+      hash: md5
+      md5: ec00b29e1f3c70b819c94179ec7f323f
+      size: 12783
+    - path: resultados/07_virada_2018/plots/custom
+      hash: md5
+      md5: ea03632acc04d9f3c2ddc8b738f245c1.dir
+      size: 7750
+      nfiles: 10
+    - path: resultados/07_virada_2018/plots/images
+      hash: md5
+      md5: 71109f9c25a7f86b63e379507d46dc44.dir
+      size: 325995
+      nfiles: 6
+  nb_08_mecanismos:
+    cmd: papermill notebooks/08_mecanismos.ipynb 
+      reports/notebooks/08_mecanismos.ipynb -k python3 --cwd notebooks 
+      --no-progress-bar --log-level WARNING
+    deps:
+    - path: data/processed/covariaveis_amc.parquet
+      hash: md5
+      md5: f1d1b1f6e3724086cb2b7db075a8aab4
+      size: 848385
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/processed/painel_amc.parquet
+      hash: md5
+      md5: 9b6d4016f70cc1666e0e560c2ce9340e
+      size: 4026517
+    - path: data/processed/religiosos_amc.parquet
+      hash: md5
+      md5: 9f936816d38e5f29f5deda42592a98da
+      size: 395016
+    - path: notebooks/08_mecanismos.ipynb
+      hash: md5
+      md5: 361a29e778aaa479377dec5da4819de8
+      size: 18793
+    - path: src/kingsrace/features/base.py
+      hash: md5
+      md5: c605e5a3fbaaef0f12cc91da761be482
+      size: 2136
+    - path: src/kingsrace/models/event_study.py
+      hash: md5
+      md5: a93c5c0f3adeeede1cd78e4c797bf8fd
+      size: 5203
+    - path: src/kingsrace/resultados.py
+      hash: md5
+      md5: 79c76d7e756cc6441fe647fa201dc943
+      size: 5012
+    - path: src/kingsrace/viz/tema.py
+      hash: md5
+      md5: f82a54c2cc4d73068d33dfabc9c9c10f
+      size: 2005
+    params:
+      params.yaml:
+        serie_e:
+          alfa_holm: 0.05
+          testes_holm: 11
+    outs:
+    - path: reports/notebooks/08_mecanismos.ipynb
+      hash: md5
+      md5: 2cbf9f8eb1fe3ada60d62a1d3003efa2
+      size: 71500
+    - path: resultados/08_mecanismos/metrics.json
+      hash: md5
+      md5: e1a01f180ab62a7ead9c8da9167a9fa3
+      size: 3913
+    - path: resultados/08_mecanismos/plots/custom
+      hash: md5
+      md5: 522672224e7b50df17b87683e2bd3a64.dir
+      size: 1681
+      nfiles: 2
+    - path: resultados/08_mecanismos/plots/images
+      hash: md5
+      md5: 5cb4b5a424ca7842e38bd2f444d83e82.dir
+      size: 84988
+      nfiles: 2

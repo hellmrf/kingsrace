@@ -3,3 +3,18 @@
 anos: [2006, 2010, 2014, 2018, 2022, 2026]
 # Eleições gerais com votos para deputado federal (medida E2c, candidatos religiosos).
 anos_deputados: [2006, 2010, 2014, 2018, 2022]
+
+# Correção de Holm da série E, como registrada em docs/hipoteses.md. Mudar só com nova
+# entrada no registro, nunca por `dvc exp run -S`.
+serie_e:
+  alfa_holm: 0.05
+  testes_holm: 11 # E1a E1b E2a E2b E2c E3 E4a E4b E5 E7a E7b
+
+# Versão congelada da previsão do 2º turno lida pelo 03 (data/reference/previsoes/).
+previsao_2t:
+  versao: v1
+
+# Escolhas exploratórias, livres para `dvc exp run -S` (não entram em vereditos).
+exploracao:
+  c3_grupos: 4
+  c3_semente: 0

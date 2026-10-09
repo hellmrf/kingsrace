@@ -1,0 +1,47 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "data": {"values": "<DVC_METRIC_DATA>"},
+  "title": "<DVC_METRIC_TITLE>",
+  "width": "<DVC_METRIC_PLOT_WIDTH>",
+  "height": "<DVC_METRIC_PLOT_HEIGHT>",
+  "layer": [
+    {
+      "data": {"values": [{}]},
+      "mark": {"type": "rule", "color": "#898781", "strokeDash": [4, 4]},
+      "encoding": {"y": {"datum": 0}}
+    },
+    {
+      "mark": {"type": "rule", "strokeWidth": 2},
+      "encoding": {
+        "x": {
+          "field": "<DVC_METRIC_X>",
+          "type": "nominal",
+          "sort": null,
+          "title": "<DVC_METRIC_X_LABEL>",
+          "axis": {"labelAngle": 0}
+        },
+        "xOffset": {"field": "rev", "sort": []},
+        "color": "<DVC_METRIC_COLOR>",
+        "y": {"field": "ic_inf", "type": "quantitative", "title": "<DVC_METRIC_Y_LABEL>"},
+        "y2": {"field": "ic_sup"}
+      }
+    },
+    {
+      "mark": {"type": "point", "filled": true, "size": 70, "opacity": 1},
+      "params": ["<DVC_METRIC_ZOOM_AND_PAN>"],
+      "encoding": {
+        "x": {"field": "<DVC_METRIC_X>", "type": "nominal", "sort": null},
+        "xOffset": {"field": "rev", "sort": []},
+        "color": "<DVC_METRIC_COLOR>",
+        "y": {"field": "<DVC_METRIC_Y>", "type": "quantitative"},
+        "tooltip": [
+          {"field": "rev"},
+          {"field": "<DVC_METRIC_X>"},
+          {"field": "<DVC_METRIC_Y>", "format": "+.4f"},
+          {"field": "ic_inf", "format": "+.4f"},
+          {"field": "ic_sup", "format": "+.4f"}
+        ]
+      }
+    }
+  ]
+}

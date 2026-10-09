@@ -120,16 +120,16 @@ entram no `pyproject.toml` no marco em que forem usadas.
 
 ## D7 — Fontes grandes com pouco disco: CNPJ, RAIS, SIM e Anatel
 
-**Data:** 2026-10-09 · **Status:** em vigor
+**Data:** 2026-10-09 · **Status:** em vigor; leitura do CNPJ e pipeline revistos em D9
 
 - **Cache do DVC em hardlinks** (`dvc config --local cache.type hardlink,symlink`, só nesta
   máquina): cada bruto existe uma vez no disco, não duas. O DVC deixa os brutos só para
   leitura; o código nunca os altera.
 - **CNPJ (Receita) fora do R2:** são ~7 GB por versão, além da cota gratuita. Os `.dvc` têm
   `push: false` e guardam URL + hash; os zips de Estabelecimentos são baixados, processados
-  e apagados um por vez (`python -m kingsrace.ingest.receita todos`, retomável), lidos
-  direto do zip pela extensão `zipfs` do DuckDB. Refazer do zero = baixar de novo da Receita
-  (que mantém as versões mensais anteriores no compartilhamento público).
+  e apagados um por vez (`python -m kingsrace.ingest.receita todos`, retomável). Refazer do
+  zero = baixar de novo da Receita (que mantém as versões mensais anteriores no
+  compartilhamento público). A leitura direta do zip pela extensão `zipfs` foi trocada em D9.
 - **RAIS e SIM vêm por FTP**, que o `dvc import-url` não suporta: baixados com `curl`,
   versionados com `dvc add` e com a URL de origem em `data/reference/fontes_ftp.csv`.
 - **SIM 2025 é preliminar** (pasta PRELIM do DATASUS); entra no último triênio da E5
@@ -145,6 +145,58 @@ entram no `pyproject.toml` no marco em que forem usadas.
   cruzar qualquer dado da Anatel com o voto.
 - **Por habitante:** igrejas e MEIs usam a população do Censo 2022 em todos os anos; as taxas
   de homicídio usam as estimativas do IBGE no ano do meio de cada triênio (SIDRA 6579).
+
+---
+
+## D8 — Resultados versionados: notebooks como etapas do DVC, com DVCLive
+
+**Data:** 2026-10-09 · **Status:** em vigor
+
+Até aqui os números de cada teste viviam só no kernel dos notebooks e eram copiados à mão
+para `hipoteses.md`; o DVC não via nenhum resultado. Agora:
+
+- **Cada notebook é uma etapa** (`nb_<nn>_<nome>` no `dvc.yaml`), executada pelo papermill.
+  Ele registra pelo DVCLive (`kingsrace.resultados`) o que vai para o registro, com o ID da
+  hipótese no nome: `A1/M3/beta`, `E2a/salto/p`, `B4/backtest_2022/G0/rmse_pp`; vereditos
+  como `<ID>/sustenta` (0/1), pelo critério registrado.
+- **O que fica onde:** `resultados/<nb>/metrics.json` e as tabelas de coeficientes
+  (`plots/custom/`) no **git**, para comparar commits e branches sem baixar nada; o
+  notebook executado (`reports/notebooks/`) e os PNGs dos gráficos (`plots/images/`) no
+  **cache do DVC** (R2). O notebook no git continua sem saídas.
+- **Tabelas de coeficientes** usam o template `.dvc/plots/coeficientes.json` (ponto e IC de
+  95%, uma cor por revisão): `dvc plots diff main` põe lado a lado o mesmo teste em duas
+  revisões.
+- **Confirmatório é o que está comitado:** um resultado entra em `hipoteses.md` a partir do
+  `metrics.json` de um commit, gerado por `just resultados` com `dvc status` limpo. Rodar o
+  notebook à mão grava os mesmos arquivos, mas conta como rascunho.
+- **Experimentos (`dvc exp run -S`) são exploração.** Só os parâmetros da seção
+  `exploracao` do `params.yaml` servem para isso. `serie_e` (Holm) e `previsao_2t` vêm do
+  registro e mudam só com nova entrada nele. Um experimento fica fora do git até um
+  `dvc exp apply`/`dvc exp branch` explícito.
+- **Limite:** o hash do notebook inclui as saídas; `just resultados` roda o `nbstripout`
+  antes do `dvc repro` para que um notebook aberto e executado não pareça alterado.
+
+---
+
+## D9 — Pipeline completo para a série E e leitura do CNPJ em máquinas de 8 GB
+
+**Data:** 2026-10-09 · **Status:** em vigor; revê em parte D7
+
+- **Etapas novas no `dvc.yaml`:** `rais`, `sim`, `cnpj` e `mecanismos`, antes rodadas à
+  mão (as saídas só existiam na máquina que as gerou).
+- **`receita` é uma etapa congelada (`frozen`).** O `todos` chama `dvc import-url`, que não
+  roda dentro do `dvc repro`. Para refazer: rodar o `todos` fora do DVC e `dvc commit
+  receita`. As três parquets da Receita (pequenas) **vão para o R2**: uma máquina nova as
+  recebe com `dvc pull`, sem baixar 7 GB. Os zips continuam fora (`push: false`), então o
+  `dvc pull` ainda acusa a falta deles; isso é esperado.
+- **Leitura do CNPJ:** cada CSV é extraído para o disco já em UTF-8, lido pelo DuckDB e
+  apagado. A extensão `zipfs` descomprime o arquivo inteiro na memória (7 GB num zip de
+  Estabelecimentos) e derrubava uma máquina de 8 GB; o latin-1 nativo do DuckDB recusa os
+  bytes 0x80–0x9F que aparecem em alguns registros (0x8F em Estabelecimentos0 de 2026-09); o
+  ISO_8859_1 da extensão `encodings` aceita, mas é ~15× mais lento. O DuckDB roda com
+  memória limitada (`KINGSRACE_DUCKDB_MEMORIA`, 2 GB por padrão) e leitor sequencial (o
+  paralelo recusa os CSVs da Receita com `strict_mode=false`). O escape é fixo em `"`: o
+  detector escolheu `'` em Estabelecimentos4, e `"SABESP'"` engolia os campos seguintes.
 
 ---
 

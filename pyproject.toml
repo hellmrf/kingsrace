@@ -31,8 +31,10 @@ build-backend = "uv_build"
 [dependency-groups]
 dev = [
     "dvc[s3]>=3.67.1",
+    "dvclive[image]>=3.49",
     "ipykernel>=7.4.0",
     "nbstripout>=0.9.1",
+    "papermill>=2.7",
     "pytest>=9.1.1",
     "ruff>=0.16.10",
 ]
