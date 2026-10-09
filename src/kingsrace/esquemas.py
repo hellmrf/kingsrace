@@ -43,7 +43,7 @@ class VotosMunicipio(pa.DataFrameModel):
     cd_tse: pl.Int32
     nr_votavel: pl.Int32
     nm_votavel: pl.String
-    votos: pl.Int32 = contagem()
+    votos: pl.Int64 = contagem()
     papel: pl.String = pa.Field(isin=PAPEIS)
     cd_ibge: pl.Int64 = pa.Field(nullable=True)  # nulo só no exterior
 
@@ -57,16 +57,16 @@ class PainelMunicipio(pa.DataFrameModel):
     ano: pl.Int16
     turno: pl.Int8 = pa.Field(isin=[1, 2])
     uf: pl.String = pa.Field(isin=UFS)
-    aptos: pl.Int32 = contagem()
-    comparecimento: pl.Int32 = contagem()
-    abstencoes: pl.Int32 = contagem()
-    eleitores_nao_instalados: pl.Int32 = contagem()
-    validos: pl.Int32 = contagem()
-    brancos: pl.Int32 = contagem()
-    nulos: pl.Int32 = contagem()
-    votos_pt: pl.Int32 = contagem()
-    votos_adv: pl.Int32 = contagem()
-    votos_outros: pl.Int32 = contagem()
+    aptos: pl.Int64 = contagem()
+    comparecimento: pl.Int64 = contagem()
+    abstencoes: pl.Int64 = contagem()
+    eleitores_nao_instalados: pl.Int64 = contagem()
+    validos: pl.Int64 = contagem()
+    brancos: pl.Int64 = contagem()
+    nulos: pl.Int64 = contagem()
+    votos_pt: pl.Int64 = contagem()
+    votos_adv: pl.Int64 = contagem()
+    votos_outros: pl.Int64 = contagem()
     pt_validos: pl.Float64 = proporcao()
     adv_validos: pl.Float64 = proporcao()
     pt_2p: pl.Float64 = proporcao()

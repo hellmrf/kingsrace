@@ -14,18 +14,18 @@ stages:
       size: 271292455
     - path: src/kingsrace/ingest/tse.py
       hash: md5
-      md5: f76291431544d2d1e3ecbd0d4e152d3b
-      size: 3079
+      md5: d2b2d96f474eee4e2dcadf064820ddd8
+      size: 3070
     outs:
     - path: data/interim/tse/detalhe_munzona/ano=2022
       hash: md5
-      md5: c2e3e70746ccfb27a28cbb438cefe946.dir
-      size: 330602
+      md5: c233f8b277dc14686fc7d4d1c42e84fc.dir
+      size: 339360
       nfiles: 1
     - path: data/interim/tse/votacao_secao/ano=2022
       hash: md5
-      md5: 76e8595856967dde8353882e8131069a.dir
-      size: 46603768
+      md5: 1a5fd95225b225a38195fafeea0b7613.dir
+      size: 46603901
       nfiles: 1
   converte_tse@2026:
     cmd: python -m kingsrace.ingest.tse 2026
@@ -41,26 +41,26 @@ stages:
       size: 161616519
     - path: src/kingsrace/ingest/tse.py
       hash: md5
-      md5: f76291431544d2d1e3ecbd0d4e152d3b
-      size: 3079
+      md5: d2b2d96f474eee4e2dcadf064820ddd8
+      size: 3070
     outs:
     - path: data/interim/tse/detalhe_munzona/ano=2026
       hash: md5
-      md5: 81586376aeca7fa1939d635932ce3176.dir
-      size: 163076
+      md5: 8a16c838e8e39827052336b312928ad6.dir
+      size: 163275
       nfiles: 1
     - path: data/interim/tse/votacao_secao/ano=2026
       hash: md5
-      md5: 8969857af2bf80286e5fd54e8b0e3f59.dir
-      size: 26991720
+      md5: 5dc9963d49ed6b2cab3bf3c515c16d38.dir
+      size: 26991480
       nfiles: 1
   municipios:
     cmd: python -m kingsrace.harmonize.municipios
     deps:
     - path: data/interim/tse/detalhe_munzona
       hash: md5
-      md5: 478fda97feb6f94ea9033bfc83e2f85c.dir
-      size: 493678
+      md5: 2d318d72036b70d6c94ec4d3427717f8.dir
+      size: 502635
       nfiles: 2
     - path: data/raw/ibge/municipios.json
       hash: md5
@@ -88,13 +88,13 @@ stages:
     deps:
     - path: data/interim/tse/detalhe_munzona
       hash: md5
-      md5: 478fda97feb6f94ea9033bfc83e2f85c.dir
-      size: 493678
+      md5: 2d318d72036b70d6c94ec4d3427717f8.dir
+      size: 502635
       nfiles: 2
     - path: data/interim/tse/votacao_secao
       hash: md5
-      md5: cef80e0f46a12bdcb3487cf80c667463.dir
-      size: 73595488
+      md5: f6209a6f59d3042d5dc0b52821cbfe20.dir
+      size: 73595381
       nfiles: 2
     - path: data/processed/municipios.parquet
       hash: md5
@@ -111,13 +111,13 @@ stages:
     outs:
     - path: data/processed/painel_amc.parquet
       hash: md5
-      md5: 1f816b66c7cdd5d8d9e3c2ea430d710d
-      size: 1193336
+      md5: 901f6ff4f60fe2e0258f2244294e5e1d
+      size: 1185768
     - path: data/processed/painel_municipio.parquet
       hash: md5
-      md5: e1857f39944f1787d220524dbb3857d1
-      size: 1193505
+      md5: da8e163773c8373daf5d8d99df340511
+      size: 1185906
     - path: data/processed/votos_municipio.parquet
       hash: md5
-      md5: 3b93cba30e2e23123695bfc1ea380382
-      size: 477494
+      md5: 89897adf7502322c78dedd2d65b19d00
+      size: 476245
