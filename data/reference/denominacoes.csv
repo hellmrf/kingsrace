@@ -1,0 +1,47 @@
+prioridade,padrao,grupo,denominacao
+1,\bCATOLIC,catolica,Católica
+1,\bMITRA\b,catolica,Católica
+1,\bPAROQUIA\b,catolica,Católica
+1,\b(ARQUI)?DIOCES,catolica,Católica
+1,\bPRELAZIA\b,catolica,Católica
+1,\bIRMANDADE\b,catolica,Católica
+1,\bSANTUARIO\b,catolica,Católica
+1,\bNOSSA SENHORA\b,catolica,Católica
+1,\bSAGRADO CORACAO\b,catolica,Católica
+1,\bPASTORAL\b,catolica,Católica
+1,\b(FRANCISCAN|SALESIAN|JESUIT|BENEDITIN|CARMELIT|CAPUCHINH|DOMINICAN|MARIST|CLARISS),catolica,Católica
+1,\bVICENTIN,catolica,Católica
+1,\bRENOVACAO CARISMATICA\b,catolica,Católica
+1,\bCANCAO NOVA\b,catolica,Católica
+1,\bORDEM TERCEIRA\b,catolica,Católica
+1,\bORTODOX,outra,Ortodoxa
+1,\bSANTOS DOS ULTIMOS DIAS\b,outra,Santos dos Últimos Dias (mórmons)
+1,\b(TESTEMUNHAS DE JEOVA|TORRE DE VIGIA)\b,outra,Testemunhas de Jeová
+1,\b(ESPIRITA|ESPIRITISTA|KARDEC|ESPIRITUALISTA),espirita_afro,Espírita ou espiritualista
+1,\b(UMBANDA|CANDOMBLE|TERREIRO|ORIXA|ILE|AXE|INQUICE|JUREMA|BATUQUE)\b,espirita_afro,Matriz africana
+1,\b(MACONIC|MACONARIA|ROSACRUZ|ROSA CRUZ),outra,Maçonaria ou esotérica
+1,\b(BUDIS|SEICHO|MESSIANICA|PERFECT LIBERTY|HARE KRISHNA|ISLAM|MESQUITA|MUCULMAN|JUDAIC|SINAGOGA|BAHAI|MAHIKARI|TENRIKYO),outra,Outras religiões
+1,\b(SANTO DAIME|UNIAO DO VEGETAL|VALE DO AMANHECER)\b,outra,Outras religiões
+1,\bLEGIAO DA BOA VONTADE\b,outra,Outras religiões
+2,\bLAGOINHA\b,evangelica,Lagoinha
+2,\bASSEMBLEIA DE DEUS\b,evangelica,Assembleia de Deus
+2,\bUNIVERSAL DO REINO DE DEUS\b,evangelica,Universal do Reino de Deus
+2,\bMUNDIAL DO PODER DE DEUS\b,evangelica,Mundial do Poder de Deus
+2,\bINTERNACIONAL DA GRACA\b,evangelica,Internacional da Graça de Deus
+2,\bQUADRANGULAR\b,evangelica,Evangelho Quadrangular
+2,\bDEUS E AMOR\b,evangelica,Deus é Amor
+2,\bCONGREGACAO CRISTA\b,evangelica,Congregação Cristã no Brasil
+2,\bRENASCER EM CRISTO\b,evangelica,Renascer em Cristo
+2,\bSARA NOSSA TERRA\b,evangelica,Sara Nossa Terra
+2,\bBOLA DE NEVE\b,evangelica,Bola de Neve
+2,\bVIDEIRA\b,evangelica,Videira
+2,\bMARANATA\b,evangelica,Maranata
+2,\bBRASIL PARA CRISTO\b,evangelica,O Brasil para Cristo
+2,\bADVENTISTA,evangelica,Adventista
+2,\bBATISTA\b,evangelica,Batista
+2,\bPRESBITERIAN,evangelica,Presbiteriana
+2,\bMETODISTA\b,evangelica,Metodista
+2,\bLUTERAN,evangelica,Luterana
+2,\bNAZARENO\b,evangelica,Nazareno
+2,\bPENTECOST,evangelica,Pentecostal (outras)
+3,\b(EVANGELIC|APOSTOLIC|MISSIONARI)|\b(EVANGELHO|IGREJA|MINISTERIO|GOSPEL|AVIVAMENTO|REINO DE DEUS|CONGREGACAO|MISSAO|TEMPLO|JESUS|CRISTO|CRISTA)\b,evangelica,Evangélica (genérica)

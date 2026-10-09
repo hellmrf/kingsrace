@@ -118,6 +118,36 @@ entram no `pyproject.toml` no marco em que forem usadas.
 
 ---
 
+## D7 — Fontes grandes com pouco disco: CNPJ, RAIS, SIM e Anatel
+
+**Data:** 2026-10-09 · **Status:** em vigor
+
+- **Cache do DVC em hardlinks** (`dvc config --local cache.type hardlink,symlink`, só nesta
+  máquina): cada bruto existe uma vez no disco, não duas. O DVC deixa os brutos só para
+  leitura; o código nunca os altera.
+- **CNPJ (Receita) fora do R2:** são ~7 GB por versão, além da cota gratuita. Os `.dvc` têm
+  `push: false` e guardam URL + hash; os zips de Estabelecimentos são baixados, processados
+  e apagados um por vez (`python -m kingsrace.ingest.receita todos`, retomável), lidos
+  direto do zip pela extensão `zipfs` do DuckDB. Refazer do zero = baixar de novo da Receita
+  (que mantém as versões mensais anteriores no compartilhamento público).
+- **RAIS e SIM vêm por FTP**, que o `dvc import-url` não suporta: baixados com `curl`,
+  versionados com `dvc add` e com a URL de origem em `data/reference/fontes_ftp.csv`.
+- **SIM 2025 é preliminar** (pasta PRELIM do DATASUS); entra no último triênio da E5
+  (2023–2025). **RAIS:** a partir de 2018 o layout muda (vírgula, aspas, colunas
+  "… - Código"); o leitor acha as colunas pelo prefixo. Totais conferidos com os oficiais
+  (2006: 35.155.249 vínculos; 2013: 48.948.433). SIM 2012: 57.045 homicídios, igual ao Atlas
+  da Violência.
+- **E3 cai para a medida alternativa registrada (banda larga fixa).** Não há série municipal
+  do 4G anterior a 2018 nos dados abertos da Anatel: os acessos móveis só vêm por DDD até
+  2018 (por município só a partir de 2019), a cobertura por município começa em 2021 e as
+  estações rádio-base do SMP não estão no arquivo público de estações licenciadas (só os
+  radioenlaces). A banda larga fixa tem acessos por município desde 2007. Decidido antes de
+  cruzar qualquer dado da Anatel com o voto.
+- **Por habitante:** igrejas e MEIs usam a população do Censo 2022 em todos os anos; as taxas
+  de homicídio usam as estimativas do IBGE no ano do meio de cada triênio (SIDRA 6579).
+
+---
+
 ## Armadilhas metodológicas (valem para todas as análises)
 
 - **Falácia ecológica:** escrever conclusões em nível de lugar ("municípios com X"),

@@ -325,6 +325,8 @@ variação de acessos de banda larga fixa por 100 habitantes de 2014 a 2017 (Ana
 nenhuma das duas, E3 é registrada como **não testável**. A medida usada é anotada antes de
 cruzar com o voto.
 
+**Anotação (2026-10-09, antes de cruzar com o voto):** sem série municipal do 4G anterior a 2018 nos dados abertos da Anatel (detalhes em `decisoes.md`, D7), a E3 usa a medida alternativa: variação dos acessos de banda larga fixa por 100 habitantes entre o ano da eleição anterior e o ano anterior à eleição (2014→2017 para 14→18; 2010→2013 no placebo; 2007→2009 em 06→10, porque a série começa em 2007). É um indicador fraco do ambiente digital (não mede o celular nem o WhatsApp), e o resultado será lido assim.
+
 **E4 · Recessão e Lava Jato (alvo: fenômeno a, 14→18).**
 
 - ★ **E4a:** X = variação do log do emprego formal entre o ano da eleição anterior e o ano

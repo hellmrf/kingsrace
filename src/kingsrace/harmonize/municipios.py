@@ -23,13 +23,20 @@ def normaliza_nome(nome: str) -> str:
     return re.sub(r"[\s'\-]+", " ", sem_acento).strip().upper()
 
 
-def casa_municipios(tse: pl.DataFrame, ibge: pl.DataFrame, overrides: pl.DataFrame) -> pl.DataFrame:
-    """Devolve `cd_tse, cd_ibge` para cada código de município do TSE.
+def casa_municipios(
+    tse: pl.DataFrame, ibge: pl.DataFrame, overrides: pl.DataFrame, codigo: str = "cd_tse"
+) -> pl.DataFrame:
+    """Devolve `<codigo>, cd_ibge` para cada código de município da fonte (TSE por padrão).
 
-    tse: cd_tse, uf, nome — pode ter vários nomes por código (renomeações entre pleitos);
-    basta um casar. ibge: cd_ibge, uf, nome. overrides: cd_tse, cd_ibge (+ colunas de
-    documentação, ignoradas) — têm precedência.
+    tse: <codigo>, uf, nome — pode ter vários nomes por código (renomeações entre pleitos);
+    basta um casar. ibge: cd_ibge, uf, nome. overrides: <codigo>, cd_ibge (+ colunas de
+    documentação, ignoradas) — têm precedência. `codigo` permite usar a mesma regra com
+    outras fontes (ex.: o código de município da Receita Federal).
     """
+    if codigo != "cd_tse":
+        renomeia = {codigo: "cd_tse"}
+        res = casa_municipios(tse.rename(renomeia), ibge, overrides.rename(renomeia))
+        return res.rename({"cd_tse": codigo})
     overrides = overrides.select(
         pl.col("cd_tse").cast(tse.schema["cd_tse"]), pl.col("cd_ibge").cast(ibge.schema["cd_ibge"])
     )

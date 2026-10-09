@@ -1,0 +1,14 @@
+md5: 5caba02262a26446a42cf4d42600deb8
+frozen: true
+deps:
+- checksum: '"b29fa6e296d4a83e7664a15b7e591ac8"'
+  size: 85104766
+  hash: md5
+  path: 
+    https://arquivos.receitafederal.gov.br/public.php/dav/files/gn672Ad4CF8N6TK/Dados/Cadastros/CNPJ/2026-09/Empresas3.zip
+outs:
+- md5: 4c9bb6beec00b1cbcd2e197a61d903b9
+  size: 85104766
+  hash: md5
+  path: Empresas3.zip
+  push: false

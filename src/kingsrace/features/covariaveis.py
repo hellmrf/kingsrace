@@ -26,6 +26,7 @@ SOMAS = [
     "familias_bf_2026",
     "pessoas_bf_2026",
     "valor_bf_2026",
+    *(f"pop_{a}" for a in (2004, 2008, 2012, 2016, 2020, 2024)),
 ]
 
 

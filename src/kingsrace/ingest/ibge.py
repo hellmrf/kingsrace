@@ -68,6 +68,16 @@ CONSULTAS: dict[str, tuple[str, dict[tuple[str, ...], str]]] = {
         "t/137/n6/all/v/1000093/p/2010/c133/95277",
         {("1000093", "2010", "95277"): "pct_evangelica_2010"},
     ),
+    "ocupacao_2010": (
+        # Censo 2010 (amostra): % dos ocupados de 10+ anos que trabalham por conta própria (E7b)
+        "t/2031/n6/all/v/1000696/p/2010/c11913/96171",
+        {("1000696", "2010", "96171"): "pct_conta_propria_2010"},
+    ),
+    "populacao_estimada": (
+        # estimativas anuais do IBGE no ano do meio de cada triênio de homicídios (E5)
+        "t/6579/n6/all/v/9324/p/2004,2008,2012,2016,2020,2024",
+        {("9324", str(a)): f"pop_{a}" for a in (2004, 2008, 2012, 2016, 2020, 2024)},
+    ),
     "soja": (
         # PAM: área plantada de soja (hectares), antes e depois do período entre as eleições
         "t/5457/n6/all/v/8331/p/2021,2025/c782/40124",
