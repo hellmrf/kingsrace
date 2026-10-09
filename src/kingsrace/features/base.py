@@ -3,6 +3,27 @@
 import polars as pl
 
 
+def geografia_amc(municipios: pl.DataFrame) -> pl.DataFrame:
+    """Nome, UF, região e região imediata de cada AMC.
+
+    A região imediata é a mais frequente entre os membros (empate: menor código); só importa
+    para AMCs que atravessam regiões (ex.: Paraíso das Águas/MS).
+    """
+    regiao_amc = (
+        municipios.group_by("amc_id", "cd_regiao_imediata", "regiao_imediata")
+        .len()
+        .sort(["amc_id", "len", "cd_regiao_imediata"], descending=[False, True, False])
+        .group_by("amc_id", maintain_order=True)
+        .first()
+        .drop("len")
+    )
+    return (
+        municipios.group_by("amc_id")
+        .agg(pl.col("nome").sort().str.join(" + "), pl.col("uf", "regiao").first())
+        .join(regiao_amc, on="amc_id")
+    )
+
+
 def base_variacao(
     painel_amc: pl.DataFrame,
     cov_amc: pl.DataFrame,
@@ -23,21 +44,7 @@ def base_variacao(
             "amc_id", *(pl.col(c).alias(f"{c}_{sufixo}") for c in ("aptos", "pt_2p", "pt_2p_logit"))
         )
 
-    # região imediata da AMC: a mais frequente entre os membros (empate: menor código).
-    # Só importa para AMCs que atravessam regiões (ex.: Paraíso das Águas/MS).
-    regiao_amc = (
-        municipios.group_by("amc_id", "cd_regiao_imediata", "regiao_imediata")
-        .len()
-        .sort(["amc_id", "len", "cd_regiao_imediata"], descending=[False, True, False])
-        .group_by("amc_id", maintain_order=True)
-        .first()
-        .drop("len")
-    )
-    geo = (
-        municipios.group_by("amc_id")
-        .agg(pl.col("nome").sort().str.join(" + "), pl.col("uf", "regiao").first())
-        .join(regiao_amc, on="amc_id")
-    )
+    geo = geografia_amc(municipios)
 
     return (
         pleito(de, "de")

@@ -5,6 +5,38 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-09 · a série histórica 2006–2026
+
+[`notebooks/06_serie.ipynb`](../notebooks/06_serie.ipynb)
+
+**Dados:** 2006, 2010, 2014 e 2018 incorporados; 11 turnos, 5.562 AMCs comparáveis, todos
+os totais de PT e adversário batendo com os oficiais. No caminho: votos de candidato anulado
+em 2006 (Rui Costa Pimenta), o código 97 ("anulado e apurado em separado"), nulos definidos
+por resíduo (o sentido das colunas do TSE muda entre anos), voto em trânsito de 2010 numa
+pseudo-UF e AMCs para os municípios de 2013 (detalhes em [decisoes.md](decisoes.md), D5).
+
+**O achado principal: o gradiente de tamanho inverteu em 2018.** De 2006 a 2018, os
+municípios **grandes** se afastaram mais do PT a cada eleição (o pico foi 2014→2018, o
+desmoronamento urbano do PT). Desde 2018→2022 é o contrário: as cidades grandes voltaram e
+os municípios pequenos é que se afastam. O padrão de 2022→2026 que motivou o projeto é a
+continuação dessa virada, não uma regra antiga. A mesma virada aparece na clivagem: com o
+resto fixo, ser urbano era desvantagem para o PT até 2018 e passou a ser vantagem.
+
+**Outros resultados:**
+- **A clivagem de renda é a constante da série:** municípios mais pobres votam mais no PT em
+  todos os pleitos, com qualquer candidato. O **efeito evangélico nasceu em 2018**.
+- **O voto ficou mais regional dentro dos estados**, não entre eles (o interior se separou dos
+  centros urbanos da mesma UF).
+- **2022→2026 foi a transição mais uniforme da série**: o país se moveu quase em bloco (é a
+  única com o mesmo candidato do PT nos dois lados).
+- **Quatro tipos de trajetória** (exploratório): redutos do PT formados até 2018 (Nordeste),
+  subida e volta, afastamento gradual (mais no Sul) e antipetistas convergindo para o meio.
+
+**Pergunta que fica:** o que mudou por volta de 2018? Candidatos (Haddad, Bolsonaro), o
+antipetismo urbano pós-Lava Jato e a volta dele em 2022, ou uma reorganização do interior?
+
+---
+
 ## 2026-10-09 · agro, religião e Bolsa Família (A2, A3, A4)
 
 [`notebooks/05_composicao.ipynb`](../notebooks/05_composicao.ipynb)

@@ -21,11 +21,11 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | B2 | Variação da abstenção entre turnos e a quem beneficiou | aberta | | | |
 | B3 | Transferências heterogêneas por região/perfil | aberta | | | |
 | B4 | Previsão do 2T por município, congelada antes de 25/10/2026 | registrada | ver [B4](#b4) | | `03_previsao_2t.ipynb` |
-| C1 | Clivagem do lulismo (renda, Nordeste, escolaridade, religião) ao longo de 2006–2026 | registrada | ver [C](#série-histórica-c1-c2-c4-c5) | | `06_serie.ipynb` |
-| C2 | Nacionalização vs. regionalização do voto do PT (decomposição de variância) | registrada | ver [C](#série-histórica-c1-c2-c4-c5) | | `06_serie.ipynb` |
-| C3 | Tipologia de trajetórias municipais 2006–2026 | exploratória | ver [C](#série-histórica-c1-c2-c4-c5) | | `06_serie.ipynb` |
-| C4 | Uniformidade da variação entre pleitos | registrada | ver [C](#série-histórica-c1-c2-c4-c5) | | `06_serie.ipynb` |
-| C5 | O gradiente de tamanho da A1 se repete nas transições anteriores | registrada | ver [C](#série-histórica-c1-c2-c4-c5) | | `06_serie.ipynb` |
+| C1 | Clivagem do lulismo (renda, Nordeste, escolaridade, religião) ao longo de 2006–2026 | **testada** | ver [C](#série-histórica-c1-c2-c4-c5) | **(a), (b), (c) sustentadas.** Renda sempre negativa; efeito evangélico surge em 2018 | `06_serie.ipynb` |
+| C2 | Nacionalização vs. regionalização do voto do PT (decomposição de variância) | **testada** | ver [C](#série-histórica-c1-c2-c4-c5) | **Não se sustenta.** Entre UFs caiu (70% → 62%); entre regiões imediatas da UF subiu (15% → 25%) | `06_serie.ipynb` |
+| C3 | Tipologia de trajetórias municipais 2006–2026 | exploratória | ver [C](#série-histórica-c1-c2-c4-c5) | 4 tipos: redutos formados até 2018, subida e volta, afastamento gradual, antipetistas convergindo | `06_serie.ipynb` |
+| C4 | Uniformidade da variação entre pleitos | **testada** | ver [C](#série-histórica-c1-c2-c4-c5) | **Sustentada.** dp 0,14 em 2022→2026 contra 0,40–0,49 antes | `06_serie.ipynb` |
+| C5 | O gradiente de tamanho da A1 se repete nas transições anteriores | **testada** | ver [C](#série-histórica-c1-c2-c4-c5) | **Não se sustenta: inverteu.** Negativo em 2006→18 (até −0,133), positivo desde 2018→22 | `06_serie.ipynb` |
 | D1 | Queda de 2026 concentrada nas periferias evangélicas das capitais | aberta | | | |
 
 ---
@@ -220,3 +220,16 @@ antigos elas medem a estrutura dos municípios, não o retrato da época.
   específico do período recente.
 - **C3 · trajetórias (exploratória, sem teste):** agrupamento das AMCs pela trajetória do
   logit de `pt_2p` nos seis 1ºs turnos.
+
+**Resultado da série (2026-10-09, `06_serie.ipynb`):**
+
+- **C1:** renda padronizada −0,49 (2006), −0,35, −0,53, −0,62, −0,57 (2022), −0,62 (2026):
+  (a) e (b) se sustentam, (b) por pouco. % evangélica +0,01 (2006) → −0,15 (2018) → −0,17
+  (2022) → −0,13 (2026): (c) se sustenta. Exploratório: % urbana negativa de 2010 a 2018,
+  positiva em 2022–2026.
+- **C2:** fração entre UFs 69,8% (2006) → 61,8% (2022); entre regiões imediatas da UF
+  14,9% → 25,1%. Não se sustenta como formulada: a diferença cresceu dentro dos estados.
+- **C4:** desvio-padrão do Δ logit 0,40 / 0,49 / 0,48 / 0,43 nas transições anteriores e
+  **0,14** em 2022→2026; correlação 0,987 (a maior). Sustenta-se.
+- **C5:** efeito do tamanho −0,062, −0,046, −0,133, **+0,036**, **+0,025**. Positivo só em 2
+  das 4 transições anteriores: não se sustenta. O gradiente inverteu por volta de 2018.
