@@ -5,6 +5,30 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-08 (madrugada) · previsão do 2º turno, versão 1
+
+[`notebooks/03_previsao_2t.ipynb`](../notebooks/03_previsao_2t.ipynb) · especificação e
+critérios de avaliação em [hipoteses.md](hipoteses.md#b4).
+
+- **Congelada:** `data/reference/previsoes/previsao_2t_2026_v1.csv`, tag
+  `previsao-2t-2026-v1`, sha256 `fc6e30ce87ba34913f22490038338e0adb45447487bd6719efbedbd132192d2d`.
+- **Nível central: Lula 46,9%** entre os dois finalistas (faixa 45,8%–48,0%). Vem da única
+  pesquisa de 2º turno até agora (Datafolha 6–8/10: Lula 48% dos válidos), corrigida pela
+  metade do viés do instituto no 1º turno (+2,2 pp a favor de Lula).
+- **Achado do backtest de 2022:** distribuir os votos dos eliminados por perfil de
+  candidato (Tebet e Ciro → Lula) **piora** a previsão por município em relação a um
+  deslocamento uniforme (1,16 contra 0,95 pp). O desvio de 2022 não segue onde os outros
+  candidatos eram fortes; segue um padrão de **compressão** (os redutos andam para o centro).
+  Por isso o central é o uniforme, e as alternativas (transferências, compressão) vão
+  congeladas junto para o resultado decidir.
+- **Bug pego antes de congelar:** o `join` do polars não preserva a ordem das linhas, e a
+  variante de transferências recebia valores de outros municípios. Corrigido com teste de
+  regressão; a previsão agora é determinística (mesmo hash a cada execução).
+- **Próximo:** versão 2 em 24/10 com as pesquisas finais (`just previsao v2 2026-10-24`,
+  depois de acrescentar as pesquisas em `data/reference/pesquisas_2026.csv`).
+
+---
+
 ## 2026-10-08 (noite)
 
 ### A1 testada: o tamanho importa, mas metade era composição
