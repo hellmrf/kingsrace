@@ -148,6 +148,42 @@ def compressao_2022() -> float:
     return estima_compressao(t["lg1"].to_numpy(), t["lg2"].to_numpy())
 
 
+def previsoes_por_variante(
+    painel: pl.DataFrame, est: pl.DataFrame, alvos: dict[str, float], compressao: float
+) -> pl.DataFrame:
+    """Uma linha por município com as cinco colunas de previsão (ver `gera_previsao`).
+
+    painel: 1º turno (cd_ibge, uf, votos_pt, votos_adv, pt_2p, pt_2p_logit).
+    est: transferências (cd_ibge, pt_est, adv_est), em qualquer ordem: tudo é alinhado
+    pela chave do município, nunca pela posição.
+    alvos: nível nacional por cenário (central, sem_correcao, correcao_total).
+    """
+    base = painel.join(est.select("cd_ibge", "pt_est", "adv_est"), on="cd_ibge", how="left").sort(
+        "cd_ibge"
+    )
+    if base["pt_est"].null_count():
+        raise ValueError("municípios sem estimativa de transferência")
+    pt1 = base["votos_pt"].to_numpy().astype(float)
+    adv1 = base["votos_adv"].to_numpy().astype(float)
+    lg1 = base["pt_2p_logit"].to_numpy()
+    central = alvos["central"]
+    variantes = {
+        "pt_2p": calibra_nivel(pt1, adv1, central),
+        "pt_2p_sem_correcao": calibra_nivel(pt1, adv1, alvos["sem_correcao"]),
+        "pt_2p_correcao_total": calibra_nivel(pt1, adv1, alvos["correcao_total"]),
+        "pt_2p_g1_transferencias": calibra_nivel(
+            base["pt_est"].to_numpy(), base["adv_est"].to_numpy(), central
+        ),
+        "pt_2p_g2_compressao": calibra_logits(
+            lg1 + compressao * (lg1 - lg1.mean()), pt1 + adv1, central
+        ),
+    }
+    return base.select("cd_ibge", "uf", pt_2p_1t="pt_2p").with_columns(
+        *(pl.Series(nome, s) for nome, (_, s) in variantes.items()),
+        votos_validos_est=pl.Series(pt1 + adv1).round(0).cast(pl.Int64),
+    )
+
+
 def gera_previsao(versao: str, corte: date) -> None:
     """Grava data/reference/previsoes/previsao_2t_2026_<versão>.{csv,json}.
 
@@ -168,33 +204,14 @@ def gera_previsao(versao: str, corte: date) -> None:
         .sort("cd_ibge")
     )
     real_1t = painel["votos_pt"].sum() / (painel["votos_pt"].sum() + painel["votos_adv"].sum())
-    pt1 = painel["votos_pt"].to_numpy().astype(float)
-    adv1 = painel["votos_adv"].to_numpy().astype(float)
-    lg1 = painel["pt_2p_logit"].to_numpy()
-    est = painel.select("cd_ibge").join(aplica_transferencias(votos, taxas), on="cd_ibge")
+    est = aplica_transferencias(votos, taxas)
     b = compressao_2022()
-
     alvos = {
         nome: alvo_das_pesquisas(pesquisas, real_1t, lam, corte) for nome, lam in LAMBDAS.items()
     }
-    central = alvos["central"]["alvo"]
-    variantes = {
-        "pt_2p": calibra_nivel(pt1, adv1, central),
-        "pt_2p_sem_correcao": calibra_nivel(pt1, adv1, alvos["sem_correcao"]["alvo"]),
-        "pt_2p_correcao_total": calibra_nivel(pt1, adv1, alvos["correcao_total"]["alvo"]),
-        "pt_2p_g1_transferencias": calibra_nivel(
-            est["pt_est"].to_numpy(), est["adv_est"].to_numpy(), central
-        ),
-        "pt_2p_g2_compressao": calibra_logits(lg1 + b * (lg1 - lg1.mean()), pt1 + adv1, central),
-    }
-    previsao = (
-        painel.select("cd_ibge", "uf", pt_2p_1t="pt_2p")
-        .with_columns(
-            *(pl.Series(nome, s) for nome, (_, s) in variantes.items()),
-            votos_validos_est=pl.Series(pt1 + adv1).round(0).cast(pl.Int64),
-        )
-        .with_columns(pl.col("^pt_2p.*$").round(5))
-    )
+    previsao = previsoes_por_variante(
+        painel, est, {nome: a["alvo"] for nome, a in alvos.items()}, b
+    ).with_columns(pl.col("^pt_2p.*$").round(5))
 
     meta = {
         "versao": versao,
@@ -205,7 +222,6 @@ def gera_previsao(versao: str, corte: date) -> None:
         ).stdout.strip(),
         "pt_2p_1t_real": real_1t,
         "compressao_2022": b,
-        "deslocamento_logit": {nome: c for nome, (c, _) in variantes.items()},
         "niveis": {
             nome: {
                 "lambda": LAMBDAS[nome],

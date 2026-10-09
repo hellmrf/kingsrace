@@ -10,6 +10,7 @@ from kingsrace.models.previsao_2t import (
     calibra_logits,
     calibra_nivel,
     estima_compressao,
+    previsoes_por_variante,
 )
 
 
@@ -109,3 +110,25 @@ def test_calibra_logits_atinge_alvo_com_base_arbitraria():
     c, s = calibra_logits(base, peso, alvo=0.45)
 
     assert np.sum(peso * s) / np.sum(peso) == pytest.approx(0.45, abs=1e-9)
+
+
+def test_variantes_alinham_transferencias_pelo_municipio_e_nao_pela_ordem():
+    # A e B empatados no 1º turno; as transferências favorecem o PT em A e o adversário em B,
+    # mas chegam em ordem trocada (B antes de A)
+    painel = pl.DataFrame(
+        {
+            "cd_ibge": [1, 2],
+            "uf": ["SP", "SP"],
+            "votos_pt": [50, 50],
+            "votos_adv": [50, 50],
+            "pt_2p": [0.5, 0.5],
+            "pt_2p_logit": [0.0, 0.0],
+        }
+    )
+    est = pl.DataFrame({"cd_ibge": [2, 1], "pt_est": [10.0, 90.0], "adv_est": [90.0, 10.0]})
+    alvos = {"central": 0.5, "sem_correcao": 0.5, "correcao_total": 0.5}
+
+    res = previsoes_por_variante(painel, est, alvos, compressao=0.0)
+    g1 = dict(res.select("cd_ibge", "pt_2p_g1_transferencias").iter_rows())
+
+    assert g1[1] > 0.5 > g1[2]
