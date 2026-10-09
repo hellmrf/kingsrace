@@ -74,6 +74,80 @@ DETALHE = {
 }
 
 
+DEPUTADO_FEDERAL = 6
+
+CANDIDATO = {
+    "ANO_ELEICAO": "SMALLINT",
+    "SG_UF": "VARCHAR",
+    "CD_CARGO": "TINYINT",
+    "SQ_CANDIDATO": "BIGINT",
+    "NR_CANDIDATO": "INTEGER",
+    "NM_URNA_CANDIDATO": "VARCHAR",
+    "SG_PARTIDO": "VARCHAR",
+    "DS_SITUACAO_CANDIDATURA": "VARCHAR",
+    "CD_OCUPACAO": "INTEGER",
+    "DS_OCUPACAO": "VARCHAR",
+    "DS_SIT_TOT_TURNO": "VARCHAR",
+}
+
+VOTACAO_CANDIDATO = {
+    "ANO_ELEICAO": "SMALLINT",
+    "NR_TURNO": "TINYINT",
+    "SG_UF": "VARCHAR",
+    "CD_MUNICIPIO": "INTEGER",
+    "NR_ZONA": "INTEGER",
+    "CD_CARGO": "TINYINT",
+    "SQ_CANDIDATO": "BIGINT",
+    "NM_URNA_CANDIDATO": "VARCHAR",
+    "SG_PARTIDO": "VARCHAR",
+    "DS_SITUACAO_CANDIDATURA": "VARCHAR",
+    "DS_DETALHE_SITUACAO_CAND": "VARCHAR",
+    "QT_VOTOS_NOMINAIS": "BIGINT",
+}
+
+DETALHE_CARGO = {
+    "ANO_ELEICAO": "SMALLINT",
+    "NR_TURNO": "TINYINT",
+    "SG_UF": "VARCHAR",
+    "CD_MUNICIPIO": "INTEGER",
+    "NR_ZONA": "INTEGER",
+    "CD_CARGO": "TINYINT",
+    "QT_TOTAL_VOTOS_VALIDOS": "BIGINT",
+    "QT_VOTOS_NOMINAIS_VALIDOS": "BIGINT",
+    "QT_TOTAL_VOTOS_LEG_VALIDOS": "BIGINT",
+}
+
+
+def converte_deputados(ano: int) -> None:
+    """Converte candidatos, votos por candidato e detalhe por município×zona (deputado federal)."""
+    raw, interim = paths.RAW / "tse", paths.INTERIM / "tse"
+    filtro = f"CD_CARGO = '{DEPUTADO_FEDERAL}'"
+    csv_zip_para_parquet(
+        raw / "consulta_cand" / f"consulta_cand_{ano}.zip",
+        membro=f"consulta_cand_{ano}_BRASIL.csv",
+        destino=interim / "candidatos" / f"ano={ano}" / "data.parquet",
+        colunas=CANDIDATO,
+        filtro=filtro,
+    )
+    # Até 2014 os votos nominais anulados já vêm zerados; a partir de 2018 o TSE separa
+    # QT_VOTOS_NOMINAIS (todos) de QT_VOTOS_NOMINAIS_VALIDOS (em 2022 diferem em ~1 milhão).
+    validos = {"QT_VOTOS_NOMINAIS_VALIDOS": "BIGINT"} if ano >= 2018 else {}
+    csv_zip_para_parquet(
+        raw / "votacao_candidato_munzona" / f"votacao_candidato_munzona_{ano}.zip",
+        membro=f"votacao_candidato_munzona_{ano}_BRASIL.csv",
+        destino=interim / "votacao_deputado" / f"ano={ano}" / "data.parquet",
+        colunas=VOTACAO_CANDIDATO | validos,
+        filtro=filtro,
+    )
+    csv_zip_para_parquet(
+        raw / "detalhe_votacao_munzona" / f"detalhe_votacao_munzona_{ano}.zip",
+        membro=f"detalhe_votacao_munzona_{ano}_BRASIL.csv",  # o _BR só tem presidente
+        destino=interim / "detalhe_deputado" / f"ano={ano}" / "data.parquet",
+        colunas=DETALHE_CARGO,
+        filtro=filtro,
+    )
+
+
 def converte_ano(ano: int) -> None:
     """Converte votação por seção e detalhe por município×zona (presidente) de um ano."""
     raw, interim = paths.RAW / "tse", paths.INTERIM / "tse"
@@ -96,4 +170,8 @@ def converte_ano(ano: int) -> None:
 if __name__ == "__main__":
     import sys
 
-    converte_ano(int(sys.argv[1]))
+    # python -m kingsrace.ingest.tse 2022  |  python -m kingsrace.ingest.tse deputados 2022
+    if sys.argv[1] == "deputados":
+        converte_deputados(int(sys.argv[2]))
+    else:
+        converte_ano(int(sys.argv[1]))

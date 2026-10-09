@@ -14,6 +14,23 @@ stages:
         - data/interim/tse/detalhe_munzona/ano=${item}:
             cache: false
 
+  converte_deputados:
+    foreach: ${anos_deputados}
+    do:
+      cmd: python -m kingsrace.ingest.tse deputados ${item}
+      deps:
+        - src/kingsrace/ingest/tse.py
+        - data/raw/tse/consulta_cand/consulta_cand_${item}.zip
+        - data/raw/tse/votacao_candidato_munzona/votacao_candidato_munzona_${item}.zip
+        - data/raw/tse/detalhe_votacao_munzona/detalhe_votacao_munzona_${item}.zip
+      outs:
+        - data/interim/tse/candidatos/ano=${item}:
+            cache: false
+        - data/interim/tse/votacao_deputado/ano=${item}:
+            cache: false
+        - data/interim/tse/detalhe_deputado/ano=${item}:
+            cache: false
+
   municipios:
     cmd: python -m kingsrace.harmonize.municipios
     deps:
@@ -51,3 +68,14 @@ stages:
     outs:
       - data/processed/covariaveis_municipio.parquet
       - data/processed/covariaveis_amc.parquet
+
+  religiosos:
+    cmd: python -m kingsrace.features.religiao
+    deps:
+      - src/kingsrace/features/religiao.py
+      - data/processed/municipios.parquet
+      - data/interim/tse/candidatos
+      - data/interim/tse/votacao_deputado
+      - data/interim/tse/detalhe_deputado
+    outs:
+      - data/processed/religiosos_amc.parquet

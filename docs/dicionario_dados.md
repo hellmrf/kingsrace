@@ -98,3 +98,15 @@ valores) são **somadas**; as taxas do Censo são ponderadas pela população; a
 (per capita, participações, por 100 habitantes, densidade) são **recalculadas a partir das
 somas**. Município sem população no Censo (Boa Esperança do Norte) entra nas somas, não nos
 pesos.
+
+## `religiosos_amc.parquet`
+
+Uma linha por `amc_id` × `ano` (eleições gerais de 2006 a 2022, 1º turno), deputado federal.
+Regra de classificação e particularidades em [decisoes.md](decisoes.md) (D6).
+
+| coluna | descrição |
+|---|---|
+| `votos_religiosos` | votos nominais válidos em candidatos religiosos (regra da E2c) |
+| `nominais_validos` | votos nominais válidos para deputado federal |
+| `validos_deputado` | votos válidos para deputado federal (nominais + legenda) |
+| `pct_religiosos` | 100 × `votos_religiosos` / `validos_deputado` |

@@ -1,0 +1,13 @@
+md5: 018e4a4a6523a6a2ff8bf6daefe78545
+frozen: true
+deps:
+- checksum: '"3db5dc-5caef842ba2c0"'
+  size: 4044252
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_2006.zip
+outs:
+- md5: 1d9a367a88cfd00c11fe4987521e2e03
+  size: 4044252
+  hash: md5
+  path: consulta_cand_2006.zip

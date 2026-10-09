@@ -1,0 +1,13 @@
+md5: 1e5ab03dd6e46bca01b1c246c2168359
+frozen: true
+deps:
+- checksum: '"7cdfcb9-5deece984dcc0"'
+  size: 130940089
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_2006.zip
+outs:
+- md5: b312a8cb6dfed2fee34542b5e91af414
+  size: 130940089
+  hash: md5
+  path: votacao_candidato_munzona_2006.zip

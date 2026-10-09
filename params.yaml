@@ -1,3 +1,5 @@
 # Pleitos presidenciais incluídos no pipeline. Para adicionar um ano: importar os
 # arquivos brutos (dvc import-url) e incluí-lo aqui.
 anos: [2006, 2010, 2014, 2018, 2022, 2026]
+# Eleições gerais com votos para deputado federal (medida E2c, candidatos religiosos).
+anos_deputados: [2006, 2010, 2014, 2018, 2022]

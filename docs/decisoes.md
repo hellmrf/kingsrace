@@ -96,6 +96,28 @@ entram no `pyproject.toml` no marco em que forem usadas.
 
 ---
 
+## D6 — Deputado federal e candidatos religiosos (medida E2c)
+
+**Data:** 2026-10-09 · **Status:** em vigor
+
+- **Fontes:** `consulta_cand_{ano}` (ocupação), `votacao_candidato_munzona_{ano}` (votos por
+  candidato, município e zona) e `detalhe_votacao_munzona_{ano}_BRASIL.csv` (válidos). O
+  `_BR.csv` do detalhe só tem presidente.
+- **Votos nominais válidos:** até 2014 o `QT_VOTOS_NOMINAIS` já vem sem os anulados; a partir
+  de 2018 o TSE separa `QT_VOTOS_NOMINAIS_VALIDOS` (em 2022, ~1 milhão de votos de
+  candidatos indeferidos ficam de fora). A soma bate com o detalhe em todas as UFs nos cinco
+  anos (teste em `test_dados.py`).
+- **Denominador:** `QT_TOTAL_VOTOS_VALIDOS` do detalhe (nominais + legenda).
+- **Chave do candidato:** (ano, UF, `SQ_CANDIDATO`); em 2006 o sequencial se repete entre UFs.
+- **Candidatos com voto e sem cadastro:** 1 em 2006 (GO, 51.839 votos) e 3 em 2014. O nome de
+  urna vem do arquivo de votação; sem ocupação conhecida, contam só pelo título.
+- **A regra registrada é seguida à risca**, com dois efeitos conhecidos: entra quem declara
+  ocupação religiosa sem título católico no nome (ex.: o padre Luiz Couto, PT-PB, em 2022) e
+  fica de fora quem é evangélico mas não usa título nem declara a ocupação (muitos deputados
+  da bancada evangélica). A medida é um **limite inferior** da presença religiosa explícita.
+
+---
+
 ## Armadilhas metodológicas (valem para todas as análises)
 
 - **Falácia ecológica:** escrever conclusões em nível de lugar ("municípios com X"),

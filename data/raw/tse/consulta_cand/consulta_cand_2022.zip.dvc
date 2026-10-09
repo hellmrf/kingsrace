@@ -1,0 +1,13 @@
+md5: 9b29cf0b44378bbc9ec692d4202cb615
+frozen: true
+deps:
+- checksum: '"42f1c4-65d625763cf16"'
+  size: 4387268
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_2022.zip
+outs:
+- md5: e45e984d7f3f390ef02a6cdb93dda19b
+  size: 4387268
+  hash: md5
+  path: consulta_cand_2022.zip
