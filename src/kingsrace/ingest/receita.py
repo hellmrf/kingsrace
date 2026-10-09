@@ -1,9 +1,17 @@
 """CNPJ da Receita Federal: organizações religiosas (E2b) e MEIs (E7a).
 
 Arquivos brutos em data/raw/receita/cnpj_<versão>/ (dvc import-url do compartilhamento
-público da Receita). CSVs sem cabeçalho, `;`, latin-1, um por zip, lidos direto do zip
-(extensão `zipfs` do DuckDB). O cadastro é um retrato da data de geração: CNPJs baixados
-continuam nele, com a data da situação atual.
+público da Receita). CSVs sem cabeçalho, `;`, latin-1, um por zip. Cada CSV é extraído para
+o disco já convertido para UTF-8 (`csv_extraido`), lido pelo DuckDB e apagado:
+
+- a extensão `zipfs` do DuckDB descomprime o arquivo inteiro na memória (7 GB num zip de
+  Estabelecimentos), o que derruba uma máquina de 8 GB;
+- o latin-1 nativo do DuckDB recusa bytes 0x80–0x9F, que aparecem em alguns registros (0x8F
+  em Estabelecimentos0 de 2026-09); o ISO_8859_1 da extensão `encodings` aceita, mas é ~15x
+  mais lento. O latin-1 do Python aceita os 256 bytes.
+
+O cadastro é um retrato da data de geração: CNPJs baixados continuam nele, com a data da
+situação atual.
 
 Os brutos não ficam no disco nem no R2 (decisões D7): `python -m kingsrace.ingest.receita
 todos` baixa cada zip de Estabelecimentos, extrai dele uma parte pequena e apaga a cópia
@@ -15,9 +23,12 @@ local (o `.dvc` guarda URL e hash). Saídas em data/interim/receita/:
 - `municipios_receita.parquet`: código da Receita, nome e UF (a tabela da Receita não tem UF).
 """
 
+import os
 import subprocess
 import sys
 import zipfile
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 import duckdb
@@ -34,6 +45,8 @@ CNAE_RELIGIOSA = "9491000"
 # situação cadastral que encerra o CNPJ na data da situação: 1 nula, 4 inapta, 8 baixada
 SITUACOES_FIM = (1, 4, 8)
 ANOS_MEI = range(2009, 2027)  # o MEI começou em julho de 2009
+MEMORIA = os.environ.get("KINGSRACE_DUCKDB_MEMORIA", "2GB")
+THREADS = int(os.environ.get("KINGSRACE_DUCKDB_THREADS", "4"))
 
 ESTABELECIMENTOS = [
     "cnpj_basico",
@@ -98,21 +111,42 @@ def fim(situacao: str, data_situacao: str) -> str:
 
 
 def conexao() -> duckdb.DuckDBPyConnection:
+    """DuckDB com memória limitada: o padrão (80% da RAM) derruba uma máquina de 8 GB."""
     con = duckdb.connect()
     con.sql("SET enable_progress_bar=false")
-    con.sql("INSTALL zipfs FROM community")
-    con.sql("LOAD zipfs")
+    con.sql(f"SET memory_limit='{MEMORIA}'")
+    con.sql(f"SET threads={THREADS}")
+    con.sql("SET preserve_insertion_order=false")
+    con.sql(f"SET temp_directory='{paths.INTERIM / 'receita' / 'duckdb_tmp'}'")
     return con
 
 
-def le_zip(zip_path: Path, colunas: list[str]) -> str:
-    """`read_csv` do único CSV de um zip da Receita, sem extrair."""
+@contextmanager
+def csv_extraido(zip_path: Path) -> Iterator[Path]:
+    """Extrai o único CSV do zip, em blocos e já em UTF-8, e o apaga ao sair."""
+    destino = paths.INTERIM / "receita" / "partes" / f"_{zip_path.stem}.csv"
     with zipfile.ZipFile(zip_path) as z:
         (membro,) = z.namelist()
+        with z.open(membro) as origem, destino.open("wb") as saida:
+            while bloco := origem.read(1 << 24):
+                saida.write(bloco.decode("latin-1").encode())
+    try:
+        yield destino
+    finally:
+        destino.unlink(missing_ok=True)
+
+
+def le_csv(csv: Path, colunas: list[str]) -> str:
+    """`read_csv` de um CSV da Receita extraído por `csv_extraido`.
+
+    Sequencial: com `strict_mode=false` (aspas soltas em alguns campos) o leitor paralelo do
+    DuckDB recusa os arquivos da Receita. Escape fixo em `"`: o detector às vezes escolhe `'`
+    e então um campo como `"SABESP'"` engole os seguintes.
+    """
     nomes = ", ".join(f"'{c}'" for c in colunas)
     return (
-        f"read_csv('zip://{zip_path}/{membro}', delim=';', quote='\"', header=false, "
-        f"encoding='latin-1', all_varchar=true, names=[{nomes}], strict_mode=false)"
+        f"read_csv('{csv}', delim=';', quote='\"', escape='\"', header=false, "
+        f"all_varchar=true, names=[{nomes}], strict_mode=false, parallel=false)"
     )
 
 
@@ -126,25 +160,30 @@ def pastas(versao: str) -> tuple[Path, Path]:
 def prepara_mei(versao: str = VERSAO) -> None:
     """MEIs do Simples (CNPJ básico, opção e exclusão) → partes/mei_simples.parquet."""
     raw, saida = pastas(versao)
-    conexao().sql(f"""
-        COPY (
-            SELECT cnpj_basico,
-                   {data("data_opcao_mei")} AS opcao,
-                   {data("data_exclusao_mei")} AS exclusao
-            FROM {le_zip(raw / "Simples.zip", SIMPLES)}
-            WHERE {data("data_opcao_mei")} IS NOT NULL
-        ) TO '{saida / "partes" / "mei_simples.parquet"}' (FORMAT parquet)
-    """)
+    with csv_extraido(raw / "Simples.zip") as csv:
+        conexao().sql(f"""
+            COPY (
+                SELECT cnpj_basico,
+                       {data("data_opcao_mei")} AS opcao,
+                       {data("data_exclusao_mei")} AS exclusao
+                FROM {le_csv(csv, SIMPLES)}
+                WHERE {data("data_opcao_mei")} IS NOT NULL
+            ) TO '{saida / "partes" / "mei_simples.parquet"}' (FORMAT parquet)
+        """)
 
 
 def processa_estabelecimentos(i: int, versao: str = VERSAO) -> None:
     """Extrai de Estabelecimentos<i>.zip as igrejas, o estoque de MEIs e a UF dos municípios."""
-    raw, saida = pastas(versao)
-    partes = saida / "partes"
+    raw, _ = pastas(versao)
+    with csv_extraido(raw / f"Estabelecimentos{i}.zip") as csv:
+        _processa_estabelecimentos(i, csv)
+
+
+def _processa_estabelecimentos(i: int, csv: Path) -> None:
+    partes = paths.INTERIM / "receita" / "partes"
     con = conexao()
     con.sql(f"CREATE VIEW mei AS SELECT * FROM '{partes / 'mei_simples.parquet'}'")
-    fonte = le_zip(raw / f"Estabelecimentos{i}.zip", ESTABELECIMENTOS)
-    con.sql(f"CREATE VIEW e AS SELECT * FROM {fonte}")
+    con.sql(f"CREATE VIEW e AS SELECT * FROM {le_csv(csv, ESTABELECIMENTOS)}")
     con.sql(f"""
         COPY (
             SELECT cnpj_basico, cnpj_ordem, matriz_filial, nome_fantasia, situacao,
@@ -182,13 +221,17 @@ def finaliza(versao: str = VERSAO) -> None:
     partes = saida / "partes"
     con = conexao()
     con.sql(f"CREATE TABLE religiosas AS SELECT * FROM '{partes}/religiosas_*.parquet'")
-    empresas = " UNION ALL ".join(
-        f"SELECT cnpj_basico, razao_social, natureza_juridica "
-        f"FROM {le_zip(raw / f'Empresas{i}.zip', EMPRESAS)} "
-        "SEMI JOIN religiosas USING (cnpj_basico)"
-        for i in range(10)
+    con.sql(
+        "CREATE TABLE empresas "
+        "(cnpj_basico VARCHAR, razao_social VARCHAR, natureza_juridica VARCHAR)"
     )
-    con.sql(f"CREATE TABLE empresas AS {empresas}")
+    for i in range(10):
+        with csv_extraido(raw / f"Empresas{i}.zip") as csv:
+            con.sql(f"""
+                INSERT INTO empresas
+                SELECT cnpj_basico, razao_social, natureza_juridica
+                FROM {le_csv(csv, EMPRESAS)} SEMI JOIN religiosas USING (cnpj_basico)
+            """)
     con.sql(f"""
         COPY (
             SELECT r.*, e.razao_social, e.natureza_juridica,
@@ -202,19 +245,20 @@ def finaliza(versao: str = VERSAO) -> None:
             FROM '{partes}/mei_estoque_*.parquet' GROUP BY ALL ORDER BY ALL
         ) TO '{saida / "mei_estoque.parquet"}' (FORMAT parquet)
     """)
-    con.sql(f"""
-        COPY (
-            SELECT m.codigo AS municipio, m.nome, u.uf
-            FROM {le_zip(raw / "Municipios.zip", ["codigo", "nome"])} m
-            LEFT JOIN (
-                SELECT municipio, arg_max(uf, n) AS uf
-                FROM (SELECT municipio, uf, sum(n) AS n
-                      FROM '{partes}/ufs_*.parquet' GROUP BY ALL)
-                GROUP BY municipio
-            ) u ON u.municipio = m.codigo
-            ORDER BY m.codigo
-        ) TO '{saida / "municipios_receita.parquet"}' (FORMAT parquet)
-    """)
+    with csv_extraido(raw / "Municipios.zip") as csv:
+        con.sql(f"""
+            COPY (
+                SELECT m.codigo AS municipio, m.nome, u.uf
+                FROM {le_csv(csv, ["codigo", "nome"])} m
+                LEFT JOIN (
+                    SELECT municipio, arg_max(uf, n) AS uf
+                    FROM (SELECT municipio, uf, sum(n) AS n
+                          FROM '{partes}/ufs_*.parquet' GROUP BY ALL)
+                    GROUP BY municipio
+                ) u ON u.municipio = m.codigo
+                ORDER BY m.codigo
+            ) TO '{saida / "municipios_receita.parquet"}' (FORMAT parquet)
+        """)
 
 
 def _dvc(*args: str) -> None:
@@ -229,6 +273,7 @@ def baixa(arquivo: str, versao: str = VERSAO) -> Path:
     meta = yaml.safe_load(dvc_file.read_text())
     meta["outs"][0]["push"] = False
     dvc_file.write_text(yaml.safe_dump(meta, sort_keys=False, allow_unicode=True))
+    _dvc("commit", "-f", "-q", str(dvc_file))  # recalcula o md5 do .dvc, que mudou acima
     return raw / arquivo
 
 
@@ -251,7 +296,9 @@ def todos(versao: str = VERSAO) -> None:
     for i in range(10):
         if (saida / "partes" / f"ufs_{i}.parquet").exists():
             continue  # já processado (permite retomar depois de uma falha)
-        zip_path = baixa(f"Estabelecimentos{i}.zip", versao)
+        zip_path = raw / f"Estabelecimentos{i}.zip"
+        if not zip_path.exists():  # sobra de uma execução que falhou no processamento
+            baixa(zip_path.name, versao)
         processa_estabelecimentos(i, versao)
         apaga_local(zip_path)
         print(f"Estabelecimentos{i} processado", flush=True)
