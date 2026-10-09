@@ -28,6 +28,12 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | C5 | O gradiente de tamanho da A1 se repete nas transições anteriores | **testada** | ver [C](#série-histórica-c1-c2-c4-c5) | **Não se sustenta: inverteu.** Negativo em 2006→18 (até −0,133), positivo desde 2018→22 | `06_serie.ipynb` |
 | D1 | Queda de 2026 concentrada nas periferias evangélicas das capitais | aberta | | | |
 | E0 | Diagnóstico da virada de 2018 (regiões, 2º turno, acumulado, estados de origem, comparecimento, estabilidade do mapa) | exploratória | — | Nacional, presente no 2º turno, mudança de voto; **não é inversão completa** (desde 2014: −0,133 → −0,026); mapa congelado desde 2018 | `07_virada_2018.ipynb` |
+| E1 | Máquinas locais: emendas por habitante e prefeitos de direita explicam o afastamento dos pequenos depois de 2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
+| E2 | Igrejas: presença evangélica (Censo 2010, CNPJ, candidatos religiosos) prevê o afastamento do PT em 2014→2018, e não antes | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
+| E3 | Internet móvel: chegada do 4G antes de 2018 prevê o afastamento do PT em 2014→2018 | registrada (condicional aos dados) | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
+| E4 | Recessão e Lava Jato: perda de emprego formal e exposição a petróleo, naval e obras preveem o afastamento em 2014→2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
+| E5 | Segurança: aumento dos homicídios prevê o afastamento em 2014→2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
+| E6 | Síntese: quanto do gradiente de tamanho de 2014→2018 e 2018→2022 cada mecanismo absorve | registrada (descritiva) | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
 
 ---
 
@@ -234,3 +240,108 @@ antigos elas medem a estrutura dos municípios, não o retrato da época.
   **0,14** em 2022→2026; correlação 0,987 (a maior). Sustenta-se.
 - **C5:** efeito do tamanho −0,062, −0,046, −0,133, **+0,036**, **+0,025**. Positivo só em 2
   das 4 transições anteriores: não se sustenta. O gradiente inverteu por volta de 2018.
+
+### Série E: mecanismos da virada de 2018
+
+**Registrada em 2026-10-09, depois do diagnóstico exploratório E0 (`07_virada_2018.ipynb`) e
+antes de baixar qualquer dado novo.** O E0 mostrou dois fenômenos: **(a)** o choque contra
+o PT em 2014→2018, maior nas cidades grandes, que só voltou em parte; **(b)** desde 2018, o
+afastamento dos municípios pequenos, que continua em 2026. A virada é nacional, então não
+basta achar uma associação: cada mecanismo precisa mostrar uma **pegada no tempo**, ou seja,
+aparecer na transição certa e **não** nas anteriores.
+
+**Limite:** dados eleitorais por município não identificam interferência externa nem quem
+financia um canal. Os testes dizem se a geografia da virada bate com a pegada de cada canal.
+
+**Base comum (event study por transição):**
+
+- **Unidade:** AMC (5.562), 1º turno. Transições: 2006→10, 2010→14, 2014→18, 2018→22,
+  2022→26.
+- **Desfecho:** Δ logit(`pt_2p`) em cada transição.
+- **Modelo por transição:** Δ logit ~ X + log(aptos no pleito inicial) + logit(`pt_2p`
+  inicial) + controles estruturais | região imediata, erros agrupados por região imediata,
+  sem pesos. X é **padronizada** (z entre AMCs), para comparar mecanismos.
+- **Controles estruturais** (Censo 2022, como na A1): log(renda mediana), alfabetização,
+  % urbana, idade mediana, % preta ou parda. Robustez: sem controles; com pesos pelo
+  eleitorado.
+- **Teste da pegada:** painel empilhado das transições, X × transição, efeitos fixos de
+  região imediata × transição, erros agrupados por região imediata. A diferença entre o
+  coeficiente da transição-alvo e o da transição anterior é o teste de "salto".
+- **Critério padrão (mecanismos do fenômeno a, alvo 2014→18):** sustenta-se se (i) β(14→18)
+  tiver o sinal previsto com IC 95% excluindo zero **e** (ii) β(14→18) − β(10→14) tiver o
+  mesmo sinal com IC 95% excluindo zero. Se (i) passar e (ii) não, o veredito é **"clivagem
+  antiga, não choque de 2018"**.
+- **Comparações múltiplas:** correção de Holm sobre os testes principais (marcados ★), em
+  conjunto, com α = 0,05.
+- Os coeficientes de 18→22 e 22→26 são sempre reportados (fenômeno b), sem critério,
+  exceto na E1.
+
+**E1 · Máquinas locais (alvo: fenômeno b, 18→22 e 22→26).**
+
+- ★ **E1a:** X = valor pago de emendas parlamentares com município identificado como local
+  do gasto, por habitante, nos quatro anos anteriores a cada eleição (Portal da
+  Transparência, emendas individuais, de bancada, de relator e transferências especiais,
+  onde houver município). Previsão: β < 0 em 18→22 **e** em 22→26 (mais emendas, mais
+  afastamento do PT), e β(18→22) − β(14→18) < 0. Transições sem dado de emendas ficam de
+  fora, e isso é registrado.
+- ★ **E1b (RDD):** eleições para prefeito de 2016 e 2020 decididas por pouco entre um
+  candidato da direita e um que não é da direita. Unidade: município. Desfecho: Δ logit
+  (`pt_2p`) na transição presidencial seguinte (2016 → 14→18; 2020 → 18→22). `rdrobust`,
+  banda ótima (MSE), IC robusto com correção de viés. Previsão: prefeito da direita → β < 0;
+  o teste principal é o de **2020** (IC abaixo de zero). Mesmo desenho da A5 (2024 → 22→26).
+- **Direita** = PSL, PL (ex-PR), PP, Republicanos (ex-PRB), DEM, União Brasil, PSC, PTB,
+  Patriota (ex-PEN), PRTB, Novo. MDB e PSD ficam no grupo de comparação; robustez com eles
+  na direita. A lista vale para todos os anos, mesmo que alguns desses partidos tenham
+  apoiado o PT antes de 2016.
+- Exploratório: E1a separada pelo bloco do autor da emenda.
+
+**E2 · Igrejas (alvo: fenômeno a, 14→18).** Previsão: β < 0 (mais presença evangélica, mais
+afastamento do PT), com o critério padrão.
+
+- ★ **E2a:** X = % evangélica no Censo 2010 (anterior a 2014). Sugerida pela C1, que mostrou
+  o efeito evangélico surgindo em 2018 no nível; aqui o teste é na variação e com o placebo.
+- ★ **E2b:** X = igrejas evangélicas ativas por 10 mil habitantes em 2014 (estoque) e
+  aberturas líquidas 2014→2017 por 10 mil habitantes (dois testes, só a primeira é ★). Fonte:
+  CNPJ da Receita, CNAE 9491-0/00. "Ativa na data" = início antes da data e sem baixa,
+  nulidade ou inaptidão anterior a ela. Evangélica = razão social bate com a lista de termos
+  em `data/reference/denominacoes.csv`, commitada **antes** de cruzar com o voto.
+  **Validação prévia:** a correlação entre igrejas evangélicas por habitante e a %
+  evangélica do Censo (2010 com o estoque de 2010; 2022 com o de 2022) precisa ser ≥ 0,3;
+  abaixo disso, a medida é declarada inválida e E2b não é testada.
+- ★ **E2c:** X = % dos válidos para deputado federal em 2014 dados a candidatos religiosos.
+  Religioso = ocupação declarada "sacerdote ou membro de ordem ou seita religiosa" **ou**
+  nome de urna com título evangélico (Pastor, Pastora, Pr., Bispo, Bispa, Apóstolo,
+  Apóstola, Missionário, Missionária, Presbítero). "Padre" e "Frei" ficam de fora. A mesma
+  medida de 2006 e 2010 entra nas transições anteriores (exposição variável no tempo).
+- **Lagoinha (exploratório, sem teste):** cronologia e mapa das unidades pela razão social
+  no CNPJ; comparação descritiva de municípios que receberam unidade antes e depois de cada
+  eleição. Sem teste, porque a igreja escolhe onde abrir.
+
+**E3 · Internet móvel (alvo: fenômeno a, 14→18).** ★ X = anos com 4G no município até
+outubro de 2018 (0 a 5), pelos dados da Anatel. Previsão: β < 0, com o critério padrão.
+**Condicional aos dados:** sem série municipal do 4G anterior a 2018, a medida passa a ser a
+variação de acessos de banda larga fixa por 100 habitantes de 2014 a 2017 (Anatel); sem
+nenhuma das duas, E3 é registrada como **não testável**. A medida usada é anotada antes de
+cruzar com o voto.
+
+**E4 · Recessão e Lava Jato (alvo: fenômeno a, 14→18).**
+
+- ★ **E4a:** X = variação do log do emprego formal entre o ano da eleição anterior e o ano
+  anterior à eleição (2014→2017 para a transição 14→18; equivalentes nas demais). Fonte: RAIS;
+  se a RAIS municipal não estiver acessível, o pessoal assalariado do Cempre (IBGE), com a
+  fonte anotada. Previsão: β > 0 (mais perda de emprego, mais afastamento do PT), com o
+  critério padrão.
+- ★ **E4b:** X = parcela do emprego formal de 2013 em extração de petróleo e gás e apoio
+  (CNAE 06 e 09.1), derivados de petróleo (19), construção de embarcações (30.1) e obras de
+  infraestrutura (42). Previsão: β < 0, com o critério padrão.
+
+**E5 · Segurança (alvo: fenômeno a, 14→18).** ★ X = variação da taxa de homicídios por 100
+mil habitantes entre os triênios anteriores a cada par de eleições (2011–13 → 2015–17 para
+14→18). Homicídio = agressões (CID-10 X85–Y09) + intervenções legais (Y35–Y36), por
+município de residência (SIM/DATASUS ou Atlas da Violência/Ipea). Previsão: β < 0, com o
+critério padrão.
+
+**E6 · Síntese (descritiva, sem critério).** Nas transições 14→18 e 18→22, o modelo da C5
+(tamanho + nível inicial | região imediata) mais cada X, uma de cada vez e depois todas
+juntas. Reporta quanto o coeficiente do tamanho (−0,133 e +0,036) encolhe com cada uma,
+como o M0→M3 da A1.
