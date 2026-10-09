@@ -5,6 +5,36 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-09 · igrejas: a pegada aparece exatamente em 2018 (E2a, E2c)
+
+[`notebooks/08_mecanismos.ipynb`](../notebooks/08_mecanismos.ipynb)
+
+**Dados novos:** candidatos e votos para deputado federal de 2006 a 2022 (TSE). A medida E2c
+é a fatia dos válidos para deputado que foi para candidatos religiosos: ocupação religiosa
+declarada ou título evangélico no nome de urna (Pastor, Bispo, Missionário…). Os votos
+nominais válidos batem com o detalhe do TSE em todas as UFs nos cinco anos. Particularidades
+em [decisoes.md](decisoes.md) (D6).
+
+**Ferramenta nova:** `models/event_study.py`, o teste comum da série E. Calcula o efeito da
+medida em cada transição e o "salto" em relação à transição anterior, num painel empilhado.
+
+**Resultados (os dois vereditos são definitivos, mesmo antes da correção de Holm completa):**
+
+- **% evangélica no Censo 2010 (E2a):** nenhum efeito em 2006→2010 e 2010→2014; em 2014→2018,
+  −0,091 por desvio-padrão (~2,3 pp numa AMC dividida ao meio). O efeito segue menor em
+  2018→2022 e se inverte levemente em 2022→2026.
+- **Voto em candidatos religiosos (E2c):** também nulo antes e −0,027 em 2014→2018, e quase
+  some depois. A pegada da organização política das igrejas está concentrada em 2018.
+- **Composição e organização são coisas diferentes:** as duas medidas quase não se
+  correlacionam (0,18) e mantêm o efeito quando entram juntas (exploratório).
+
+**O que isso não diz:** não é prova causal, e não separa a mobilização organizada pelas
+igrejas da pauta de costumes de Bolsonaro ou de campanhas no WhatsApp dirigidas a
+evangélicos. Também não diz quem organizou ou financiou. Próximo: o CNPJ (igrejas por ano,
+Lagoinha e MEIs da E7).
+
+---
+
 ## 2026-10-09 · o que exatamente virou em 2018 (série E, etapa 0)
 
 [`notebooks/07_virada_2018.ipynb`](../notebooks/07_virada_2018.ipynb) (exploratório)

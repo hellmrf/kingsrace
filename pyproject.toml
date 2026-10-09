@@ -17,6 +17,7 @@ dependencies = [
     "pyarrow>=25.0.1",
     "pyfixest",
     "scikit-learn>=1.9.1",
+    "scipy>=1.18.1",
     "vl-convert-python>=1.9.0.post1",
 ]
 

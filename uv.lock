@@ -1820,6 +1820,7 @@ dependencies = [
     { name = "pyarrow" },
     { name = "pyfixest" },
     { name = "scikit-learn" },
+    { name = "scipy" },
     { name = "vl-convert-python" },
 ]
 
@@ -1843,6 +1844,7 @@ requires-dist = [
     { name = "pyarrow", specifier = ">=25.0.1" },
     { name = "pyfixest" },
     { name = "scikit-learn", specifier = ">=1.9.1" },
+    { name = "scipy", specifier = ">=1.18.1" },
     { name = "vl-convert-python", specifier = ">=1.9.0.post1" },
 ]
 

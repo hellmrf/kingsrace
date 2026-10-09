@@ -29,7 +29,7 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | D1 | Queda de 2026 concentrada nas periferias evangélicas das capitais | aberta | | | |
 | E0 | Diagnóstico da virada de 2018 (regiões, 2º turno, acumulado, estados de origem, comparecimento, estabilidade do mapa) | exploratória | — | Nacional, presente no 2º turno, mudança de voto; **não é inversão completa** (desde 2014: −0,133 → −0,026); mapa congelado desde 2018 | `07_virada_2018.ipynb` |
 | E1 | Máquinas locais: emendas por habitante e prefeitos de direita explicam o afastamento dos pequenos depois de 2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
-| E2 | Igrejas: presença evangélica (Censo 2010, CNPJ, candidatos religiosos) prevê o afastamento do PT em 2014→2018, e não antes | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
+| E2 | Igrejas: presença evangélica (Censo 2010, CNPJ, candidatos religiosos) prevê o afastamento do PT em 2014→2018, e não antes | **E2a, E2c testadas**; E2b registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | **E2a e E2c se sustentam.** % evangélica 2010: −0,091 em 14→18, salto −0,098 (IC −0,122 a −0,075). Candidatos religiosos: −0,027, salto −0,027 (IC −0,044 a −0,010). Placebos nulos | `08_mecanismos.ipynb` |
 | E3 | Internet móvel: chegada do 4G antes de 2018 prevê o afastamento do PT em 2014→2018 | registrada (condicional aos dados) | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
 | E4 | Recessão e Lava Jato: perda de emprego formal e exposição a petróleo, naval e obras preveem o afastamento em 2014→2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
 | E5 | Segurança: aumento dos homicídios prevê o afastamento em 2014→2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
@@ -371,3 +371,24 @@ reportados, porque a transformação continua depois de 2018.
 (tamanho + nível inicial | região imediata) mais cada X (E1–E5 e E7), uma de cada vez e depois todas
 juntas. Reporta quanto o coeficiente do tamanho (−0,133 e +0,036) encolhe com cada uma,
 como o M0→M3 da A1.
+
+**Resultado E2a e E2c (2026-10-09, `08_mecanismos.ipynb`):**
+
+| Teste | 2006→10 | 2010→14 | **2014→18** | 2018→22 | 2022→26 | Salto (IC 95%) | p (IU) |
+|---|---|---|---|---|---|---|---|
+| E2a · % evangélica 2010 | −0,006 | +0,007 | **−0,091** | −0,036 | +0,012 | −0,098 (−0,122 a −0,075) | < 10⁻¹⁴ |
+| E2c · candidatos religiosos | +0,001 | −0,000 | **−0,027** | −0,006 | +0,000 | −0,027 (−0,044 a −0,010) | 0,002 |
+
+- **Veredito: E2a e E2c se sustentam.** Placebos nulos e salto em 2014→2018 nas duas.
+- **Holm:** o p de cada teste é o maior entre o do efeito em 2014→2018 e o do salto (teste de
+  interseção-união: as duas condições precisam valer). Com 11 testes ★, p ≤ 0,05/11 ≈ 0,0045
+  garante a rejeição em Holm quaisquer que sejam os outros, então os dois vereditos já são
+  definitivos.
+- **Robustez:** sem controles (−0,107; −0,034) e com pesos (−0,188; −0,039), mesmos sinais;
+  placebos pequenos.
+- **Exploratório:** as duas medidas quase não se correlacionam (0,18) e mantêm o efeito
+  juntas (−0,090 e −0,019): a organização política das igrejas acrescenta algo à composição
+  religiosa.
+- **Limite:** pegada consistente com o canal "igreja", não prova causal. Não separa
+  mobilização organizada pelas igrejas da pauta de Bolsonaro ou de campanhas digitais
+  dirigidas a evangélicos (E3 e E6 ajudam), nem identifica quem organizou ou financiou.
