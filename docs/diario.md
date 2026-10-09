@@ -27,9 +27,10 @@ tínhamos. Abre a **série E** (mecanismos da virada), cujo roteiro está em
   o congelamento começa antes: o molde é o Dilma × Aécio de 2014.
 
 **Consequência para o desenho:** uma quebra igual no país todo é o que qualquer causa nacional
-produz, então a uniformidade não aponta para nenhuma. As hipóteses E1–E5 (máquinas locais e
-emendas, igrejas, internet móvel, recessão e Lava Jato, violência) vão ser testadas pela
-**pegada geográfica e temporal** de cada canal, com placebo nas transições anteriores a 2018.
+produz, então a uniformidade não aponta para nenhuma. As hipóteses E1–E5 e E7 (máquinas
+locais e emendas, igrejas, internet móvel, recessão e Lava Jato, violência, transformação do
+trabalho: MEI e conta própria) vão ser testadas pela **pegada geográfica e temporal** de cada
+canal, com placebo nas transições anteriores a 2018.
 
 ---
 

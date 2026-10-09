@@ -33,6 +33,7 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | E3 | Internet móvel: chegada do 4G antes de 2018 prevê o afastamento do PT em 2014→2018 | registrada (condicional aos dados) | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
 | E4 | Recessão e Lava Jato: perda de emprego formal e exposição a petróleo, naval e obras preveem o afastamento em 2014→2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
 | E5 | Segurança: aumento dos homicídios prevê o afastamento em 2014→2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
+| E7 | Transformação do trabalho (pejotização, uberização): MEIs e trabalho por conta própria preveem o afastamento do PT a partir de 2014→2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
 | E6 | Síntese: quanto do gradiente de tamanho de 2014→2018 e 2018→2022 cada mecanismo absorve | registrada (descritiva) | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
 
 ---
@@ -341,7 +342,32 @@ mil habitantes entre os triênios anteriores a cada par de eleições (2011–13
 município de residência (SIM/DATASUS ou Atlas da Violência/Ipea). Previsão: β < 0, com o
 critério padrão.
 
+**E7 · Transformação do trabalho (registrada em 2026-10-09, a pedido, antes de abrir os dados
+de MEI e de ocupação).** A ideia: a expansão do trabalho por conta própria (MEI desde 2009,
+aplicativos de transporte e entrega a partir de 2014, reforma trabalhista de 2017) enfraquece
+o vínculo com a identidade de trabalhador assalariado e com o PT, e aproxima do discurso
+do "empreendedor". Alvo: fenômeno a (14→18), com os coeficientes de 18→22 e 22→26 sempre
+reportados, porque a transformação continua depois de 2018.
+
+- ★ **E7a · pejotização:** X = aberturas líquidas de MEI por 100 habitantes entre o ano da
+  eleição anterior e o ano anterior à eleição (2014→2017 para 14→18; 2010→2013 para 10→14,
+  que é o placebo; 2018→2021 e 2022→2025 depois). Fonte: CNPJ da Receita (tabela do Simples,
+  com as datas de opção e de exclusão do MEI, ligada ao município do estabelecimento matriz),
+  a mesma base da E2b. A transição 06→10 fica de fora (o MEI começou em julho de 2009).
+  Previsão: β < 0, com o critério padrão.
+- ★ **E7b · trabalho por conta própria:** X = % dos ocupados que trabalham por conta própria
+  no Censo 2010 (anterior a 2014). Uma característica fixa cujo efeito passa a existir em
+  2018 indicaria que o sentido político dessa posição mudou. Previsão: β < 0, com o critério
+  padrão.
+- **Uberização (exploratório, sem teste):** se houver uma lista confiável das datas de chegada
+  da Uber e da 99 por município, comparação descritiva entre municípios com e sem aplicativo
+  antes de 2018. Sem teste, porque as empresas escolhem onde entrar (cidades grandes e ricas
+  primeiro) e o MEI de motorista de aplicativo só passou a existir depois.
+- **Relação com a E4:** a E4a mede a perda de emprego formal; a E7 mede a troca de forma de
+  trabalho. Na E6 as duas entram juntas, para separar o choque de emprego da mudança de
+  forma.
+
 **E6 · Síntese (descritiva, sem critério).** Nas transições 14→18 e 18→22, o modelo da C5
-(tamanho + nível inicial | região imediata) mais cada X, uma de cada vez e depois todas
+(tamanho + nível inicial | região imediata) mais cada X (E1–E5 e E7), uma de cada vez e depois todas
 juntas. Reporta quanto o coeficiente do tamanho (−0,133 e +0,036) encolhe com cada uma,
 como o M0→M3 da A1.
