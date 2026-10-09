@@ -1,0 +1,60 @@
+{
+  "versao": "v1",
+  "corte_pesquisas": "2026-10-08",
+  "gerada_em": "2026-10-08T22:56:00-03:00",
+  "commit": "8bf1f17c1a3a8a45ce434f2faa194c9c1cdc8a95",
+  "pt_2p_1t_real": 0.4897957886797773,
+  "compressao_2022": -0.013861779824705892,
+  "niveis": {
+    "central": {
+      "lambda": 0.5,
+      "alvo_nacional": 0.46880033336427884,
+      "pesquisas_2t": 1,
+      "vies_medio_1t": 0.015611771593527713,
+      "detalhe": [
+        {
+          "instituto": "Datafolha",
+          "campo_fim": "2026-10-08",
+          "s": 0.48,
+          "vies": 0.022399333271442223,
+          "corrigido": 0.46880033336427884
+        }
+      ]
+    },
+    "sem_correcao": {
+      "lambda": 0.0,
+      "alvo_nacional": 0.48,
+      "pesquisas_2t": 1,
+      "vies_medio_1t": 0.015611771593527713,
+      "detalhe": [
+        {
+          "instituto": "Datafolha",
+          "campo_fim": "2026-10-08",
+          "s": 0.48,
+          "vies": 0.022399333271442223,
+          "corrigido": 0.48
+        }
+      ]
+    },
+    "correcao_total": {
+      "lambda": 1.0,
+      "alvo_nacional": 0.45760066672855776,
+      "pesquisas_2t": 1,
+      "vies_medio_1t": 0.015611771593527713,
+      "detalhe": [
+        {
+          "instituto": "Datafolha",
+          "campo_fim": "2026-10-08",
+          "s": 0.48,
+          "vies": 0.022399333271442223,
+          "corrigido": 0.45760066672855776
+        }
+      ]
+    }
+  },
+  "insumos_sha256": {
+    "transferencias_2t.csv": "089ced1d23c037bbd3f0710763736b9861b5ca99493b833aa6cca52eb4c46548",
+    "pesquisas_2026.csv": "874c12014951e8b50d37ae1aae3e08ac44e744f83d41e1c9d44a17521ef5e67b"
+  },
+  "previsao_sha256": "fc6e30ce87ba34913f22490038338e0adb45447487bd6719efbedbd132192d2d"
+}
