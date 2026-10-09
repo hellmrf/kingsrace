@@ -130,23 +130,32 @@ stages:
       size: 98704
     - path: data/raw/ibge/sidra
       hash: md5
-      md5: e5ad1f616b2058a1ac069ae6d80be349.dir
-      size: 48491619
-      nfiles: 19
+      md5: 0ede85ea413575725fe09fc95549bed3.dir
+      size: 54107202
+      nfiles: 23
+    - path: data/raw/mds
+      hash: md5
+      md5: 889ba6b7952b993abf540ccd70c3939f.dir
+      size: 340932
+      nfiles: 5
     - path: src/kingsrace/features/covariaveis.py
       hash: md5
-      md5: d5756729e43c4a011761c57dcae96c03
-      size: 3171
+      md5: e6ba8340a5028232ea45f80bb5aaeef6
+      size: 5908
     - path: src/kingsrace/ingest/ibge.py
       hash: md5
-      md5: 85d0f064c202e0d17b41fac1090de48b
-      size: 4108
+      md5: 4b63afd463d13382a5034475a5e01e33
+      size: 4863
+    - path: src/kingsrace/ingest/mds.py
+      hash: md5
+      md5: 4e85f29a1820a70d8911696fd04fa7ad
+      size: 1694
     outs:
     - path: data/processed/covariaveis_amc.parquet
       hash: md5
-      md5: eab6a30070ba2c13be89dd9c8a37425a
-      size: 588381
+      md5: 831f1815593d2b6b153617dd125c9447
+      size: 849064
     - path: data/processed/covariaveis_municipio.parquet
       hash: md5
-      md5: d99f5827f7c50ce88ce63c1654f772ec
-      size: 556808
+      md5: c631eebb03330637bfb72dd2dc05b71f
+      size: 816382

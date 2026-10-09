@@ -109,3 +109,10 @@ def test_percentuais_entre_0_e_100(covariaveis):
     fora = [c for c in pct.columns if not pct[c].drop_nulls().is_between(0, 100).all()]
 
     assert fora == []
+
+
+def test_soja_nunca_ocupa_mais_que_o_territorio(covariaveis):
+    for ano in ("2021", "2025"):
+        excesso = covariaveis.filter(pl.col(f"area_soja_{ano}_ha") > 100 * pl.col("area_km2"))
+
+        assert excesso.is_empty(), excesso.select("cd_ibge", f"area_soja_{ano}_ha", "area_km2")

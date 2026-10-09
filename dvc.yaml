@@ -42,8 +42,10 @@ stages:
     cmd: python -m kingsrace.features.covariaveis
     deps:
       - src/kingsrace/ingest/ibge.py
+      - src/kingsrace/ingest/mds.py
       - src/kingsrace/features/covariaveis.py
       - data/raw/ibge/sidra
+      - data/raw/mds
       - data/processed/municipios.parquet
     outs:
       - data/processed/covariaveis_municipio.parquet

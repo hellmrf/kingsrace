@@ -1,0 +1,12 @@
+md5: 0830eae8dce32e3716b0eee6e1377e4e
+frozen: true
+deps:
+- checksum: '313404528780136787928378717763072383133'
+  hash: md5
+  path: 
+    https://aplicacoes.mds.gov.br/sagi/servicos/misocial?q=*:*&fq=anomes_s:202209&fq=tipo_s:mes_mu&wt=csv&rows=6000&fl=codigo_ibge,anomes,pab_qtd_fam_benef_i,pab_valor_pago_d
+outs:
+- md5: f960f3a86280bbccee8577274950e613
+  size: 156170
+  hash: md5
+  path: auxilio_brasil_202209.csv

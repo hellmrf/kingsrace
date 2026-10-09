@@ -30,7 +30,7 @@ def test_converte_resposta_do_sidra_em_tabela_larga_por_municipio():
         _linha("3550308", "1000140", "2022", "2836", "13.49"),
         _linha("3550308", "1000140", "2022", "95263", "50.72"),  # não pedida: ignorada
         _linha("1100015", "1000140", "2022", "95277", "41.10"),
-        _linha("1100015", "1000140", "2022", "2836", "-"),
+        _linha("1100015", "1000140", "2022", "2836", "..."),
     ]
 
     res = sidra_para_tabela(linhas, COLUNAS).sort("cd_ibge")
@@ -40,7 +40,17 @@ def test_converte_resposta_do_sidra_em_tabela_larga_por_municipio():
     assert res.rows() == [(1100015, 41.10, None), (3550308, 23.17, 13.49)]
 
 
-@pytest.mark.parametrize("suprimido", ["-", "...", "X", ".."])
+def test_traco_e_zero_absoluto_na_convencao_do_ibge():
+    linhas = [
+        CABECALHO,
+        _linha("1", "1000140", "2022", "95277", "-"),
+        _linha("1", "1000140", "2022", "2836", "1.0"),
+    ]
+
+    assert sidra_para_tabela(linhas, COLUNAS)["pct_evangelica"].to_list() == [0.0]
+
+
+@pytest.mark.parametrize("suprimido", ["...", "X", ".."])
 def test_valores_suprimidos_viram_nulos(suprimido):
     linhas = [
         CABECALHO,

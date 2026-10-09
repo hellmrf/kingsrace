@@ -9,7 +9,10 @@ resposta: variável, ano e categorias das classificações, nessa ordem.
 import polars as pl
 
 SIDRA = "https://apisidra.ibge.gov.br/values"
-SUPRIMIDOS = {"-", "..", "...", "X"}
+# convenção do IBGE: "-" é zero absoluto; "..", "..." e "X" são ausentes (não se aplica,
+# não disponível, omitido para não identificar o informante)
+ZERO = "-"
+SUPRIMIDOS = {"..", "...", "X", "x"}
 
 # nome: (caminho da consulta, {(variável, ano, *categorias): coluna})
 CONSULTAS: dict[str, tuple[str, dict[tuple[str, ...], str]]] = {
@@ -60,6 +63,19 @@ CONSULTAS: dict[str, tuple[str, dict[tuple[str, ...], str]]] = {
         "t/10297/n6/all/v/13504/p/2022/c11308/79452",
         {("13504", "2022", "79452"): "pct_renda_outras_fontes"},
     ),
+    "religiao_2010": (
+        # Censo 2010: % sobre a população total (2022: sobre 10+ anos; ver dicionário)
+        "t/137/n6/all/v/1000093/p/2010/c133/95277",
+        {("1000093", "2010", "95277"): "pct_evangelica_2010"},
+    ),
+    "soja": (
+        # PAM: área plantada de soja (hectares), antes e depois do período entre as eleições
+        "t/5457/n6/all/v/8331/p/2021,2025/c782/40124",
+        {
+            ("8331", "2021", "40124"): "area_soja_2021_ha",
+            ("8331", "2025", "40124"): "area_soja_2025_ha",
+        },
+    ),
     "pib": (
         "t/5938/n6/all/v/37,498,513,525/p/2021,2023",
         # o valor adicionado por setor de 2023 ainda não saiu por município (vem "...");
@@ -82,7 +98,7 @@ def url(nome: str) -> str:
 def sidra_para_tabela(linhas: list[dict], colunas: dict[tuple[str, ...], str]) -> pl.DataFrame:
     """Converte a resposta do SIDRA (1ª linha = cabeçalho) em uma linha por município.
 
-    Valores suprimidos pelo IBGE ("-", "..", "...", "X") viram nulos. Falha se alguma
+    "-" vira zero e os demais símbolos do IBGE ("..", "...", "X") viram nulos. Falha se alguma
     coluna pedida não aparecer na resposta (consulta e mapeamento desalinhados).
     """
     dims = sorted(
@@ -93,7 +109,7 @@ def sidra_para_tabela(linhas: list[dict], colunas: dict[tuple[str, ...], str]) -
     for r in linhas[1:]:
         coluna = colunas.get(tuple(r[d] for d in dims))
         if coluna is not None:
-            valor = None if r["V"] in SUPRIMIDOS else float(r["V"])
+            valor = 0.0 if r["V"] == ZERO else None if r["V"] in SUPRIMIDOS else float(r["V"])
             registros.append({"cd_ibge": int(r["D1C"]), "coluna": coluna, "valor": valor})
 
     ausentes = set(colunas.values()) - {r["coluna"] for r in registros}
