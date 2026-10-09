@@ -10,9 +10,9 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | ID | Hipótese | Status | Teste / critério | Resultado | Notebook |
 |---|---|---|---|---|---|
 | A1 | Lula cai mais (Δ dois maiores, 2022→2026 1T) quanto menor o município, mesmo dentro da UF | **testada** | ver [A1](#a1) | **Sustentada.** M3: β = +0,024 (IC 95% +0,021 a +0,028); metade do gradiente bruto é composição | `02_tamanho.ipynb` |
-| A2 | Queda maior onde o agro pesa mais e onde a soja avançou | registrada | ver [A2–A4](#a2-a3-e-a4) | | `05_composicao.ipynb` |
-| A3 | Participação evangélica (nível 2022 e Δ 2010–2022) prevê a queda | registrada | ver [A2–A4](#a2-a3-e-a4) | | `05_composicao.ipynb` |
-| A4 | Coeficiente da cobertura do Bolsa Família muda de sinal ou cresce entre 2022 e 2026 | registrada | ver [A2–A4](#a2-a3-e-a4) | | `05_composicao.ipynb` |
+| A2 | Queda maior onde o agro pesa mais e onde a soja avançou | **testada** | ver [A2–A4](#a2-a3-e-a4) | **Não se sustenta.** Expansão da soja: −0,0007 (IC −0,0017 a +0,0003) | `05_composicao.ipynb` |
+| A3 | Participação evangélica (nível 2022 e Δ 2010–2022) prevê a queda | **testada** | ver [A2–A4](#a2-a3-e-a4) | **Não se sustenta.** Crescimento 2010→22: +0,0002 (IC −0,0009 a +0,0012) | `05_composicao.ipynb` |
+| A4 | Coeficiente da cobertura do Bolsa Família muda de sinal ou cresce entre 2022 e 2026 | **testada** | ver [A2–A4](#a2-a3-e-a4) | **Sustentada.** Associação dobrou: +0,0058 (2022) → +0,0115 (2026); interação IC +0,0036 a +0,0077. A4a também | `05_composicao.ipynb` |
 | A5 | Prefeito do PL/centrão eleito em 2024 aumenta o afastamento de Lula (RDD) | aberta | | | |
 | A6 | Parte relevante da perda de Lula é desmobilização (abstenção), não conversão | **testada** | ver [A6](#a6) | **Não se sustenta.** Comparecimento + válidos = 5,9% da perda; o resto é fatia. A6b (abstenção maior nos redutos do PT) se sustenta, efeito pequeno | `04_decomposicao.ipynb` |
 | A7 | Saldo de empregos formais 2022–2026 associado a queda menor | aberta | | | |
@@ -173,3 +173,15 @@ logit(`pt_2p` 2022), `pct_urbana`, `idade_mediana`, `pct_evangelica`, log(renda 
 
 São quatro testes. Sem correção formal para comparações múltiplas, mas os p-valores são
 reportados e um resultado com p entre 0,01 e 0,05 é tratado como fraco.
+
+**Resultado A2–A4 (2026-10-09, `05_composicao.ipynb`):**
+
+| Teste | Coeficiente | IC 95% | p | Veredito |
+|---|---|---|---|---|
+| A2 · expansão da soja (por pp do território) | −0,0007 | −0,0017 a +0,0003 | 0,19 | não se sustenta |
+| A3 · crescimento evangélico (por pp) | +0,0002 | −0,0009 a +0,0012 | 0,74 | não se sustenta |
+| A4 · cobertura × 2026 (painel, nível) | +0,0057 | +0,0036 a +0,0077 | < 0,001 | **sustenta-se** |
+| A4a · Bolsa Família 2026 (modelo de Δ) | +0,0044 | +0,0032 a +0,0056 | < 0,001 | **sustenta-se** |
+
+Na A4a, 1 desvio-padrão de cobertura (~7,6 famílias por 100 habitantes) equivale a +0,034
+em Δ logit, mais que 1 desvio-padrão do tamanho do município (+0,027).

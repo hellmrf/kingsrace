@@ -5,6 +5,27 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-09 · agro, religião e Bolsa Família (A2, A3, A4)
+
+[`notebooks/05_composicao.ipynb`](../notebooks/05_composicao.ipynb)
+
+As três pistas que apareceram nos controles da A1 foram testadas com **medidas novas**
+(soja da PAM, Censo 2010, dados do MDS), mantendo as medidas antigas como controles.
+
+- **Agro (A2) e religião (A3) não se confirmam.** Nem a expansão recente da soja nem o
+  crescimento evangélico entre os Censos explicam a queda além do que já estava no modelo.
+- **Bolsa Família (A4) se confirma, e com força.** Em 2022 (Auxílio Brasil, governo
+  Bolsonaro), onde o programa alcançava mais famílias o PT já ia melhor; em 2026 (Bolsa
+  Família, governo Lula), essa associação **praticamente dobrou**. E onde a cobertura é maior,
+  o PT perdeu menos entre 2022 e 2026: o efeito de 1 desvio-padrão é maior que o do tamanho
+  do município.
+- **Dados novos e correções no caminho:** o "-" do IBGE é zero (não ausente); a agregação por
+  AMC passou a somar contagens; um erro na PAM (Mariópolis/PR com soja maior que o território)
+  foi anulado; e um efeito colateral dessa correção, que zerava a soja de Boa Esperança do
+  Norte, foi pego antes de rodar os modelos.
+
+---
+
 ## 2026-10-09 · para onde foram os votos de Lula (A6, A8)
 
 [`notebooks/04_decomposicao.ipynb`](../notebooks/04_decomposicao.ipynb)
