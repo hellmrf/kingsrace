@@ -14,9 +14,9 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | A3 | Participação evangélica (nível 2022 e Δ 2010–2022) prevê a queda | aberta | | | |
 | A4 | Coeficiente da cobertura do Bolsa Família muda de sinal ou cresce entre 2022 e 2026 | aberta | | | |
 | A5 | Prefeito do PL/centrão eleito em 2024 aumenta o afastamento de Lula (RDD) | aberta | | | |
-| A6 | Parte relevante da perda de Lula é desmobilização (abstenção), não conversão | aberta | | | |
+| A6 | Parte relevante da perda de Lula é desmobilização (abstenção), não conversão | registrada | ver [A6](#a6) | | `04_decomposicao.ipynb` |
 | A7 | Saldo de empregos formais 2022–2026 associado a queda menor | aberta | | | |
-| A8 | Peso dos municípios pequenos na perda nacional de votos (contribuição) | aberta | | | |
+| A8 | Peso dos municípios pequenos na perda nacional de votos (contribuição) | registrada | ver [A8](#a8) | | `04_decomposicao.ipynb` |
 | B1 | Transferências 1T→2T de 2026 favorecem Flávio, ao contrário de 2022 | aberta | | | |
 | B2 | Variação da abstenção entre turnos e a quem beneficiou | aberta | | | |
 | B3 | Transferências heterogêneas por região/perfil | aberta | | | |
@@ -102,3 +102,35 @@ pesquisas finais). Cada versão tem commit e tag `previsao-2t-2026-<versão>`.
 **Expectativas registradas (o que contaria como surpresa):** G0 ≤ G1 em RMSE, ou seja,
 as transferências por perfil não ajudam, como no backtest de 2022 (0,95 contra 1,16 pp);
 e G2 ≤ G0, ou seja, a compressão de 2022 se repete.
+
+### A6
+
+**Registrada em 2026-10-09, antes do cálculo.** No panorama já se viu que a abstenção
+nacional (sem exterior) ficou praticamente igual entre 2022 e 2026 (20,8% e 20,8%); a
+pergunta é se, mesmo assim, a mobilização diferencial explica parte da perda.
+
+- **Unidade:** AMC, 1º turno de 2022 e de 2026, sem o exterior.
+- **Decomposição (LMDI, exata e aditiva):** votos de Lula V = A · t · v · s, com A = aptos,
+  t = comparecimento/aptos, v = válidos/comparecimento, s = Lula/válidos. Em cada AMC,
+  ΔV = L(V₂₆, V₂₂) · [Δln A + Δln t + Δln v + Δln s], com L a média logarítmica; os quatro
+  termos somados no país dão as contribuições de **eleitorado**, **comparecimento**,
+  **votos válidos** (brancos e nulos) e **fatia de Lula**.
+- **Critério:** A6 se sustenta se comparecimento + válidos responderem por **≥ 25%** da
+  perda nacional de votos de Lula. Abaixo disso, a perda é sobretudo mudança de fatia.
+- **Secundária A6b:** dentro da mesma região imediata, o comparecimento caiu mais onde o PT
+  era mais forte? MQO de Δlogit(t) em logit(`pt_2p` 2022), efeitos fixos e erros agrupados
+  por região imediata; sustenta-se se o coeficiente for negativo com IC 95% abaixo de zero.
+- **Limite:** decomposição ecológica. Se eleitores de Lula ficaram em casa e foram
+  substituídos por novos eleitores de Flávio no mesmo município, isso aparece como "fatia".
+
+### A8
+
+**Registrada em 2026-10-09, antes do cálculo.**
+
+- **Medida:** a perda nacional de votos de Lula (1º turno, 2022 → 2026, sem exterior),
+  somada por grupo de AMCs (faixa de eleitorado de 2022 × região), com a mesma
+  decomposição LMDI da A6.
+- **Hipótese:** as AMCs com **menos de 20 mil eleitores** em 2022 respondem por uma fração
+  da perda nacional **maior** que a sua fração do eleitorado de 2022.
+- **Critério:** sustenta-se se fração da perda > fração do eleitorado. Também se reporta a
+  razão entre as duas (quantas vezes o peso eleitoral) e a tabela completa por grupo.
