@@ -69,6 +69,33 @@ entram no `pyproject.toml` no marco em que forem usadas.
 
 ---
 
+## D5 — Série histórica 2006–2026: particularidades do TSE
+
+**Data:** 2026-10-09 · **Status:** em vigor
+
+- **Totais conferidos:** PT e adversário batem exatamente com os totais oficiais nos 11
+  turnos (2006–2026).
+- **Votos anulados de candidato:** além do nº 28 em 2026, o nº 29 em 2006 (Rui Costa
+  Pimenta, candidatura indeferida, 25.769 votos) vai como `anulado` em `candidatos.csv`.
+- **Código 97, "voto anulado e apurado em separado":** votos de seções anuladas pela
+  Justiça Eleitoral (272 em 2010 2T, 746 em 2018 1T). Tratado como `anulado` em todos os anos.
+- **Nulos e eleitores não instalados por resíduo:** o significado das colunas de nulos do
+  TSE muda entre anos (em 2006, `QT_VOTOS_NULOS` e `QT_TOTAL_VOTOS_NULOS` diferem em 3 por
+  linha; em 2026 só o "total" inclui os anulados do nº 28). Por isso `nulos` = comparecimento
+  − válidos − brancos e `eleitores_nao_instalados` = aptos − comparecimento − abstenções. A
+  checagem independente continua: válidos (detalhe) = pt + adversário + outros (seções).
+- **Voto em trânsito de 2010:** veio numa pseudo-UF "VT" (códigos 999xx, ~80 mil eleitores);
+  atribuído à capital correspondente (`voto_transito_2010.csv`), como o TSE faz desde 2018.
+- **AMCs da série:** os 5 municípios instalados em 2013 (Mojuí dos Campos, Paraíso das Águas,
+  Pinto Bandeira, Pescaria Brava, Balneário Rincão) formam AMC com os de origem: 5.562 AMCs,
+  iguais em todos os 11 turnos. Curiosidade: Mojuí dos Campos e Paraíso das Águas já aparecem
+  nos dados de 2010 do TSE.
+- **AMC em mais de uma região imediata** (Paraíso das Águas + Costa Rica + Água Clara +
+  Chapadão do Sul): fica com a região mais frequente entre os membros.
+- **Efeito nas análises 2022→2026:** desprezível (A1 M3: +0,0244 → +0,0243; A4a idêntico).
+
+---
+
 ## Armadilhas metodológicas (valem para todas as análises)
 
 - **Falácia ecológica:** escrever conclusões em nível de lugar ("municípios com X"),

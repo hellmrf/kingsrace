@@ -59,75 +59,79 @@ stages:
     deps:
     - path: data/interim/tse/detalhe_munzona
       hash: md5
-      md5: 2d318d72036b70d6c94ec4d3427717f8.dir
-      size: 502635
-      nfiles: 2
+      md5: cb765c6c2b9a9837d40388e0030c8bea.dir
+      size: 1857291
+      nfiles: 6
     - path: data/raw/ibge/municipios.json
       hash: md5
       md5: 436ca4776176cd4d13786e7bf750dd37
       size: 2372050
     - path: data/reference/amc.csv
       hash: md5
-      md5: ddb0446390f718707f0affbe82b11879
-      size: 266
+      md5: ae5f669fc838bca830b6f61eed80e9c2
+      size: 1049
     - path: data/reference/municipios_overrides.csv
       hash: md5
       md5: a396390c411dcb3b8f31f0d83edda6c5
       size: 935
     - path: src/kingsrace/harmonize/municipios.py
       hash: md5
-      md5: ff39e9b9a42adab666444d964eb1a663
-      size: 4566
+      md5: 72e6d7b82a276f75bc170e072518d698
+      size: 4624
     outs:
     - path: data/processed/municipios.parquet
       hash: md5
-      md5: e5a80f7eb7e6a816cc2b1c8c69021350
-      size: 98704
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
   painel:
     cmd: python -m kingsrace.features.painel
     deps:
     - path: data/interim/tse/detalhe_munzona
       hash: md5
-      md5: 2d318d72036b70d6c94ec4d3427717f8.dir
-      size: 502635
-      nfiles: 2
+      md5: cb765c6c2b9a9837d40388e0030c8bea.dir
+      size: 1857291
+      nfiles: 6
     - path: data/interim/tse/votacao_secao
       hash: md5
-      md5: f6209a6f59d3042d5dc0b52821cbfe20.dir
-      size: 73595381
-      nfiles: 2
+      md5: cc52141443505e6fcf279b1d0b00083c.dir
+      size: 156913664
+      nfiles: 6
     - path: data/processed/municipios.parquet
       hash: md5
-      md5: e5a80f7eb7e6a816cc2b1c8c69021350
-      size: 98704
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
     - path: data/reference/candidatos.csv
       hash: md5
-      md5: a04f7b221eb33ca4a4e5695d73dd12c6
-      size: 170
+      md5: fd9ad6e79f1e744102a6956a1bc0c3e5
+      size: 472
+    - path: data/reference/voto_transito_2010.csv
+      hash: md5
+      md5: b095bcbfbee02a38c8ac8a1cfac6343f
+      size: 702
     - path: src/kingsrace/features/painel.py
       hash: md5
-      md5: cfd14efacfe5b2be87549f2e6ec8ea79
-      size: 5896
+      md5: 202daedce2d52d4d8273486273fc0f06
+      size: 8033
     outs:
     - path: data/processed/painel_amc.parquet
       hash: md5
-      md5: 901f6ff4f60fe2e0258f2244294e5e1d
-      size: 1185768
+      md5: 9b6d4016f70cc1666e0e560c2ce9340e
+      size: 4026517
     - path: data/processed/painel_municipio.parquet
       hash: md5
-      md5: da8e163773c8373daf5d8d99df340511
-      size: 1185906
+      md5: 2cb278f11df4f7974363fad152bcb6a3
+      size: 4030992
     - path: data/processed/votos_municipio.parquet
       hash: md5
-      md5: 89897adf7502322c78dedd2d65b19d00
-      size: 476245
+      md5: 4b722c875f390c3c9d15d5b0b681f084
+      size: 1548772
   covariaveis:
     cmd: python -m kingsrace.features.covariaveis
     deps:
     - path: data/processed/municipios.parquet
       hash: md5
-      md5: e5a80f7eb7e6a816cc2b1c8c69021350
-      size: 98704
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
     - path: data/raw/ibge/sidra
       hash: md5
       md5: 0ede85ea413575725fe09fc95549bed3.dir
@@ -153,9 +157,117 @@ stages:
     outs:
     - path: data/processed/covariaveis_amc.parquet
       hash: md5
-      md5: 831f1815593d2b6b153617dd125c9447
-      size: 849064
+      md5: f1d1b1f6e3724086cb2b7db075a8aab4
+      size: 848385
     - path: data/processed/covariaveis_municipio.parquet
       hash: md5
       md5: c631eebb03330637bfb72dd2dc05b71f
       size: 816382
+  converte_tse@2006:
+    cmd: python -m kingsrace.ingest.tse 2006
+    deps:
+    - path: 
+        data/raw/tse/detalhe_votacao_munzona/detalhe_votacao_munzona_2006.zip
+      hash: md5
+      md5: ef87ecf5f5344b4aea3c5d6443faef9b
+      size: 3893736
+    - path: data/raw/tse/votacao_secao/votacao_secao_2006_BR.zip
+      hash: md5
+      md5: 72f859dfd3dfb15cff14039af755473c
+      size: 22094673
+    - path: src/kingsrace/ingest/tse.py
+      hash: md5
+      md5: d2b2d96f474eee4e2dcadf064820ddd8
+      size: 3070
+    outs:
+    - path: data/interim/tse/detalhe_munzona/ano=2006
+      hash: md5
+      md5: 3b1fc63da2da276a254fd97fc66bd355.dir
+      size: 333068
+      nfiles: 1
+    - path: data/interim/tse/votacao_secao/ano=2006
+      hash: md5
+      md5: a38b3f47cc4e6b33007a948c4c9e4f9e.dir
+      size: 6842495
+      nfiles: 1
+  converte_tse@2010:
+    cmd: python -m kingsrace.ingest.tse 2010
+    deps:
+    - path: 
+        data/raw/tse/detalhe_votacao_munzona/detalhe_votacao_munzona_2010.zip
+      hash: md5
+      md5: 079288f1189a3328f0008b9e059c230f
+      size: 3354480
+    - path: data/raw/tse/votacao_secao/votacao_secao_2010_BR.zip
+      hash: md5
+      md5: d6a69b4bde0b13ad1b5394fe054c9e66
+      size: 23737900
+    - path: src/kingsrace/ingest/tse.py
+      hash: md5
+      md5: d2b2d96f474eee4e2dcadf064820ddd8
+      size: 3070
+    outs:
+    - path: data/interim/tse/detalhe_munzona/ano=2010
+      hash: md5
+      md5: 2398e163ad5436e6d70adc6ca9e45fdb.dir
+      size: 333989
+      nfiles: 1
+    - path: data/interim/tse/votacao_secao/ano=2010
+      hash: md5
+      md5: 72576350cd182fb753dbcacd8fc13abd.dir
+      size: 7107608
+      nfiles: 1
+  converte_tse@2014:
+    cmd: python -m kingsrace.ingest.tse 2014
+    deps:
+    - path: 
+        data/raw/tse/detalhe_votacao_munzona/detalhe_votacao_munzona_2014.zip
+      hash: md5
+      md5: 9ed8385690ddd2ecc8924b17677a9120
+      size: 3937094
+    - path: data/raw/tse/votacao_secao/votacao_secao_2014_BR.zip
+      hash: md5
+      md5: bc7cac6028574d196f416bd9aa592067
+      size: 29583546
+    - path: src/kingsrace/ingest/tse.py
+      hash: md5
+      md5: d2b2d96f474eee4e2dcadf064820ddd8
+      size: 3070
+    outs:
+    - path: data/interim/tse/detalhe_munzona/ano=2014
+      hash: md5
+      md5: 9f0dd9c370646572ca398cd39714ef08.dir
+      size: 352235
+      nfiles: 1
+    - path: data/interim/tse/votacao_secao/ano=2014
+      hash: md5
+      md5: 70b77afbb2b70c1040a1a82a22a42849.dir
+      size: 8949044
+      nfiles: 1
+  converte_tse@2018:
+    cmd: python -m kingsrace.ingest.tse 2018
+    deps:
+    - path: 
+        data/raw/tse/detalhe_votacao_munzona/detalhe_votacao_munzona_2018.zip
+      hash: md5
+      md5: 84f2a2d2817d2c7eec80f34fbca37dac
+      size: 4269741
+    - path: data/raw/tse/votacao_secao/votacao_secao_2018_BR.zip
+      hash: md5
+      md5: 4e0724f1ad5c20dab2a2053616f11de2
+      size: 250985147
+    - path: src/kingsrace/ingest/tse.py
+      hash: md5
+      md5: d2b2d96f474eee4e2dcadf064820ddd8
+      size: 3070
+    outs:
+    - path: data/interim/tse/detalhe_munzona/ano=2018
+      hash: md5
+      md5: 869ef09f8d9b40854c0a004a24191da1.dir
+      size: 335364
+      nfiles: 1
+    - path: data/interim/tse/votacao_secao/ano=2018
+      hash: md5
+      md5: b9e41f3b3ad572616e3d90c5a8767f84.dir
+      size: 60419136
+      nfiles: 1

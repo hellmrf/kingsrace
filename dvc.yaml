@@ -30,6 +30,7 @@ stages:
     deps:
       - src/kingsrace/features/painel.py
       - data/reference/candidatos.csv
+      - data/reference/voto_transito_2010.csv
       - data/processed/municipios.parquet
       - data/interim/tse/votacao_secao
       - data/interim/tse/detalhe_munzona

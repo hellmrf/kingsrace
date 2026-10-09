@@ -2,7 +2,7 @@
 
 Tabelas de `data/processed/`, geradas por `just repro` (etapas em `dvc.yaml`). O esquema
 executável está em `src/kingsrace/esquemas.py`; este arquivo explica o significado.
-Pleitos disponíveis: os de `params.yaml` (hoje 2022 1T/2T e 2026 1T).
+Pleitos disponíveis: os de `params.yaml` (2006–2022, 1º e 2º turnos, e 2026 1º turno).
 
 ## `municipios.parquet`
 
@@ -44,9 +44,9 @@ Pleitos disponíveis: os de `params.yaml` (hoje 2022 1T/2T e 2026 1T).
 | `aptos` | Int32 | eleitores aptos = `comparecimento + abstencoes + eleitores_nao_instalados` |
 | `comparecimento` | Int32 | = `validos + brancos + nulos` |
 | `abstencoes` | Int32 | eleitores que não compareceram |
-| `eleitores_nao_instalados` | Int32 | eleitores de seções não instaladas (raros; ex.: Manaus 2022, 84) |
+| `eleitores_nao_instalados` | Int64 | resíduo aptos − comparecimento − abstenções: eleitores de seções não instaladas (ex.: Manaus 2022, 84) e pequenas diferenças do TSE em 2006–2014 |
 | `validos` | Int32 | votos válidos = `votos_pt + votos_adv + votos_outros` |
-| `brancos`, `nulos` | Int32 | `nulos` inclui votos anulados (candidatos indeferidos) |
+| `brancos`, `nulos` | Int64 | `nulos` é o resíduo comparecimento − válidos − brancos: nulos, votos de candidatos indeferidos e anulados apurados em separado |
 | `votos_pt`, `votos_adv`, `votos_outros` | Int32 | votos do PT, do principal adversário e dos demais válidos |
 | `pt_validos`, `adv_validos` | Float64 | proporção nos válidos |
 | `pt_2p` | Float64 | PT / (PT + adversário) — métrica principal entre pleitos |

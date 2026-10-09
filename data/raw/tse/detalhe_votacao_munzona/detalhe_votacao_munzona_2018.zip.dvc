@@ -1,0 +1,13 @@
+md5: 11fdb01a24b28f2b835847fa4e28fc96
+frozen: true
+deps:
+- checksum: '"4126ad-63b13e8577a7f"'
+  size: 4269741
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_2018.zip
+outs:
+- md5: 84f2a2d2817d2c7eec80f34fbca37dac
+  size: 4269741
+  hash: md5
+  path: detalhe_votacao_munzona_2018.zip

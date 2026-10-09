@@ -1,0 +1,13 @@
+md5: adbb66ff12e2666f7500cc0684767b46
+frozen: true
+deps:
+- checksum: '"332f70-63bdd0f5db779"'
+  size: 3354480
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_2010.zip
+outs:
+- md5: 079288f1189a3328f0008b9e059c230f
+  size: 3354480
+  hash: md5
+  path: detalhe_votacao_munzona_2010.zip

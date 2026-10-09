@@ -116,3 +116,9 @@ def test_soja_nunca_ocupa_mais_que_o_territorio(covariaveis):
         excesso = covariaveis.filter(pl.col(f"area_soja_{ano}_ha") > 100 * pl.col("area_km2"))
 
         assert excesso.is_empty(), excesso.select("cd_ibge", f"area_soja_{ano}_ha", "area_km2")
+
+
+def test_residuos_de_turnout_nao_sao_negativos(painel):
+    assert painel.filter(
+        (pl.col("nulos") < 0) | (pl.col("eleitores_nao_instalados") < 0)
+    ).is_empty()

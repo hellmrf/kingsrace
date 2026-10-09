@@ -7,7 +7,9 @@ from kingsrace.features.painel import (
     adiciona_metricas,
     agrega_amc,
     classifica_votos,
+    completa_turnout,
     monta_painel,
+    remapeia_transito,
 )
 
 CANDIDATOS = pl.DataFrame(
@@ -20,7 +22,7 @@ CANDIDATOS = pl.DataFrame(
 
 
 def test_classifica_votos_por_papel_com_branco_nulo_e_outro_por_padrao():
-    votos = pl.DataFrame({"ano": [2026] * 6, "nr_votavel": [13, 22, 28, 95, 96, 70]})
+    votos = pl.DataFrame({"ano": [2026] * 7, "nr_votavel": [13, 22, 28, 95, 96, 97, 70]})
 
     res = classifica_votos(votos, CANDIDATOS)
 
@@ -30,6 +32,7 @@ def test_classifica_votos_por_papel_com_branco_nulo_e_outro_por_padrao():
         28: "anulado",
         95: "branco",
         96: "nulo",
+        97: "anulado",  # voto anulado e apurado em separado (seções anuladas pela Justiça)
         70: "outro",
     }
 
@@ -145,3 +148,31 @@ def test_agrega_amc_soma_votos_antes_de_calcular_proporcoes():
     assert res.height == 1
     assert (r["amc_id"], r["votos_pt"], r["validos"]) == (9000001, 910, 1100)
     assert r["pt_2p"] == pytest.approx(910 / 1100)
+
+
+def test_voto_em_transito_de_2010_vai_para_a_capital():
+    votos = pl.DataFrame(
+        {"uf": ["VT", "SP", "RJ"], "cd_tse": [99901, 71072, 60011], "votos": [5, 100, 7]}
+    )
+    mapa = pl.DataFrame({"cd_tse_vt": [99901], "uf": ["SP"], "cd_tse_capital": [71072]})
+
+    res = remapeia_transito(votos, mapa)
+
+    assert res.rows() == [("SP", 71072, 5), ("SP", 71072, 100), ("RJ", 60011, 7)]
+
+
+def test_completa_turnout_define_nulos_e_nao_instalados_pelos_residuos():
+    # 2006: as colunas de nulos do TSE diferem entre si; os resíduos sempre fecham a conta
+    detalhe = pl.DataFrame(
+        {
+            "aptos": [25804],
+            "comparecimento": [20144],
+            "abstencoes": [5660],
+            "validos": [18852],
+            "brancos": [244],
+        }
+    )
+
+    r = completa_turnout(detalhe).row(0, named=True)
+
+    assert (r["nulos"], r["eleitores_nao_instalados"]) == (1048, 0)

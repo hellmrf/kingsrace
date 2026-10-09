@@ -1,0 +1,13 @@
+md5: 21191198ae89570ff9ca0aded57cf20d
+frozen: true
+deps:
+- checksum: '"1512351-5deece14b2640"'
+  size: 22094673
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2006_BR.zip
+outs:
+- md5: 72f859dfd3dfb15cff14039af755473c
+  size: 22094673
+  hash: md5
+  path: votacao_secao_2006_BR.zip

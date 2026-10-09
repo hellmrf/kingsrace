@@ -52,13 +52,21 @@ def test_base_variacao_calcula_deltas_tamanho_e_traz_geografia_e_covariaveis():
     assert r["pct_evangelica"] == 30.0
 
 
-def test_base_variacao_falha_se_amc_atravessa_regioes_imediatas():
-    municipios = _municipios().with_columns(
-        pl.when(pl.col("cd_ibge") == 12)
-        .then(999999)
-        .otherwise(pl.col("cd_regiao_imediata"))
-        .alias("cd_regiao_imediata")
+def test_amc_que_atravessa_regioes_imediatas_fica_com_a_mais_frequente():
+    # ex.: Paraíso das Águas + Chapadão do Sul (mesma região) + Água Clara + Costa Rica
+    municipios = pl.DataFrame(
+        {
+            "cd_ibge": [11, 12, 13, 14],
+            "amc_id": [1, 1, 1, 1],
+            "nome": ["A", "B", "C", "D"],
+            "uf": ["MS"] * 4,
+            "regiao": ["CO"] * 4,
+            "cd_regiao_imediata": [500002, 500003, 500004, 500003],
+            "regiao_imediata": ["Três Lagoas", "Chapadão", "Coxim", "Chapadão"],
+        }
     )
+    painel = _painel().filter(pl.col("amc_id") == 1)
 
-    with pytest.raises(ValueError, match="região imediata"):
-        base_variacao(_painel(), _cov(), municipios, de=(2022, 1), para=(2026, 1))
+    res = base_variacao(painel, _cov(), municipios, de=(2022, 1), para=(2026, 1))
+
+    assert res.select("cd_regiao_imediata", "regiao_imediata").row(0) == (500003, "Chapadão")

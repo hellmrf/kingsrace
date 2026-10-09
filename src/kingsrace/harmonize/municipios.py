@@ -92,7 +92,7 @@ def executa() -> None:
     """Gera data/processed/municipios.parquet a partir de todos os anos convertidos."""
     tse = (
         pl.scan_parquet(paths.INTERIM / "tse" / "detalhe_munzona" / "*" / "*.parquet")
-        .filter(pl.col("sg_uf") != "ZZ")
+        .filter(~pl.col("sg_uf").is_in(["ZZ", "VT"]))  # exterior; trânsito de 2010 (→ capital)
         .select(
             pl.col("cd_municipio").alias("cd_tse"),
             pl.col("sg_uf").alias("uf"),

@@ -14,7 +14,7 @@ def base_variacao(
 
     Colunas: `delta_logit` e `delta_pp` (de `pt_2p`), níveis `*_de`/`*_para`,
     `log_aptos_de`, geografia (nome, uf, regiao, região imediata) e as covariáveis.
-    Falha se uma AMC atravessar regiões imediatas (os efeitos fixos dependem disso).
+    Se uma AMC atravessar regiões imediatas, fica com a mais frequente entre os membros.
     """
 
     def pleito(ano_turno, sufixo):
@@ -23,20 +23,26 @@ def base_variacao(
             "amc_id", *(pl.col(c).alias(f"{c}_{sufixo}") for c in ("aptos", "pt_2p", "pt_2p_logit"))
         )
 
-    geo = municipios.group_by("amc_id").agg(
-        pl.col("nome").sort().str.join(" + "),
-        pl.col("uf", "regiao", "regiao_imediata").first(),
-        pl.col("cd_regiao_imediata").first(),
-        pl.col("cd_regiao_imediata").n_unique().alias("_n_ri"),
+    # região imediata da AMC: a mais frequente entre os membros (empate: menor código).
+    # Só importa para AMCs que atravessam regiões (ex.: Paraíso das Águas/MS).
+    regiao_amc = (
+        municipios.group_by("amc_id", "cd_regiao_imediata", "regiao_imediata")
+        .len()
+        .sort(["amc_id", "len", "cd_regiao_imediata"], descending=[False, True, False])
+        .group_by("amc_id", maintain_order=True)
+        .first()
+        .drop("len")
     )
-    multiplas = geo.filter(pl.col("_n_ri") > 1)
-    if multiplas.height:
-        raise ValueError(f"AMC em mais de uma região imediata: {multiplas['amc_id'].to_list()}")
+    geo = (
+        municipios.group_by("amc_id")
+        .agg(pl.col("nome").sort().str.join(" + "), pl.col("uf", "regiao").first())
+        .join(regiao_amc, on="amc_id")
+    )
 
     return (
         pleito(de, "de")
         .join(pleito(para, "para"), on="amc_id")
-        .join(geo.drop("_n_ri"), on="amc_id")
+        .join(geo, on="amc_id")
         .join(cov_amc, on="amc_id", how="left")
         .with_columns(
             delta_logit=pl.col("pt_2p_logit_para") - pl.col("pt_2p_logit_de"),
