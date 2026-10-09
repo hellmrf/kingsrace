@@ -20,7 +20,7 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | B1 | Transferências 1T→2T de 2026 favorecem Flávio, ao contrário de 2022 | aberta | | | |
 | B2 | Variação da abstenção entre turnos e a quem beneficiou | aberta | | | |
 | B3 | Transferências heterogêneas por região/perfil | aberta | | | |
-| B4 | Previsão do 2T por município, congelada antes de 25/10/2026 | aberta | | | |
+| B4 | Previsão do 2T por município, congelada antes de 25/10/2026 | registrada | ver [B4](#b4) | | `03_previsao_2t.ipynb` |
 | C1 | Clivagem do lulismo (renda, Nordeste, escolaridade, religião) ao longo de 2006–2026 | aberta | | | |
 | C2 | Nacionalização vs. regionalização do voto do PT (decomposição de variância) | aberta | | | |
 | C3 | Tipologia de trajetórias municipais 2006–2026 | aberta | | | |
@@ -75,3 +75,30 @@ padrão bruto; o que se testa aqui é se ele sobrevive à composição dos munic
 - Observações: todos os modelos usam a mesma amostra (5.569 AMCs, todas completas); o
   `pyfixest` descarta grupos de efeito fixo unitários (n = 5.567–5.568). São 510 regiões
   imediatas, não 509 como escrito acima (a definição não muda).
+
+### B4
+
+**Registrada em 2026-10-08, antes do 2º turno (25/10).** Método em
+`src/kingsrace/models/previsao_2t.py`; previsões congeladas em
+`data/reference/previsoes/` (v1 em 08/10, só com o Datafolha de 6–8/10; v2 em 24/10, com as
+pesquisas finais). Cada versão tem commit e tag `previsao-2t-2026-<versão>`.
+
+- **O que se prevê:** a fatia de Lula entre os dois finalistas, por município (5.571).
+- **Nível nacional:** média das pesquisas de 2º turno, corrigida por λ × o viés de cada
+  instituto no 1º turno. Central λ = 0,5; faixa de λ = 1 (viés repetido inteiro) a λ = 0.
+- **Geografia (três variantes no mesmo nível):** G0 deslocamento uniforme em logit
+  (central); G1 transferências por perfil de candidato; G2 uniforme + compressão de 2022.
+
+**Como será avaliada** (com os dados do 2º turno do TSE):
+
+1. **Nível:** erro nacional do cenário central, em pp; o resultado cai dentro da faixa?
+2. **Geografia:** cada variante é recalibrada no nível real e medida pelo RMSE municipal
+   (pp, sem pesos; com pesos pelo eleitorado como complemento). Vence a de menor RMSE.
+3. **Erro total:** RMSE municipal das colunas exatamente como congeladas.
+4. **Referência ingênua:** repetir a fatia do 1º turno (`pt_2p_1t`). O modelo só agrega
+   valor se bater essa referência.
+5. **Por UF:** erro do total de cada UF.
+
+**Expectativas registradas (o que contaria como surpresa):** G0 ≤ G1 em RMSE, ou seja,
+as transferências por perfil não ajudam, como no backtest de 2022 (0,95 contra 1,16 pp);
+e G2 ≤ G0, ou seja, a compressão de 2022 se repete.
