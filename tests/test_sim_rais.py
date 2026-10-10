@@ -74,3 +74,11 @@ def test_rais_acha_colunas_nos_dois_layouts(tmp_path):
     )
     assert colunas(novo)[0] == ","
     assert colunas(novo)[1]["municipio"] == "Município - Código"
+
+
+def test_codigo_de_7_digitos_ate_2005_vira_6():
+    obitos = pl.DataFrame({"CAUSABAS": ["X950", "X950"], "CODMUNRES": ["3550308", "355030"]})
+
+    res = conta_homicidios(obitos, 2004)
+
+    assert res.select("cd_ibge6", "homicidios").rows() == [(355030, 2)]

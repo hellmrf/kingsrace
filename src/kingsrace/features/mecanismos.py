@@ -61,7 +61,11 @@ def e5_homicidios(homicidios: pl.DataFrame, cov: pl.DataFrame) -> pl.DataFrame:
     """Δ da taxa de homicídios por 100 mil habitantes entre os triênios de cada transição.
 
     Taxa do triênio = homicídios dos três anos / (3 × população estimada no ano do meio).
+    Uma AMC sem registro num ano teve zero homicídios; uma AMC sem estimativa de população
+    fica sem taxa; uma transição com algum ano do triênio ausente nos dados fica de fora
+    (não vira zero).
     """
+    anos = set(homicidios["ano"].unique().to_list())
 
     def taxa(anos):
         a0, a1 = anos
@@ -70,13 +74,20 @@ def e5_homicidios(homicidios: pl.DataFrame, cov: pl.DataFrame) -> pl.DataFrame:
             homicidios.filter(pl.col("ano").is_between(a0, a1))
             .group_by("amc_id")
             .agg(pl.col("homicidios").sum())
-            .join(cov.select("amc_id", pop=pl.col(f"pop_{meio}")), on="amc_id", how="right")
+            # população 0 = município ainda sem estimativa própria (Nazária/PI em 2004)
+            .join(
+                cov.select("amc_id", pop=pl.col(f"pop_{meio}").replace(0, None)),
+                on="amc_id",
+                how="right",
+            )
             .with_columns(taxa=1e5 * pl.col("homicidios").fill_null(0) / (3 * pl.col("pop")))
             .select("amc_id", "taxa")
         )
 
     partes = []
     for de, (antes, depois) in TRIENIOS.items():
+        if not all({*range(a0, a1 + 1)} <= anos for a0, a1 in (antes, depois)):
+            continue
         partes.append(
             taxa(antes)
             .join(taxa(depois), on="amc_id", suffix="_depois")
