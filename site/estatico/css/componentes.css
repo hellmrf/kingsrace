@@ -195,3 +195,7 @@ main > *, section > *, .capa > * { min-width: 0; }
 .capa .placar { grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
 /* no celular, a coluna de texto das tabelas quebra linha; as numéricas não */
 .tabela-rola td:first-child, .tabela-rola th:first-child { white-space: normal; min-width: 9rem; }
+
+/* mapa de pontos: largo, com no máximo a altura da tela */
+.mapa-fig { width: 100%; max-width: var(--larga); margin-inline: auto; }
+.mapa-fig .graf svg { max-height: 85vh; }

@@ -1,7 +1,7 @@
 """Dados da página "Como virar" (site/paginas/segundo-turno/), só com saídas do DVC (D12).
 
-Lê as métricas e os gráficos da etapa `segundo_turno` (resultados/segundo_turno/), a previsão
-congelada da B4 (resultados/03_previsao_2t/) e as tabelas de data/processed/segundo_turno/.
+Lê as métricas e os gráficos das etapas `segundo_turno` e `pesquisas` (resultados/), a
+previsão congelada da B4 (resultados/03_previsao_2t/) e as tabelas de data/processed/.
 Seleciona, ordena e renomeia; não faz conta nova. Grava em site/dados/segundo-turno/:
 
 - `pagina.json`: os números do texto (o build os grava no HTML);
@@ -16,6 +16,7 @@ Uso: python -m kingsrace.publica dados segundo-turno
 import polars as pl
 
 from kingsrace import paths
+from kingsrace.features.base import geografia_amc
 from kingsrace.publica import comum
 
 ETAPA = "segundo_turno"
@@ -53,7 +54,7 @@ ROTULO_CENARIO = {
 }
 
 
-def pagina(m: dict, b4: dict, governador: pl.DataFrame) -> dict:
+def pagina(m: dict, b4: dict, governador: pl.DataFrame, g6: dict) -> dict:
     g = lambda caminho: comum.metrica(m, caminho)  # noqa: E731
     gov26 = governador.filter(pl.col("ano") == 2026)
     com = gov26.filter("tem_2t")["uf"].sort().to_list()
@@ -95,15 +96,33 @@ def pagina(m: dict, b4: dict, governador: pl.DataFrame) -> dict:
             "exterior_mi": g("G1/exterior_margem_mi"),
         },
         "rotulo_origem": ROTULO_ORIGEM,
+        "g6": {
+            k: comum.metrica(g6, f"G6/{k}")
+            for k in (
+                "n_pesquisas",
+                "n_institutos_na_janela",
+                "real_1t",
+                "media",
+                "modelo",
+                "distancia_pp",
+                "distancia_mi",
+                "margem_mi",
+                "votos_dos_dois_1t_mi",
+                "cruzamentos/n",
+                "vies_medio_1t",
+            )
+        },
     }
 
 
 def municipios(reserva: pl.DataFrame, nomes: pl.DataFrame) -> pl.DataFrame:
+    coords = pl.read_parquet(paths.PROCESSED / "coordenadas_municipio.parquet")
     return (
         reserva.join(nomes, on="cd_ibge")
+        .join(coords.select("cd_ibge", "lat", "lon"), on="cd_ibge", how="left")
         .select(
             "cd_ibge", "nome", "uf", "aptos", "p_lula", "abstencao", "nao_votou", "reserva",
-            "rendimento_pp", "perdidos", "votos_eliminados",
+            "rendimento_pp", "perdidos", "votos_eliminados", "lat", "lon",
         )
         .sort("uf", "nome")
     )  # fmt: skip
@@ -128,11 +147,61 @@ COLUNAS_LOCAL = {
 }
 
 
+# janelas entre o 1º e o 2º turno de cada eleição com 2º turno citada na página
+JANELAS_ENTRE_TURNOS = [("2006-10-02", "2006-10-29"), ("2022-10-03", "2022-10-30"),
+                        ("2026-10-05", "2026-10-25")]  # fmt: skip
+
+
+def documentado_entre_turnos() -> pl.DataFrame:
+    """Eventos da linha do tempo (G7) que caem entre os turnos de 2006, 2022 e 2026."""
+    t = pl.read_csv(paths.REFERENCE / "linha_do_tempo.csv")
+    dentro = pl.any_horizontal(
+        pl.col("data").is_between(pl.lit(a), pl.lit(b)) for a, b in JANELAS_ENTRE_TURNOS
+    )
+    return t.filter(dentro & ~pl.col("faixa").eq("urnas")).sort("data")
+
+
+def tabela_pesquisas() -> pl.DataFrame:
+    """Pesquisas do 2º turno com viés e corrigido (etapa pesquisas) e a procedência (série)."""
+    g6 = pl.read_parquet(paths.PROCESSED / "pesquisas" / "pesquisas_2t.parquet")
+    serie = pl.read_csv(paths.REFERENCE / "pesquisas_serie_2025_2026.csv", try_parse_dates=True)
+    institutos = pl.read_csv(paths.REFERENCE / "institutos.csv")
+    procedencia = (
+        serie.join(institutos, left_on="instituto", right_on="nome", how="left")
+        .select(
+            pl.col("instituto_right").alias("instituto"), "campo_fim", "amostra", "lula", "flavio",
+            "fonte", "url", pl.col("conferido").fill_null("não"),
+        )
+    )  # fmt: skip
+    return (
+        g6.join(procedencia, on=["instituto", "campo_fim"], how="left")
+        .with_columns(pl.col("campo_inicio", "campo_fim").cast(pl.String))
+        .sort("campo_fim", "instituto", descending=[True, False])
+    )
+
+
+def amcs() -> pl.DataFrame:
+    """Ex-eleitores (G4) por AMC, com nome, UF e centro eleitoral, para o mapa "conversar"."""
+    ex = pl.read_parquet(TABELAS / "ex_eleitores_amc.parquet").select(
+        "amc_id", fatia=pl.col("c_fatia"), delta=pl.col("delta")
+    )
+    municipios_ = pl.read_parquet(paths.PROCESSED / "municipios.parquet")
+    geo = geografia_amc(municipios_).select("amc_id", "nome", "uf")
+    coords = pl.read_parquet(paths.PROCESSED / "coordenadas_amc.parquet")
+    return (
+        ex.join(geo, on="amc_id")
+        .join(coords.select("amc_id", "lat", "lon"), on="amc_id", how="left")
+        .sort("amc_id")
+    )
+
+
 def arredonda(df: pl.DataFrame) -> pl.DataFrame:
     """Só formatação: frações com 3 casas, votos inteiros, coordenadas com 5 casas (~1 m)."""
     fracoes = [c for c in ("abstencao", "p_lula") if c in df.columns]
     votos = [
-        c for c in ("reserva", "rendimento_pp", "perdidos", "votos_eliminados") if c in df.columns
+        c
+        for c in ("reserva", "rendimento_pp", "perdidos", "votos_eliminados", "fatia", "delta")
+        if c in df.columns
     ]
     coords = [c for c in ("lat", "lon") if c in df.columns]
     return df.with_columns(
@@ -148,13 +217,26 @@ def executa() -> None:
     if abs(comum.metrica(m, "G1/diferenca_mi") * 1e6 - oficial) > 0.5:
         raise ValueError("G1/diferenca_mi não bate com os totais oficiais do TSE")
 
-    comum.grava_json(DESTINO / "pagina.json", pagina(m, b4, governador))
-    comum.grava_json(DESTINO / "graficos.json", {n: comum.grafico(ETAPA, n) for n in GRAFICOS})
+    g6 = comum.metricas("pesquisas")
+    comum.grava_json(
+        DESTINO / "pagina.json",
+        pagina(m, b4, governador, g6)
+        | {
+            "pesquisas": tabela_pesquisas().to_dicts(),
+            "documentado": documentado_entre_turnos().to_dicts(),
+            "evidencias": pl.read_csv(paths.REFERENCE / "evidencias_mobilizacao.csv").to_dicts(),
+        },
+    )
+    graficos = {n: comum.grafico(ETAPA, n) for n in GRAFICOS}
+    graficos |= {n: comum.grafico("pesquisas", n) for n in ("G6_media", "G6_pesquisas")}
+    comum.grava_json(DESTINO / "graficos.json", graficos)
 
     nomes = pl.read_parquet(paths.PROCESSED / "municipios.parquet").select("cd_ibge", "nome")
     tabela = arredonda(municipios(pl.read_parquet(TABELAS / "reserva_municipio.parquet"), nomes))
     comum.grava_json(DESTINO / "municipios.json", tabela.to_dicts())
     ufs = tabela.select("cd_ibge", "uf")
+
+    comum.grava_json(DESTINO / "amcs.json", arredonda(amcs()).to_dicts())
 
     locais = pl.read_parquet(TABELAS / "reserva_local.parquet").select(
         *(pl.col(c).alias(a) for c, a in COLUNAS_LOCAL.items())
