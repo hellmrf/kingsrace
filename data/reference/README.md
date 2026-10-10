@@ -14,3 +14,7 @@ Regra prática: se passar de ~1 MB ou puder ser baixado de uma fonte, não é da
 | `municipios_overrides_receita.csv` | correspondências Receita→IBGE que o casamento por UF + nome não resolve. |
 | `fontes_ftp.csv` | URL de origem dos brutos baixados por FTP (RAIS, SIM), que o `dvc import-url` não suporta; o hash fica no `.dvc` de cada arquivo. |
 | `fontes_receita.csv` | versão, URL, md5 e tamanho dos zips de Estabelecimentos do CNPJ, que são apagados depois de processados e não ficam no DVC; a ingestão para se um novo download não bater com o md5 anotado. |
+| `pesquisas_2026.csv` | últimas pesquisas de cada instituto antes do 1º turno de 2026 e a do 2º turno usada na previsão v1. |
+| `pesquisas_serie_2025_2026.csv` | 2º turno simulado Lula × Flávio, jun/2025 a out/2026, da Wikipédia (pt), com ~20% das linhas conferidas na fonte (`conferido`); linhas `divergente` já trazem o valor da fonte. |
+| `aprovacao_lula_2025_2026.csv` | aprovação do trabalho de Lula pela Quaest, jan/2025 a out/2026, lida dos relatórios do instituto. A partir de ago/2026 a pergunta muda um pouco (coluna `pergunta`). |
+| `linha_do_tempo.csv` | eventos de 2006 a 2026 com faixa (`eua`, `brasil`, `urnas`), grau de evidência (`documentado`, `reportado`, `alegado`, `refutado`), fonte e `conferido`. Alimenta a página `reports/conjuntura`. |

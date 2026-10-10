@@ -5,6 +5,38 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-10 · síntese para o grupo: "O que os votos mostram"
+
+[`reports/conjuntura/`](../reports/conjuntura/) · página publicada como artifact privado
+
+Uma página visual, sem jargão, para debater os achados com os colegas antes do 2º turno
+(versão 1, para a militância e a direção; a versão acadêmica fica para depois de 25/10).
+Cada afirmação leva um selo de evidência (dado testado, exploratório, documentado,
+reportado, alegado), e os números vêm todos de `dados.js`, gerado por `just conjuntura` a
+partir das métricas dos notebooks e do painel, com os totais conferidos contra os oficiais.
+
+**Contas descritivas novas** (exploratórias, sem registro; feitas para a página):
+
+- **A distribuição da variação municipal em cada transição** (pp, 1º turno): em 2022→2026, o
+  PT caiu em 99,1% das AMCs, com desvio-padrão de 3,1 pp, contra 8,4 a 9,7 pp nas quatro
+  transições anteriores. É a C4 em pontos percentuais.
+- **Pesquisas da véspera do 1º turno:** 7 dos 11 institutos davam Lula à frente; o viés médio
+  na fatia entre os dois foi de +1,6 pp a favor de Lula.
+- **Bolsa Família no nível (A4) em pp:** por desvio-padrão de cobertura (7,6 famílias por 100
+  habitantes), +1,1 pp para o PT em 2022 e +2,2 pp em 2026.
+
+**Fontes novas:** `data/reference/linha_do_tempo.csv` (eventos de 2006 a 2026 com grau de
+evidência e fonte conferida, o produto previsto na série F) e as séries de pesquisas de
+2025–2026 (2º turno simulado Lula × Flávio e aprovação do governo), que alimentam um gráfico
+**exploratório** de pesquisas com as ações dos EUA marcadas no tempo. O gráfico não testa
+nada: serve para escolher o que testar.
+
+**Para o grupo decidir** (votação na própria página): tarifas por município (Comex Stat),
+pesquisas × eventos por segmento, segurança (PCC/CV), módulo RDD de prefeitos e emendas,
+E3b, trilha documental e igrejas em 2026.
+
+---
+
 ## 2026-10-10 · só a religião marca 2018; economia, violência e trabalho, não (série E)
 
 [`notebooks/08_mecanismos.ipynb`](../notebooks/08_mecanismos.ipynb) · registro de 10/10 em

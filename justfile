@@ -51,3 +51,7 @@ pull:
 # Gera e grava a previsão do 2º turno (ex.: just previsao v2 2026-10-24)
 previsao versao corte:
     uv run python -m kingsrace.models.previsao_2t {{versao}} {{corte}}
+
+# Gera os dados da página de síntese (reports/conjuntura/dados.js)
+conjuntura:
+    uv run python reports/conjuntura/gerar_dados.py

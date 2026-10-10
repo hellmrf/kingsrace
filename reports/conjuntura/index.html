@@ -1,0 +1,1539 @@
+<title>O que os votos mostram</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+/* Layout: coluna única de leitura (~42rem) com gráficos que se abrem até ~60rem; a capa
+   imita o boletim de urna, e os números dos candidatos (13 e 22) identificam as séries. */
+:root {
+  --papel: #f5f5f2;
+  --superficie: #fcfcfb;
+  --tinta: #141413;
+  --tinta-2: #4f4e4b;
+  --tinta-3: #85837d;
+  --linha: #e1e0d9;
+  --eixo: #c3c2b7;
+  --pt: #e34948;
+  --pt-lavado: rgba(227, 73, 72, 0.12);
+  --adv: #2a78d6;
+  --adv-lavado: rgba(42, 120, 214, 0.12);
+  --meio: #f0efec;
+  --confirma: #1d7f45;
+  --realce: #fff3c4;
+  --anel: rgba(20, 20, 19, 0.10);
+  --f-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-texto: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-dado: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --t-1: clamp(2.6rem, 7vw, 4.4rem);
+  --t-2: clamp(1.55rem, 3.6vw, 2.15rem);
+  --t-3: 1.2rem;
+  --t-corpo: 1.0625rem;
+  --t-nota: 0.875rem;
+  --t-micro: 0.75rem;
+  --coluna: 42rem;
+  --larga: 60rem;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #121211;
+    --superficie: #1a1a19;
+    --tinta: #f0efec;
+    --tinta-2: #c3c2b7;
+    --tinta-3: #8f8d86;
+    --linha: #2c2c2a;
+    --eixo: #45453f;
+    --pt: #e66767;
+    --pt-lavado: rgba(230, 103, 103, 0.16);
+    --adv: #3987e5;
+    --adv-lavado: rgba(57, 135, 229, 0.16);
+    --meio: #383835;
+    --confirma: #2fa865;
+    --realce: #3a3315;
+    --anel: rgba(255, 255, 255, 0.10);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #121211;
+  --superficie: #1a1a19;
+  --tinta: #f0efec;
+  --tinta-2: #c3c2b7;
+  --tinta-3: #8f8d86;
+  --linha: #2c2c2a;
+  --eixo: #45453f;
+  --pt: #e66767;
+  --pt-lavado: rgba(230, 103, 103, 0.16);
+  --adv: #3987e5;
+  --adv-lavado: rgba(57, 135, 229, 0.16);
+  --meio: #383835;
+  --confirma: #2fa865;
+  --realce: #3a3315;
+  --anel: rgba(255, 255, 255, 0.10);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--f-texto);
+  font-size: var(--t-corpo);
+  line-height: 1.6;
+  padding-inline: 16px;
+  padding-block: 0 4rem;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration-color: var(--eixo); text-underline-offset: 3px; }
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--adv); outline-offset: 2px; border-radius: 2px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.08; }
+h2 { font-size: var(--t-2); font-weight: 750; font-stretch: 82%; letter-spacing: -0.01em; }
+h3 { font-size: var(--t-3); font-weight: 700; font-stretch: 90%; }
+p { margin: 0; }
+.coluna { width: 100%; max-width: var(--coluna); margin-inline: auto; }
+.larga { width: 100%; max-width: var(--larga); margin-inline: auto; }
+.rotulo {
+  font-family: var(--f-dado); font-size: var(--t-micro); letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--tinta-3);
+}
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- capa: o boletim de urna ---------- */
+.capa { padding-block: 2.5rem 2rem; display: grid; gap: 1.5rem; }
+.capa h1 { font-size: var(--t-1); font-weight: 800; font-stretch: 72%; letter-spacing: -0.02em; }
+.capa .lede { font-size: 1.2rem; line-height: 1.5; color: var(--tinta-2); max-width: 38rem; }
+.boletim {
+  font-family: var(--f-dado); font-size: 0.8125rem; background: var(--superficie);
+  border: 1px solid var(--linha); border-radius: 4px; padding: 0.9rem 1rem;
+  display: grid; gap: 0.35rem; max-width: 34rem;
+}
+.boletim .topo { display: flex; flex-wrap: wrap; gap: 0.25rem 1rem; color: var(--tinta-3); }
+.boletim .cand { display: grid; grid-template-columns: 2.2rem 1fr auto auto; gap: 0.75rem; align-items: center; }
+.boletim .cand span:nth-child(3), .boletim .cand span:nth-child(4) { text-align: right; font-variant-numeric: tabular-nums; }
+.chip-n {
+  display: inline-grid; place-items: center; min-width: 2.2rem; height: 1.5rem; border-radius: 3px;
+  font-family: var(--f-dado); font-weight: 500; font-size: 0.8125rem; color: #fff;
+}
+.chip-n.pt { background: var(--pt); }
+.chip-n.adv { background: var(--adv); }
+
+.selos { display: flex; flex-wrap: wrap; gap: 0.4rem 1.1rem; font-size: var(--t-nota); color: var(--tinta-2); }
+.selos > span { display: inline-flex; gap: 0.4rem; align-items: baseline; }
+.selo { font-family: var(--f-dado); font-size: 0.8125rem; white-space: nowrap; color: var(--tinta-2); }
+.selo b { font-weight: 500; color: var(--tinta); }
+
+nav.indice {
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--papel);
+  border-block: 1px solid var(--linha); margin-inline: -16px; padding: 0.5rem 16px;
+  overflow-x: auto; white-space: nowrap; scrollbar-width: none;
+}
+nav.indice::-webkit-scrollbar { display: none; }
+nav.indice ol { list-style: none; margin: 0 auto; padding: 0; display: flex; gap: 0.35rem; max-width: var(--larga); }
+nav.indice a {
+  display: inline-block; font-size: var(--t-nota); text-decoration: none; padding: 0.25rem 0.6rem;
+  border-radius: 999px; color: var(--tinta-2); border: 1px solid transparent;
+}
+nav.indice a:hover { border-color: var(--linha); color: var(--tinta); }
+nav.indice a span { font-family: var(--f-dado); color: var(--tinta-3); margin-right: 0.3rem; }
+
+/* ---------- seções ---------- */
+main { display: grid; gap: 4.5rem; padding-top: 2.5rem; }
+section { display: grid; gap: 1.6rem; scroll-margin-top: 4rem; }
+.cabeca { display: grid; gap: 0.6rem; }
+.cabeca .linha-sup { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; }
+.texto { display: grid; gap: 0.9rem; }
+.texto p { max-width: 65ch; }
+.nao-diz {
+  font-size: var(--t-nota); color: var(--tinta-2); border-left: 2px solid var(--eixo);
+  padding-left: 0.85rem; max-width: 62ch;
+}
+.nao-diz strong { color: var(--tinta); font-weight: 600; }
+.comentar {
+  font: inherit; font-size: var(--t-micro); font-family: var(--f-dado); letter-spacing: 0.04em;
+  background: none; color: var(--tinta-3); border: 1px solid var(--linha); border-radius: 999px;
+  padding: 0.15rem 0.6rem; cursor: pointer;
+}
+.comentar:hover { color: var(--tinta); border-color: var(--eixo); }
+
+/* figuras */
+figure { margin: 0; display: grid; gap: 0.6rem; min-width: 0; }
+figure .titulo-graf { font-weight: 600; font-size: 1rem; line-height: 1.35; }
+figure .sub { font-size: var(--t-nota); color: var(--tinta-2); }
+.graf { width: 100%; min-width: 0; position: relative; }
+.graf svg { display: block; width: 100%; height: auto; overflow: visible; }
+.graf text { font-family: var(--f-texto); fill: var(--tinta-2); font-size: 12px; }
+.graf .valor { fill: var(--tinta); font-weight: 600; font-variant-numeric: tabular-nums; }
+.graf .eixo-t { fill: var(--tinta-3); font-size: 11px; font-variant-numeric: tabular-nums; }
+.graf .grade { stroke: var(--linha); stroke-width: 1; }
+.graf .base { stroke: var(--eixo); stroke-width: 1; }
+.graf .alvo { cursor: default; }
+.graf .alvo:hover > .marca, .graf .alvo:focus > .marca { filter: brightness(1.12); }
+figcaption { font-size: var(--t-micro); color: var(--tinta-3); font-family: var(--f-dado); }
+.legenda { display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: var(--t-nota); color: var(--tinta-2); }
+.legenda span { display: inline-flex; align-items: center; gap: 0.4rem; }
+.legenda i { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 2px; }
+.legenda i.linha-k { height: 2px; width: 1rem; border-radius: 0; }
+.par { display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); }
+
+/* tooltip */
+.dica {
+  position: fixed; z-index: 20; pointer-events: none; background: var(--superficie); color: var(--tinta);
+  border: 1px solid var(--linha); box-shadow: 0 4px 16px rgba(0,0,0,0.12); border-radius: 4px;
+  padding: 0.45rem 0.6rem; font-size: var(--t-nota); line-height: 1.35; max-width: 16rem;
+}
+.dica b { font-variant-numeric: tabular-nums; font-size: 0.95rem; }
+.dica .s { color: var(--tinta-2); display: block; }
+
+/* números grandes */
+.placar { display: grid; gap: 1px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15.5rem), 1fr));
+  background: var(--linha); border: 1px solid var(--linha); border-radius: 4px; overflow: hidden; }
+.placar > div { background: var(--superficie); padding: 1.1rem 1.1rem 1.2rem; display: grid; gap: 0.35rem; align-content: start; }
+.placar .grande { font-family: var(--f-display); font-weight: 800; font-stretch: 75%; font-size: 2.7rem; line-height: 1; letter-spacing: -0.01em; }
+.placar .grande.pt { color: var(--pt); }
+.placar .grande.adv { color: var(--adv); }
+.placar p { font-size: 0.9375rem; color: var(--tinta-2); line-height: 1.4; }
+
+/* detalhes "como sabemos" */
+details { border-top: 1px solid var(--linha); padding-top: 0.6rem; font-size: var(--t-nota); color: var(--tinta-2); }
+details summary { cursor: pointer; font-family: var(--f-dado); font-size: var(--t-micro); letter-spacing: 0.05em; text-transform: uppercase; color: var(--tinta-3); }
+details[open] summary { margin-bottom: 0.6rem; }
+details p + p { margin-top: 0.5rem; }
+.tabela-rola { overflow-x: auto; margin-top: 0.7rem; }
+table { border-collapse: collapse; font-size: var(--t-nota); width: 100%; }
+th, td { text-align: left; padding: 0.3rem 0.6rem 0.3rem 0; border-bottom: 1px solid var(--linha); white-space: nowrap; }
+td.n, th.n { text-align: right; font-variant-numeric: tabular-nums; }
+th { font-weight: 600; color: var(--tinta); }
+
+/* cartões de alavanca e de canal */
+.cartoes { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 17rem), 1fr)); }
+.cartao { background: var(--superficie); border: 1px solid var(--linha); border-radius: 4px; padding: 1rem 1.1rem; display: grid; gap: 0.55rem; align-content: start; min-width: 0; }
+.cartao h3 { font-size: 1.1rem; }
+.cartao p { font-size: 0.9375rem; color: var(--tinta-2); line-height: 1.5; }
+.cartao .meta { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+.etq { font-family: var(--f-dado); font-size: var(--t-micro); border: 1px solid var(--linha); border-radius: 3px; padding: 0.05rem 0.4rem; color: var(--tinta-2); white-space: nowrap; }
+
+.perguntas { display: grid; gap: 0.5rem; padding-left: 1.2rem; margin: 0; }
+.marcos-campanha { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; max-width: 46rem; }
+.marcos-campanha li { display: grid; grid-template-columns: 9.5rem 1fr; gap: 0.2rem 0.8rem; align-items: baseline; }
+.marcos-campanha li > .selo { white-space: normal; font-size: var(--t-micro); }
+@media (max-width: 560px) { .marcos-campanha li { grid-template-columns: 1fr; } }
+.perguntas li { max-width: 62ch; }
+
+/* vereditos */
+.vereditos { display: grid; gap: 0; border-top: 1px solid var(--linha); }
+.vereditos > div { display: grid; grid-template-columns: 2.4rem 1fr; gap: 0.2rem 0.8rem; padding: 0.75rem 0; border-bottom: 1px solid var(--linha); }
+.vereditos .marca-v { font-family: var(--f-display); font-weight: 800; font-size: 1.35rem; line-height: 1.2; text-align: center; grid-row: span 2; }
+.vereditos .sim .marca-v { color: var(--confirma); }
+.vereditos .nao .marca-v { color: var(--tinta-3); }
+.vereditos .antiga .marca-v { color: var(--tinta-2); }
+.vereditos .q { font-weight: 600; }
+.vereditos .a { color: var(--tinta-2); font-size: 0.9375rem; }
+.vereditos .id { font-family: var(--f-dado); font-size: var(--t-micro); color: var(--tinta-3); margin-left: 0.4rem; }
+
+/* linha do tempo */
+.filtros { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.filtros button {
+  font: inherit; font-size: var(--t-nota); background: var(--superficie); color: var(--tinta-2);
+  border: 1px solid var(--linha); border-radius: 999px; padding: 0.2rem 0.75rem; cursor: pointer;
+}
+.filtros button[aria-pressed="true"] { background: var(--tinta); color: var(--papel); border-color: var(--tinta); }
+.tempo { display: grid; gap: 1.4rem; }
+.tempo .ano { display: grid; grid-template-columns: 3.4rem 1fr; gap: 0.8rem; }
+.tempo .ano > h3 { font-size: 1.35rem; font-stretch: 75%; color: var(--tinta-3); padding-top: 0.1rem; }
+.tempo ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.7rem; border-left: 1px solid var(--linha); padding-left: 0.9rem; }
+.tempo li { display: grid; gap: 0.15rem; min-width: 0; }
+.tempo .quando { display: flex; flex-wrap: wrap; gap: 0.2rem 0.6rem; align-items: baseline; font-family: var(--f-dado); font-size: var(--t-micro); color: var(--tinta-3); }
+.faixa-t { font-family: var(--f-dado); font-size: var(--t-micro); border-radius: 3px; padding: 0 0.35rem; }
+.faixa-t.eua { background: var(--adv-lavado); color: var(--tinta); }
+.faixa-t.brasil { background: var(--meio); color: var(--tinta); }
+.faixa-t.urnas { background: var(--pt-lavado); color: var(--tinta); }
+.tempo .ev { font-size: 0.9875rem; }
+.tempo .fonte { font-size: var(--t-micro); color: var(--tinta-3); overflow-wrap: anywhere; }
+.vazio { color: var(--tinta-3); font-size: var(--t-nota); }
+
+/* debate */
+.urna { background: var(--superficie); border: 1px solid var(--linha); border-radius: 4px; padding: 1.1rem; display: grid; gap: 1rem; }
+.opcoes { display: grid; gap: 0.5rem; }
+.opcao { display: grid; grid-template-columns: auto 1fr auto; gap: 0.75rem; align-items: start; padding: 0.6rem 0.7rem; border: 1px solid var(--linha); border-radius: 4px; cursor: pointer; }
+.opcao:has(input:checked) { border-color: var(--tinta); background: var(--papel); }
+.opcao input { margin-top: 0.3rem; accent-color: var(--confirma); width: 1.05rem; height: 1.05rem; }
+.opcao .o-t { font-weight: 600; line-height: 1.35; }
+.opcao .o-d { font-size: var(--t-nota); color: var(--tinta-2); }
+.opcao .o-meta { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.3rem; }
+.opcao .contagem { font-family: var(--f-dado); font-size: var(--t-nota); color: var(--tinta-2); text-align: right; min-width: 3.5rem; }
+.opcao .barra { height: 4px; background: var(--linha); border-radius: 2px; margin-top: 0.35rem; overflow: hidden; }
+.opcao .barra i { display: block; height: 100%; background: var(--confirma); border-radius: 2px; }
+.acoes { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+.botao-confirma {
+  font: inherit; font-weight: 600; background: var(--confirma); color: #fff; border: 0; border-radius: 4px;
+  padding: 0.55rem 1.1rem; cursor: pointer; font-family: var(--f-dado); letter-spacing: 0.06em; text-transform: uppercase; font-size: 0.8125rem;
+}
+.botao-confirma[disabled] { opacity: 0.45; cursor: not-allowed; }
+.aviso { font-size: var(--t-nota); color: var(--tinta-2); }
+.campo { display: grid; gap: 0.4rem; }
+.campo label { font-size: var(--t-nota); font-weight: 600; }
+select, textarea {
+  font: inherit; font-size: 0.9375rem; color: var(--tinta); background: var(--papel);
+  border: 1px solid var(--eixo); border-radius: 4px; padding: 0.5rem 0.6rem; width: 100%;
+}
+textarea { min-height: 6rem; resize: vertical; }
+.ideias { display: grid; gap: 0.6rem; }
+.ideia { border-left: 2px solid var(--linha); padding-left: 0.8rem; display: grid; gap: 0.15rem; }
+.ideia .quem { font-size: var(--t-micro); font-family: var(--f-dado); color: var(--tinta-3); }
+.ideia .txt { font-size: 0.9375rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+footer { margin-top: 5rem; border-top: 1px solid var(--linha); padding-top: 1.5rem; font-size: var(--t-nota); color: var(--tinta-2); display: grid; gap: 0.7rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+</style>
+
+<header class="capa larga">
+  <div class="rotulo">Kingsrace · síntese para discussão interna · versão 1 · 10 de outubro de 2026</div>
+  <h1>O que os votos mostram</h1>
+  <p class="lede">Lula perdeu <span data-n="perda_mi">—</span> de votos entre 2022 e 2026, e quase todo o país andou na mesma direção. Esta página junta o que os dados já confirmaram, o que a cronologia documenta e o que ainda é pergunta. O objetivo é decidir juntos os próximos passos antes do 2º turno, em 25 de outubro.</p>
+  <div class="boletim" aria-label="Resultado do 1º turno de 2026">
+    <div class="topo"><span>PRESIDENTE · 1º TURNO</span><span>04/10/2026</span><span>100% DAS SEÇÕES</span></div>
+    <div class="cand"><span class="chip-n adv">22</span><span>FLÁVIO BOLSONARO</span><span data-n="flavio26_int">—</span><span>47,03%</span></div>
+    <div class="cand"><span class="chip-n pt">13</span><span>LULA</span><span data-n="lula26_int">—</span><span>45,16%</span></div>
+  </div>
+  <div class="selos" aria-label="Como ler os selos de evidência">
+    <span><span class="selo"><b>●</b> dado testado</span> passou por um teste registrado antes de ver o resultado</span>
+    <span><span class="selo"><b>◐</b> exploratório</span> conta nossa, sem teste registrado</span>
+    <span><span class="selo"><b>■</b> documentado</span> documento oficial ou decisão</span>
+    <span><span class="selo"><b>□</b> reportado</span> jornalismo com documentos</span>
+    <span><span class="selo"><b>○</b> alegado</span> sem documento público</span>
+  </div>
+</header>
+
+<nav class="indice" aria-label="Seções">
+  <ol>
+    <li><a href="#resumo"><span>0</span>Em uma tela</a></li>
+    <li><a href="#queda"><span>1</span>A queda</a></li>
+    <li><a href="#bloco"><span>2</span>Em bloco</a></li>
+    <li><a href="#pesquisas"><span>3</span>Pesquisas</a></li>
+    <li><a href="#segundo-turno"><span>4</span>2º turno</a></li>
+    <li><a href="#raiz"><span>5</span>A raiz em 2018</a></li>
+    <li><a href="#linha-do-tempo"><span>6</span>Linha do tempo</a></li>
+    <li><a href="#interferencia"><span>7</span>Interferência</a></li>
+    <li><a href="#debate"><span>8</span>Para o debate</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- 0 · Em uma tela -->
+<section id="resumo" class="larga">
+  <div class="cabeca">
+    <div class="linha-sup"><span class="rotulo">0 · Em uma tela</span><button class="comentar" type="button" hidden>Comentar</button></div>
+    <h2>Seis números para começar</h2>
+  </div>
+  <div class="placar">
+    <div><span class="selo"><b>●</b> dado testado</span><span class="grande pt" data-n="perda_curto">—</span><p>votos de Lula a menos no 1º turno, de 2022 para 2026.</p></div>
+    <div><span class="selo"><b>●</b> dado testado</span><span class="grande" data-n="pct_caiu26">—</span><p>dos municípios viram o PT cair. Ele subiu em só <span data-n="amcs_subiu">—</span> de <span data-n="amcs">—</span>.</p></div>
+    <div><span class="selo"><b>●</b> dado testado</span><span class="grande" data-n="desmob">—</span><p>da perda veio de abstenção e de brancos e nulos. O resto foi troca de voto.</p></div>
+    <div><span class="selo"><b>●</b> dado testado</span><span class="grande" data-n="dp26_curto">—</span><p>foi a variação típica entre municípios em 2026, contra <span data-n="dp_antes">—</span> pontos nas eleições anteriores. O país andou em bloco.</p></div>
+    <div><span class="selo"><b>●</b> dado testado</span><span class="grande pt" data-n="bf_razao_x">—</span><p>mais forte ficou a ligação entre o Bolsa Família e o voto no PT, de 2022 para 2026.</p></div>
+    <div><span class="selo"><b>●</b> dado</span><span class="grande adv" data-n="pesq_frente">—</span><p>institutos davam Lula à frente na véspera. Flávio terminou <span data-n="dif_mi">—</span> de votos na frente.</p></div>
+  </div>
+</section>
+
+<!-- 1 · A queda -->
+<section id="queda" class="larga">
+  <div class="cabeca coluna" style="margin-inline:0">
+    <div class="linha-sup"><span class="rotulo">1 · O 1º turno de 2026</span><span class="selo"><b>●</b> dado testado</span><button class="comentar" type="button" hidden>Comentar</button></div>
+    <h2>No Sul e no Sudeste, Lula perdeu votos. No Norte e no Nordeste, Flávio cresceu</h2>
+  </div>
+  <div class="texto">
+    <p>No Nordeste e no Norte, Lula praticamente manteve os votos de 2022. A fatia dele caiu porque Flávio somou <span data-n="nne_flavio">—</span> de votos ali, vindos de eleitores novos e de quem tinha votado em outros candidatos. No Sudeste e no Sul, a perda foi de fato: <span data-n="sse_perda">—</span> de votos a menos para Lula.</p>
+  </div>
+  <figure>
+    <div class="titulo-graf">Variação de votos de 2022 para 2026, 1º turno, por região</div>
+    <div class="legenda"><span><span class="chip-n pt">13</span>Lula</span><span><span class="chip-n adv">22</span>Flávio (em 2022, Jair Bolsonaro)</span></div>
+    <div class="graf" id="g-regioes"></div>
+    <figcaption>Milhões de votos. Sem o exterior. Fonte: TSE; hipótese A6 (notebook 04).</figcaption>
+  </figure>
+
+  <div class="par">
+    <figure>
+      <div class="titulo-graf">Não foi abstenção: foi troca de voto</div>
+      <div class="sub">Votos de Lula no 1º turno, de 2022 a 2026, e o que somou e tirou</div>
+      <div class="graf" id="g-cascata"></div>
+      <figcaption>Milhões de votos, sem o exterior. O eixo começa em 53 milhões.</figcaption>
+    </figure>
+    <figure>
+      <div class="titulo-graf">Os pequenos perderam mais, mas os votos estão nas cidades grandes</div>
+      <div class="legenda"><span><i style="background:var(--eixo)"></i>% do eleitorado de 2022</span><span><i style="background:var(--pt)"></i>% dos votos que Lula perdeu</span></div>
+      <div class="graf" id="g-faixas"></div>
+      <figcaption>Faixas de eleitores aptos em 2022. Hipótese A8 (notebook 04).</figcaption>
+    </figure>
+  </div>
+  <div class="texto">
+    <p>Se fosse eleitor de Lula ficando em casa, a perda apareceria no comparecimento. Não apareceu: o comparecimento ficou igual ao de 2022 e o eleitorado cresceu. O que pesou foram <span data-n="troca">—</span> de votos que mudaram de lado.</p>
+    <p>Os municípios com menos de 20 mil eleitores têm <span data-n="a8_eleit">—</span> do eleitorado e responderam por <span data-n="a8_perda">—</span> da perda. Mesmo assim, <span data-n="a8_maiores">—</span> dos votos perdidos vieram das cidades maiores. A queda proporcional é maior no interior; a queda em número de votos está nas cidades médias e grandes.</p>
+  </div>
+  <p class="nao-diz"><strong>O que isso não diz.</strong> A conta é feita por município. Se um eleitor de Lula ficou em casa e um eleitor novo votou em Flávio na mesma cidade, isso aparece como troca de voto.</p>
+  <details>
+    <summary>Como sabemos</summary>
+    <p>Os votos de Lula em cada município foram decompostos, de forma exata, em quatro fatores: eleitores aptos × comparecimento × votos válidos × fatia de Lula (método LMDI). As hipóteses A6 (desmobilização) e A8 (peso dos pequenos) foram registradas em 9/10, antes do cálculo. A A6 exigia que comparecimento e brancos/nulos respondessem por pelo menos 25% da perda; responderam por <span data-n="desmob">—</span>.</p>
+    <div class="tabela-rola" id="t-faixas"></div>
+  </details>
+</section>
+
+<!-- 2 · Em bloco -->
+<section id="bloco" class="larga">
+  <div class="cabeca coluna" style="margin-inline:0">
+    <div class="linha-sup"><span class="rotulo">2 · Como cada município mudou</span><span class="selo"><b>●</b> dado testado</span><button class="comentar" type="button" hidden>Comentar</button></div>
+    <h2>Em 2026, o país andou em bloco</h2>
+  </div>
+  <div class="texto">
+    <p>Cada gráfico mostra quantos municípios subiram ou caíram, e quanto, de uma eleição para a seguinte. Até 2022, os municípios se moviam em direções diferentes: uns subiam muito, outros caíam muito. Em 2026, quase todos caíram um pouco. Oito em cada dez municípios caíram entre <span data-n="p90_26">—</span> e <span data-n="p10_26">—</span> pontos. Foi a variação mais uniforme dos últimos 20 anos.</p>
+  </div>
+  <figure>
+    <div class="legenda"><span><i style="background:var(--pt)"></i>municípios que andaram rumo ao PT</span><span><i style="background:var(--adv)"></i>rumo ao adversário</span></div>
+    <div class="graf" id="g-bloco"></div>
+    <figcaption>Variação da fatia do PT entre os dois primeiros colocados, em pontos percentuais, 1º turno. 5.562 áreas comparáveis. A altura é a % de municípios em cada faixa de 2 pontos; as pontas acumulam o que passa de 30 pontos.</figcaption>
+  </figure>
+  <div class="texto">
+    <p><strong>Por que isso importa.</strong> Quando o país inteiro se move junto, a causa mais provável age no país inteiro ao mesmo tempo: a economia nacional, um tema de campanha, uma narrativa nas redes, um choque vindo de fora. Nossos dados mostram esse desenho, mas não dizem qual é a causa. É daí que parte a seção 7.</p>
+  </div>
+  <p class="nao-diz"><strong>O que isso não diz.</strong> 2026 é a única eleição da série com o mesmo candidato do PT nas duas pontas (Lula em 2022 e em 2026), o que por si só reduz a variação entre municípios. Essa explicação simples ainda não foi descartada.</p>
+  <details>
+    <summary>Como sabemos</summary>
+    <p>Hipótese C4, registrada em 9/10 antes da análise: 2022→2026 seria mais uniforme que as quatro transições anteriores. Na escala dos modelos (logit), o desvio-padrão da variação foi 0,14, contra 0,40 a 0,49 antes. Notebook 06.</p>
+    <div class="tabela-rola" id="t-bloco"></div>
+  </details>
+</section>
+
+<!-- 3 · Pesquisas -->
+<section id="pesquisas" class="larga">
+  <div class="cabeca coluna" style="margin-inline:0">
+    <div class="linha-sup"><span class="rotulo">3 · As pesquisas da véspera</span><span class="selo"><b>●</b> dado</span><button class="comentar" type="button" hidden>Comentar</button></div>
+    <h2>As pesquisas erraram a direção</h2>
+  </div>
+  <div class="texto">
+    <p>Na véspera do 1º turno, <span data-n="pesq_frente">—</span> institutos davam Lula à frente de Flávio. Na urna, Lula teve <span data-n="resultado_2p">—</span> dos votos dados aos dois. Em média, as pesquisas puseram Lula <span data-n="vies">—</span> pontos acima do resultado.</p>
+  </div>
+  <figure>
+    <div class="titulo-graf">Fatia de Lula entre os dois, na última pesquisa de cada instituto</div>
+    <div class="legenda"><span><i style="background:var(--pt);border-radius:50%"></i>dava Lula à frente</span><span><i style="background:var(--adv);border-radius:50%"></i>dava Flávio à frente</span><span><i class="linha-k" style="background:var(--tinta)"></i>resultado</span></div>
+    <div class="graf" id="g-pesquisas"></div>
+    <figcaption>Votos totais de Lula ÷ (Lula + Flávio), campo de 26/9 a 3/10. Fonte: registros reunidos na Wikipédia (pesquisas_2026.csv).</figcaption>
+  </figure>
+  <p class="nao-diz"><strong>Para o 2º turno.</strong> Se o mesmo erro se repetir, uma pesquisa com empate técnico é, na prática, vantagem de Flávio. Nossa previsão desconta metade desse erro (seção 4).</p>
+</section>
+
+<!-- 4 · 2º turno -->
+<section id="segundo-turno" class="larga">
+  <div class="cabeca coluna" style="margin-inline:0">
+    <div class="linha-sup"><span class="rotulo">4 · O 2º turno, 25 de outubro</span><button class="comentar" type="button" hidden>Comentar</button></div>
+    <h2>O tamanho da montanha, e onde estão os votos</h2>
+  </div>
+  <div class="texto">
+    <p>Flávio começa o 2º turno <span data-n="dif_mi">—</span> de votos à frente. Em 2022, do 1º para o 2º turno, Lula ganhou <span data-n="l22_ganho">—</span> de votos e Bolsonaro, <span data-n="b22_ganho">—</span>. Lula venceu porque tinha largado <span data-n="l22_vantagem">—</span> à frente. Agora larga atrás.</p>
+  </div>
+  <div class="par">
+    <figure>
+      <div class="titulo-graf">Os votos em jogo no 2º turno</div>
+      <div class="sub">A diferença a tirar, comparada aos votos que não foram para os dois</div>
+      <div class="graf" id="g-montanha"></div>
+      <figcaption>Milhões de votos no 1º turno de 2026; abstenção só no Brasil. Fonte: TSE.</figcaption>
+    </figure>
+    <figure>
+      <div class="titulo-graf">Quanto cada um cresceu do 1º para o 2º turno, em 2022</div>
+      <div class="graf" id="g-2022"></div>
+      <figcaption>Milhões de votos. Fonte: TSE (totalização oficial).</figcaption>
+    </figure>
+  </div>
+
+  <div class="cabeca coluna" style="margin-inline:0">
+    <div class="linha-sup"><span class="selo"><b>●</b> previsão congelada antes do resultado</span></div>
+    <h3>Nossa previsão de 8 de outubro: Lula com <span data-n="prev_central">—</span> dos votos entre os dois</h3>
+  </div>
+  <div class="texto">
+    <p>A faixa vai de <span data-n="prev_inf">—</span> a <span data-n="prev_sup">—</span>. A previsão parte da única pesquisa de 2º turno disponível em 8/10 (<span data-n="prev_pesquisa">—</span>) e desconta metade do erro que o instituto cometeu no 1º turno. Foi gravada com data e assinatura antes de qualquer resultado, para ser avaliada depois. É o cenário a virar, não um destino. A versão 2 sai em 24/10, com as pesquisas finais.</p>
+  </div>
+  <div class="par">
+    <figure>
+      <div class="titulo-graf">Onde a previsão põe cada estado</div>
+      <div class="sub">Fatia prevista de Lula entre os dois, cenário central</div>
+      <div class="graf" id="g-ladrilhos"></div>
+      <div class="legenda" id="leg-ladrilhos"></div>
+      <figcaption>Notebook 03; previsão v1, tag previsao-2t-2026-v1.</figcaption>
+    </figure>
+    <figure>
+      <div class="titulo-graf">Votos que já foram de Lula</div>
+      <div class="sub">Variação dos votos de Lula, 1º turno de 2022 para 2026, por estado</div>
+      <div class="graf" id="g-ufs"></div>
+      <figcaption>Votos. Fonte: TSE. Os 12 estados com maior variação.</figcaption>
+    </figure>
+  </div>
+  <div class="texto">
+    <p>São Paulo, Minas Gerais, Rio Grande do Sul e Paraná somam <span data-n="uf4">—</span> de votos que Lula teve em 2022 e não teve em 2026. São eleitores que já votaram nele.</p>
+  </div>
+
+  <h3>O que os dados sugerem como alavanca</h3>
+  <div class="cartoes">
+    <div class="cartao">
+      <div class="meta"><span class="selo"><b>●</b> dado testado</span><span class="etq">A4</span></div>
+      <h3>Bolsa Família</h3>
+      <p>Onde o programa alcança mais famílias, o PT perdeu menos. A ligação entre cobertura e voto dobrou: a cada <span data-n="bf_dp">—</span> famílias a mais por 100 habitantes, o PT tinha <span data-n="bf22">—</span> ponto a mais em 2022 (Auxílio Brasil, governo Bolsonaro) e <span data-n="bf26">—</span> pontos em 2026 (Bolsa Família, governo Lula).</p>
+      <div class="graf" id="g-bf"></div>
+    </div>
+    <div class="cartao">
+      <div class="meta"><span class="selo"><b>●</b> dado testado</span><span class="etq">A6b</span></div>
+      <h3>Comparecimento nos redutos</h3>
+      <p>A abstenção subiu um pouco mais onde o PT é forte, mas o efeito é pequeno: cerca de 0,25 ponto de comparecimento. No país, o comparecimento ficou igual. Trazer de volta quem ficou em casa ajuda, mas sozinho não fecha <span data-n="dif_mi">—</span>.</p>
+    </div>
+    <div class="cartao">
+      <div class="meta"><span class="selo"><b>●</b> dado testado</span><span class="etq">B4</span></div>
+      <h3>A lição de 2022</h3>
+      <p>Em 2022, o que mudou do 1º para o 2º turno não seguiu os lugares onde Ciro e Tebet eram fortes. Distribuir os votos deles por perfil de candidato piorou a previsão (erro de <span data-n="bt_g1">—</span> contra <span data-n="bt_g0">—</span> pontos por município). O 2º turno andou quase igual no país todo, com os redutos dos dois lados indo um pouco para o meio.</p>
+    </div>
+  </div>
+  <h3>Perguntas para a direção</h3>
+  <ol class="perguntas">
+    <li>Se o país anda em bloco, que mensagem nacional move <span data-n="dif_mi">—</span> de votos em duas semanas?</li>
+    <li>Os <span data-n="uf4">—</span> de votos perdidos em SP, MG, RS e PR voltam com que argumento? Quem eles ouviram entre 2022 e 2026?</li>
+    <li>Cury (<span data-n="cury">—</span>) e Caiado (<span data-n="caiado">—</span>) já declararam apoio a Flávio (□&nbsp;reportado, seção&nbsp;6). Em 2022, porém, o 2º turno não seguiu o perfil dos candidatos eliminados. Onde está esse eleitor, e o de Renan Santos (<span data-n="renan">—</span>), cofundador do MBL? O resultado de 25/10 vai mostrar. Antes disso, só temos hipóteses.</li>
+    <li>Onde a militância vê perda que os números não mostram?</li>
+  </ol>
+</section>
+
+<!-- 5 · A raiz -->
+<section id="raiz" class="larga">
+  <div class="cabeca coluna" style="margin-inline:0">
+    <div class="linha-sup"><span class="rotulo">5 · A série de 2006 a 2026</span><span class="selo"><b>●</b> dado testado</span><button class="comentar" type="button" hidden>Comentar</button></div>
+    <h2>A raiz: 2018 abriu uma fenda que não fechou</h2>
+  </div>
+  <div class="texto">
+    <p>Para entender 2026, voltamos a 2006. A série mostra uma ruptura em 2018 com duas partes. Uma passou. A outra ficou.</p>
+  </div>
+  <figure>
+    <div class="titulo-graf">Fatia do PT entre os dois primeiros colocados, 1º turno</div>
+    <div class="graf" id="g-serie"></div>
+    <figcaption>% dos votos dados ao PT e ao principal adversário. Fonte: TSE; notebook 06.</figcaption>
+  </figure>
+  <div class="par">
+    <figure>
+      <div class="titulo-graf">Cidades grandes contra pequenas</div>
+      <div class="sub">Diferença na variação do PT entre um município de 300 mil e um de 3 mil eleitores</div>
+      <div class="graf" id="g-tamanho"></div>
+      <figcaption>Pontos percentuais, aproximados. Abaixo de zero: a cidade grande se afastou mais do PT. Hipótese C5.</figcaption>
+    </figure>
+    <figure>
+      <div class="titulo-graf">Municípios mais evangélicos</div>
+      <div class="sub">Variação a mais do PT por desvio típico de % evangélica (Censo 2010)</div>
+      <div class="graf" id="g-evangelicos"></div>
+      <figcaption>Pontos percentuais, aproximados. Abaixo de zero: o mais evangélico se afastou mais. Hipótese E2a.</figcaption>
+    </figure>
+  </div>
+  <div class="texto">
+    <p>Até 2018, as cidades grandes se afastavam do PT a cada eleição. Em 2018 veio o maior tombo urbano da série: cerca de <span data-n="tam1418">—</span> pontos de diferença entre uma cidade de 300 mil eleitores e uma de 3 mil. Depois o sinal inverteu, e agora são os pequenos que se afastam.</p>
+    <p>No mesmo ano nasceu um efeito evangélico que não existia. Nada até 2014. Em 2018, de uma vez, os municípios mais evangélicos se afastaram <span data-n="ev1418">—</span> pontos a mais do PT. O mesmo salto aparece em duas medidas independentes: templos registrados na Receita e voto em pastores para deputado. Antes de 2018, nenhuma das três mostrava nada.</p>
+  </div>
+  <figure>
+    <div class="titulo-graf">O que passou e o que ficou</div>
+    <div class="sub">Quanto do efeito de 2014→2018 ainda está lá em 2026</div>
+    <div class="graf" id="g-retencao"></div>
+    <figcaption>% do efeito de 2014→2018 que permanece no acumulado de 2014 a 2026. Hipótese E0b (notebook 08) e diagnóstico E0 (notebook 07).</figcaption>
+  </figure>
+  <div class="texto">
+    <p>A parte que passou parece ligada ao momento de 2018: Lula preso e impedido, Haddad lançado a quatro semanas da eleição, Lava Jato e recessão no auge. Quando Lula voltou à urna em 2022, as cidades grandes voltaram em boa parte. A parte que ficou é estrutural: a política organizada pelas igrejas mudou de lado em 2018 e não voltou. Desde então o mapa congelou. A correlação entre o mapa de uma eleição e o da seguinte passou de <span data-n="congel_antes">—</span> para <span data-n="congel_depois">—</span>.</p>
+  </div>
+  <p class="nao-diz"><strong>O que isso não diz.</strong> A pegada das igrejas é consistente com elas terem organizado o voto, mas não prova causa. Também não separa a mobilização das igrejas da pauta de costumes de Bolsonaro ou de campanhas no WhatsApp dirigidas a evangélicos, e não diz quem organizou ou financiou.</p>
+
+  <h3>Os vereditos até aqui</h3>
+  <p class="aviso">Cada linha é uma hipótese registrada antes de olhar o resultado. ✓ se sustentou; ✗ não se sustentou; ◐ existe, mas é antiga, não um choque de 2018.</p>
+  <div class="vereditos" id="vereditos"></div>
+</section>
+
+<!-- 6 · Linha do tempo -->
+<section id="linha-do-tempo" class="larga">
+  <div class="cabeca coluna" style="margin-inline:0">
+    <div class="linha-sup"><span class="rotulo">6 · 2006 a 2026</span><button class="comentar" type="button" hidden>Comentar</button></div>
+    <h2>Linha do tempo: o que está documentado</h2>
+  </div>
+  <div class="texto">
+    <p>Cada evento abaixo foi conferido na fonte, que está ao lado, e leva o selo do grau de evidência. A coincidência no tempo não diz qual evento causou o quê: entre 2013 e 2018 aconteceu de tudo ao mesmo tempo. A linha do tempo serve para organizar as perguntas, e cada evento que falta pode ser sugerido na seção 8.</p>
+  </div>
+  <div class="filtros" role="group" aria-label="Período">
+    <button type="button" data-periodo="2025" aria-pressed="true">2025–2026</button>
+    <button type="button" data-periodo="2019" aria-pressed="false">2019–2024</button>
+    <button type="button" data-periodo="2013" aria-pressed="false">2013–2018</button>
+    <button type="button" data-periodo="2006" aria-pressed="false">Antes de 2013</button>
+    <button type="button" data-periodo="tudo" aria-pressed="false">Tudo</button>
+  </div>
+  <div class="filtros" role="group" aria-label="Faixa">
+    <button type="button" data-faixa="todas" aria-pressed="true">Todas as faixas</button>
+    <button type="button" data-faixa="eua" aria-pressed="false">EUA</button>
+    <button type="button" data-faixa="brasil" aria-pressed="false">Brasil</button>
+    <button type="button" data-faixa="urnas" aria-pressed="false">Urnas</button>
+  </div>
+  <div class="tempo" id="tempo"></div>
+</section>
+
+<!-- 7 · Interferência -->
+<section id="interferencia" class="larga">
+  <div class="cabeca coluna" style="margin-inline:0">
+    <div class="linha-sup"><span class="rotulo">7 · 2025 e 2026</span><button class="comentar" type="button" hidden>Comentar</button></div>
+    <h2>A interferência aberta: o que está documentado e por onde pode ter chegado ao voto</h2>
+  </div>
+  <div class="texto">
+    <p>Sobre 2013–2018, a ação americana documentada é a espionagem, a cooperação informal com a Lava Jato e os acordos bilionários contra empresas brasileiras. Que ela tenha causado o impeachment ou a eleição de 2018, não há evidência pública. Em 2025–2026 é diferente: a ação é aberta e assinada. Há tarifas justificadas pelo julgamento de Bolsonaro, sanções a um ministro do STF (retiradas em dezembro de 2025) e uma investigação comercial sobre pagamentos eletrônicos e outras práticas, que virou tarifa de 25% em julho de 2026 (seção 6). A pergunta deixa de ser "houve?" e passa a ser "por qual caminho chegou ao voto, se chegou?".</p>
+  </div>
+  <h3>Na campanha de 2026</h3>
+  <ul class="marcos-campanha">
+    <li><span class="selo">□ reportado</span><span><strong>26 de maio.</strong> Trump recebe Flávio no Salão Oval, com Eduardo Bolsonaro na comitiva. <span class="selo">■ documentado</span> Dois dias depois, os EUA classificam PCC e CV como organizações terroristas.</span></li>
+    <li><span class="selo">■ documentado</span><span><strong>15 de julho.</strong> Os EUA concluem a investigação comercial e impõem tarifa de 25% sobre parte das exportações brasileiras.</span></li>
+    <li><span class="selo">□ reportado</span><span><strong>24 de julho e 4 de agosto.</strong> Disputa de vistos sobre "integridade eleitoral": o Brasil nega vistos a dois funcionários do Departamento de Estado, e os EUA suspendem o visto da embaixadora brasileira.</span></li>
+    <li><span class="selo">□ reportado</span><span><strong>21 de agosto.</strong> Em telefonema com Lula, Trump menciona a eleição, segundo o governo brasileiro.</span></li>
+    <li><span class="selo">□ reportado, conferido em parte</span><span><strong>30 de setembro.</strong> O Guardian revela um projeto de US$ 1 milhão do Departamento de Estado para "combater lawfare e censura no Brasil", ainda em deliberação. Nenhum repasse foi confirmado.</span></li>
+    <li><span class="selo">□ reportado</span><span><strong>2 de outubro</strong>, dois dias antes do 1º turno. Os EUA suspendem os serviços consulares no Brasil, citando segurança, sem detalhar.</span></li>
+    <li><span class="selo">□ reportado</span><span><strong>5 de outubro.</strong> Trump chama o resultado de Flávio de "a big victory". Até 10/10, não houve apoio formal do governo americano.</span></li>
+  </ul>
+  <figure>
+    <div class="linha-sup" style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center"><span class="selo"><b>◐</b> exploratório</span></div>
+    <div class="titulo-graf">Pesquisas e ações dos EUA no mesmo eixo do tempo</div>
+    <div class="legenda" id="leg-tempo-pesq"></div>
+    <div class="graf" id="g-tempo-pesq"></div>
+    <div id="lista-marcos"></div>
+    <figcaption id="cap-tempo-pesq">2º turno simulado: <span data-n="n_pesq">—</span> pesquisas de <span data-n="n_inst">—</span> institutos, reunidas na Wikipédia; <span data-n="n_conf">—</span> delas conferidas na fonte (as que divergiam já trazem o valor da fonte). Aprovação: relatórios da Quaest; a partir de agosto de 2026 a pergunta passa a ser "vem fazendo até aqui", nas pesquisas eleitorais do instituto. Eventos: seção 6.</figcaption>
+  </figure>
+  <div class="texto">
+    <p><strong>O que o gráfico mostra</strong>, sem dizer por quê:</p>
+    <ul class="perguntas">
+      <li><strong>Julho e agosto de 2025</strong>, logo depois da carta das tarifas: a aprovação de Lula na Quaest subiu de <span data-n="apr_jul25">—</span> para <span data-n="apr_ago25">—</span> e chegou a <span data-n="apr_out25">—</span> em outubro. As poucas pesquisas de 2º turno do período mostravam Lula bem à frente de Flávio.</li>
+      <li><strong>Dezembro de 2025 a abril de 2026</strong>, depois do lançamento de Flávio: a disputa ficou perto do empate, com medianas mensais entre <span data-n="pm_emp_min">—</span> e <span data-n="pm_emp_max">—</span> para Lula.</li>
+      <li><strong>Maio a julho de 2026</strong>: Lula voltou a abrir vantagem (medianas de <span data-n="pm_rec_min">—</span> a <span data-n="pm_rec_max">—</span>).</li>
+      <li><strong>De agosto até a eleição</strong>: queda contínua, de <span data-n="pm_ago">—</span> para <span data-n="pm_out">—</span> na mediana mensal. A aprovação líquida foi de <span data-n="apr_jul26">—</span> em julho para <span data-n="apr_set26">—</span> no começo de setembro.</li>
+    </ul>
+    <p>A pergunta que fica para o grupo é o que mudou a partir de agosto de 2026. Nas mesmas semanas aconteceram a tarifa de 25%, a disputa de vistos, o telefonema em que Trump mencionou a eleição e o início da campanha na TV e nas ruas (16 de agosto). O gráfico não separa um efeito do outro.</p>
+  </div>
+  <p class="nao-diz"><strong>O que isso não diz.</strong> Pesquisa não é voto, e um movimento perto de um evento não prova que o evento o causou: vários fatos se sobrepõem no tempo. Por isso os outros choques nacionais aparecem no gráfico ao lado das ações americanas. O gráfico serve para escolher o que testar.</p>
+
+  <h3>Os caminhos possíveis, e como testar cada um</h3>
+  <div class="cartoes" id="canais"></div>
+
+  <h3>O que seria preciso para afirmar</h3>
+  <ol class="perguntas">
+    <li><strong>A ação, documentada.</strong> Para 2025–2026, temos (seção 6).</li>
+    <li><strong>Um canal com exposição desigual</strong>, entre lugares ou ao longo do tempo: exportação para os EUA, presença de facções, acesso a redes, organizações.</li>
+    <li><strong>A marca desse canal no voto</strong>, na hora certa e não antes. É o mesmo teste que confirmou as igrejas em 2018. Sem esse terceiro elo, temos coincidência, não mecanismo.</li>
+  </ol>
+</section>
+
+<!-- 8 · Debate -->
+<section id="debate" class="larga">
+  <div class="cabeca coluna" style="margin-inline:0">
+    <div class="linha-sup"><span class="rotulo">8 · Para o debate</span><button class="comentar" type="button" hidden>Comentar</button></div>
+    <h2>O que investigamos agora?</h2>
+  </div>
+  <div class="texto">
+    <p>Até 25/10, duas tarefas já estão garantidas: a versão 2 da previsão (24/10) e a leitura do resultado na noite do 2º turno. Para usar o tempo que sobra, e o que vem depois, escolha até três frentes. O resultado aparece para todos que abrirem a página. Comentários sobre qualquer seção também ficam guardados aqui: use o botão "Comentar" no alto de cada uma.</p>
+  </div>
+  <form class="urna" id="urna" novalidate>
+    <div class="rotulo">Sua escolha · até 3</div>
+    <div class="opcoes" id="opcoes"></div>
+    <div class="acoes">
+      <button class="botao-confirma" id="confirma" type="submit" disabled>Confirma</button>
+      <span class="aviso" id="aviso-urna" aria-live="polite"></span>
+    </div>
+  </form>
+
+  <div class="urna" id="mural">
+    <div class="rotulo">Hipóteses, eventos e perguntas do grupo</div>
+    <form class="campo" id="form-ideia" novalidate>
+      <label for="tipo-ideia">O que você quer acrescentar?</label>
+      <select id="tipo-ideia">
+        <option value="hipotese">Uma hipótese nova</option>
+        <option value="evento">Um evento que falta na linha do tempo</option>
+        <option value="pergunta">Uma pergunta para o grupo</option>
+        <option value="fonte">Uma fonte de dados ou documento</option>
+      </select>
+      <label for="texto-ideia" class="rotulo" style="text-transform:none;letter-spacing:0;font-family:var(--f-texto)">Escreva em poucas linhas. Se for evento, diga a data e a fonte.</label>
+      <textarea id="texto-ideia" maxlength="1500"></textarea>
+      <div class="acoes"><button class="botao-confirma" id="envia-ideia" type="submit" disabled>Enviar</button><span class="aviso" id="aviso-ideia" aria-live="polite"></span></div>
+    </form>
+    <div class="ideias" id="ideias"><p class="vazio">Ainda não há contribuições. A primeira aparece aqui assim que for enviada.</p></div>
+  </div>
+</section>
+
+</main>
+
+<footer class="larga">
+  <p><strong>Fontes.</strong> TSE (votação por seção e por zona, 2006–2026; candidatos e votos para deputado federal, 2006–2022), IBGE (Censos 2010 e 2022, PIB e soja), MDS (Bolsa Família e Auxílio Brasil), Receita Federal (CNPJ), RAIS, SIM/DATASUS. Pesquisas: registros reunidos na Wikipédia, conferidos por amostra nos institutos. Eventos: fonte de cada um na seção 6.</p>
+  <p><strong>Método.</strong> As comparações são entre áreas mínimas comparáveis (municípios somados quando um foi criado depois de 2006) da mesma região imediata do IBGE, com controles de renda, escolaridade, urbanização, idade e cor ou raça. Cada hipótese com selo ● foi registrada em docs/hipoteses.md antes do teste. As conversões para pontos percentuais são aproximadas (válidas perto de 50%).</p>
+  <p><strong>Esta versão</strong> foi feita para a militância e a direção, com foco no 2º turno. Uma versão para o público acadêmico sai depois de 25/10. Dados gerados em <span data-n="gerado_em">—</span> por reports/conjuntura/gerar_dados.py.</p>
+</footer>
+
+<div class="dica" id="dica" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="dados.js"></script>
+<script>
+(function () {
+  "use strict";
+  const D = window.DADOS;
+  if (!D || !window.d3) {
+    document.querySelector("main").insertAdjacentHTML("afterbegin", '<p class="vazio">Os dados ou a biblioteca de gráficos não carregaram. Recarregue a página.</p>');
+    return;
+  }
+
+  // ---------- formatação (pt-BR) ----------
+  const MENOS = "−";
+  const nf = (casas) => new Intl.NumberFormat("pt-BR", { minimumFractionDigits: casas, maximumFractionDigits: casas });
+  const f0 = nf(0), f1 = nf(1);
+  const sinal = (x, fmt) => (x > 0 ? "+" : x < 0 ? MENOS : "") + fmt.format(Math.abs(x));
+  const mi = (votos, casas = 1) => nf(casas).format(Math.abs(votos) / 1e6) + (Math.abs(votos) >= 2e6 ? " milhões" : " milhão");
+  const pct = (x, casas = 0) => nf(casas).format(x) + "%";
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+  // ---------- números do texto ----------
+  const R = D.resumo, ST = D.segundo_turno, dist = D.distribuicoes.transicoes;
+  const ult = dist[dist.length - 1];
+  const anteriores = dist.slice(0, -1).map((t) => t.dp_pp);
+  const reg = Object.fromEntries(D.regioes.map((r) => [r.sigla, r]));
+  const outros = Object.fromEntries(ST.outros.map((c) => [c.nome_curto, c.votos]));
+  const ufDelta = Object.fromEntries(D.ufs.map((u) => [u.uf, u.lula_delta]));
+  const frente = D.pesquisas_1t.institutos.filter((p) => p.lula_2p > 50).length;
+  const ev = D.raiz.evangelicos.find((t) => t.transicao === "2014→2018");
+  const tam = D.raiz.tamanho.find((t) => t.transicao === "2014→2018");
+  const ret = D.raiz.retencao_2026;
+  const cong = D.raiz.congelamento;
+  const N = {
+    perda_mi: mi(R.perda),
+    perda_curto: MENOS + f1.format(Math.abs(R.perda) / 1e6) + " mi",
+    flavio26_int: f0.format(R.flavio_26),
+    lula26_int: f0.format(R.lula_26),
+    pct_caiu26: pct(Math.floor(ult.pct_caiu)),
+    amcs_subiu: f0.format(R.amcs_subiu),
+    amcs: f0.format(R.amcs),
+    desmob: pct(D.cascata.frac_desmobilizacao),
+    dp26_curto: f1.format(ult.dp_pp) + " pts",
+    dp_antes: f0.format(Math.floor(Math.min(...anteriores))) + " a " + f0.format(Math.ceil(Math.max(...anteriores))),
+    bf_razao_x: f0.format(D.bolsa_familia.razao) + "×",
+    pesq_frente: frente + " de " + D.pesquisas_1t.institutos.length,
+    dif_mi: mi(ST.diferenca),
+    nne_flavio: mi((reg.NE.flavio_mi + reg.N.flavio_mi) * 1e6),
+    sse_perda: mi(-(reg.SE.lula_mi + reg.S.lula_mi) * 1e6),
+    troca: mi(D.cascata.passos.find((p) => p.rotulo === "Troca de voto").mi * 1e6),
+    a8_eleit: pct(D.a8.pct_eleitorado), a8_perda: pct(D.a8.pct_perda), a8_maiores: pct(100 - D.a8.pct_perda),
+    p10_26: f1.format(Math.abs(ult.p10_pp)), p90_26: f1.format(Math.abs(ult.p90_pp)),
+    resultado_2p: pct(D.pesquisas_1t.resultado_2p, 1),
+    vies: f1.format(D.pesquisas_1t.vies_medio),
+    l22_ganho: mi(ST.em_2022.lula_2t - ST.em_2022.lula_1t),
+    b22_ganho: mi(ST.em_2022.bolsonaro_2t - ST.em_2022.bolsonaro_1t),
+    l22_vantagem: mi(ST.em_2022.lula_1t - ST.em_2022.bolsonaro_1t),
+    prev_central: pct(ST.previsao.central, 1), prev_inf: pct(ST.previsao.faixa_inf, 1), prev_sup: pct(ST.previsao.faixa_sup, 1),
+    prev_pesquisa: ST.previsao.pesquisa,
+    uf4: mi(-(ufDelta.SP + ufDelta.MG + ufDelta.RS + ufDelta.PR)),
+    bf_dp: f1.format(D.bolsa_familia.dp_cobertura), bf22: f1.format(D.bolsa_familia.nivel_2022_pp), bf26: f1.format(D.bolsa_familia.nivel_2026_pp),
+    bt_g0: f1.format(ST.backtest_2022_rmse.G0), bt_g1: f1.format(ST.backtest_2022_rmse.G1),
+    cury: mi(outros["Augusto Cury"]), renan: mi(outros["Renan Santos"]), caiado: mi(outros["Ronaldo Caiado"]),
+    tam1418: f0.format(Math.abs(tam.pp)), ev1418: f1.format(Math.abs(ev.pp)),
+    gerado_em: D.gerado_em.split("-").reverse().join("/"),
+  };
+  // pesquisas de 2025–2026 (seção 7)
+  const pm = Object.fromEntries((D.pesquisas_mensal || []).map((m) => [m.mes, m.mediana]));
+  const faixaMeses = (meses) => meses.map((m) => pm[m]).filter((v) => v !== undefined);
+  const aprMes = (ym, qual = "primeira") => {
+    const l = (D.aprovacao || []).filter((a) => a.campo_fim.startsWith(ym));
+    return l.length ? (qual === "pior" ? l.reduce((a, b) => (b.aprova - b.desaprova < a.aprova - a.desaprova ? b : a)) : l[0]) : null;
+  };
+  const liq = (a) => (a ? sinal(a.aprova - a.desaprova, f0) + " pontos" : "—");
+  const emp = faixaMeses(["2025-12", "2026-01", "2026-02", "2026-03", "2026-04"]);
+  const rec = faixaMeses(["2026-05", "2026-06", "2026-07"]);
+  Object.assign(N, {
+    n_pesq: f0.format((D.pesquisas_2t || []).length),
+    n_inst: f0.format(new Set((D.pesquisas_2t || []).map((p) => p.instituto)).size),
+    n_conf: f0.format((D.pesquisas_2t || []).filter((p) => p.conferido === "sim" || p.conferido === "divergente").length),
+    apr_jul25: aprMes("2025-07") ? pct(aprMes("2025-07").aprova) : "—",
+    apr_ago25: aprMes("2025-08") ? pct(aprMes("2025-08").aprova) : "—",
+    apr_out25: aprMes("2025-10") ? pct(aprMes("2025-10").aprova) : "—",
+    pm_emp_min: emp.length ? pct(Math.min(...emp), 1) : "—", pm_emp_max: emp.length ? pct(Math.max(...emp), 1) : "—",
+    pm_rec_min: rec.length ? pct(Math.min(...rec), 1) : "—", pm_rec_max: rec.length ? pct(Math.max(...rec), 1) : "—",
+    pm_ago: pm["2026-08"] !== undefined ? pct(pm["2026-08"], 1) : "—",
+    pm_out: pm["2026-10"] !== undefined ? pct(pm["2026-10"], 1) : "—",
+    apr_jul26: liq(aprMes("2026-07")), apr_set26: liq(aprMes("2026-09", "pior")),
+  });
+  const fc = nf(2);
+  N.congel_antes = fc.format(Math.min(...cong.slice(0, 3).map((c) => c.correlacao))) + "–" + fc.format(Math.max(...cong.slice(0, 3).map((c) => c.correlacao)));
+  N.congel_depois = fc.format(cong[3].correlacao) + "–" + fc.format(cong[4].correlacao);
+  document.querySelectorAll("[data-n]").forEach((el) => {
+    const v = N[el.dataset.n];
+    if (v !== undefined && v !== "") el.textContent = v;
+  });
+
+  // ---------- infraestrutura dos gráficos ----------
+  const dica = document.getElementById("dica");
+  function mostraDica(ev, linhas) {
+    dica.replaceChildren();
+    linhas.forEach(([forte, sub]) => {
+      if (forte) { const b = document.createElement("b"); b.textContent = forte; dica.appendChild(b); }
+      if (sub) { const s = document.createElement("span"); s.className = "s"; s.textContent = sub; dica.appendChild(s); }
+    });
+    dica.hidden = false;
+    const r = dica.getBoundingClientRect();
+    let x, y;
+    if (ev.clientX !== undefined && ev.type !== "focus") { x = ev.clientX + 14; y = ev.clientY + 14; }
+    else { const b = ev.target.getBoundingClientRect(); x = b.right + 8; y = b.top; }
+    if (x + r.width > window.innerWidth - 8) x = Math.max(8, x - r.width - 28);
+    if (y + r.height > window.innerHeight - 8) y = Math.max(8, window.innerHeight - r.height - 8);
+    dica.style.left = x + "px"; dica.style.top = y + "px";
+  }
+  const escondeDica = () => { dica.hidden = true; };
+  function interativo(sel, linhas) {
+    sel.attr("tabindex", 0).attr("class", (d, i, n) => (n[i].getAttribute("class") || "") + " alvo")
+      .on("pointerenter pointermove", (ev, d) => mostraDica(ev, linhas(d)))
+      .on("pointerleave blur", escondeDica)
+      .on("focus", (ev, d) => mostraDica(ev, linhas(d)));
+  }
+  function svgEm(id, altura) {
+    const el = document.getElementById(id);
+    el.replaceChildren();
+    const largura = Math.max(280, el.clientWidth || 600);
+    const svg = d3.select(el).append("svg").attr("viewBox", `0 0 ${largura} ${altura}`).attr("width", "100%").attr("role", "img");
+    return { svg, largura, altura, el };
+  }
+  function tabela(id, colunas, linhas) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const t = document.createElement("table");
+    const th = t.createTHead().insertRow();
+    colunas.forEach((c) => { const x = document.createElement("th"); x.textContent = c.t; if (c.n) x.className = "n"; th.appendChild(x); });
+    const tb = t.createTBody();
+    linhas.forEach((l) => { const tr = tb.insertRow(); colunas.forEach((c) => { const td = tr.insertCell(); td.textContent = c.f(l); if (c.n) td.className = "n"; }); });
+    el.replaceChildren(t);
+  }
+  // barra horizontal com ponta arredondada (4px) e base reta, a partir de x0
+  function barraH(x0, x1, y, h, r = 4) {
+    const dir = x1 >= x0 ? 1 : -1, w = Math.abs(x1 - x0), rr = Math.min(r, w, h / 2);
+    if (w < 0.5) return "";
+    if (dir > 0) return `M${x0},${y}H${x1 - rr}Q${x1},${y} ${x1},${y + rr}V${y + h - rr}Q${x1},${y + h} ${x1 - rr},${y + h}H${x0}Z`;
+    return `M${x0},${y}H${x1 + rr}Q${x1},${y} ${x1},${y + rr}V${y + h - rr}Q${x1},${y + h} ${x1 + rr},${y + h}H${x0}Z`;
+  }
+  function barraV(x, w, y0, y1, r = 4) {
+    const h = Math.abs(y1 - y0), rr = Math.min(r, h, w / 2);
+    if (h < 0.5) return "";
+    if (y1 < y0) return `M${x},${y0}V${y1 + rr}Q${x},${y1} ${x + rr},${y1}H${x + w - rr}Q${x + w},${y1} ${x + w},${y1 + rr}V${y0}Z`;
+    return `M${x},${y0}V${y1 - rr}Q${x},${y1} ${x + rr},${y1}H${x + w - rr}Q${x + w},${y1} ${x + w},${y1 - rr}V${y0}Z`;
+  }
+  const estreito = () => window.innerWidth < 560;
+
+  // ---------- 1. regiões ----------
+  function gRegioes() {
+    const ordem = ["NE", "N", "CO", "SE", "S"];
+    const linhas = ordem.map((s) => reg[s]);
+    const rotW = estreito() ? 92 : 120, h = 12, gap = 2, passo = 2 * h + gap + 20;
+    const { svg, largura } = svgEm("g-regioes", linhas.length * passo + 28);
+    const x = d3.scaleLinear().domain([-2.2, 2.2]).range([rotW, largura - 46]);
+    [-2, -1, 0, 1, 2].forEach((t) => {
+      svg.append("line").attr("class", t === 0 ? "base" : "grade").attr("x1", x(t)).attr("x2", x(t)).attr("y1", 0).attr("y2", linhas.length * passo);
+      svg.append("text").attr("class", "eixo-t").attr("x", x(t)).attr("y", linhas.length * passo + 16).attr("text-anchor", "middle").text(t === 0 ? "0" : sinal(t, f0) + " mi");
+    });
+    linhas.forEach((r, i) => {
+      const y0 = i * passo + 6;
+      svg.append("text").attr("x", 0).attr("y", y0 + h + 4).text(r.regiao).style("fill", css("--tinta")).style("font-weight", 600);
+      [["lula_mi", "--pt", "Lula"], ["flavio_mi", "--adv", "Flávio (2022: Jair Bolsonaro)"]].forEach(([k, cor, nome], j) => {
+        const y = y0 + j * (h + gap), v = r[k];
+        const g = svg.append("g").datum(r);
+        g.append("path").attr("class", "marca").attr("d", barraH(x(0), x(v), y, h)).attr("fill", css(cor));
+        g.append("rect").attr("x", rotW).attr("y", y - 1).attr("width", largura - rotW).attr("height", h + 2).attr("fill", "transparent");
+        interativo(g, () => [[sinal(v, f1) + " mi", nome + " · " + r.regiao], [null, "Eleitores aptos: " + sinal(r.eleitores_mi, nf(2)) + " mi"]]);
+        const tx = v >= 0 ? x(v) + 5 : x(v) - 5;
+        svg.append("text").attr("class", "valor").attr("x", Math.abs(v) < 0.01 ? x(0) + 5 : tx).attr("y", y + h - 2)
+          .attr("text-anchor", v >= 0 || Math.abs(v) < 0.01 ? "start" : "end").text(Math.abs(v) < 0.01 ? "0,0" : sinal(v, f1));
+      });
+    });
+  }
+
+  // ---------- 1b. cascata ----------
+  function gCascata() {
+    const C = D.cascata;
+    let acum = C.inicio_mi;
+    const passos = [{ rotulo: "2022", tipo: "nivel", v: C.inicio_mi }];
+    C.passos.forEach((p) => { passos.push({ rotulo: p.rotulo, tipo: "passo", de: acum, para: acum + p.mi, v: p.mi }); acum += p.mi; });
+    passos.push({ rotulo: "2026", tipo: "nivel", v: C.fim_mi });
+    const rotW = 118, h = 16, passo = 34;
+    const { svg, largura } = svgEm("g-cascata", passos.length * passo + 24);
+    const x = d3.scaleLinear().domain([53, 58.5]).range([rotW, largura - 50]);
+    d3.range(53, 59).forEach((t) => {
+      svg.append("line").attr("class", "grade").attr("x1", x(t)).attr("x2", x(t)).attr("y1", 0).attr("y2", passos.length * passo);
+      svg.append("text").attr("class", "eixo-t").attr("x", x(t)).attr("y", passos.length * passo + 16).attr("text-anchor", "middle").text(t);
+    });
+    passos.forEach((p, i) => {
+      const y = i * passo + 8;
+      svg.append("text").attr("x", 0).attr("y", y + h - 3).text(p.rotulo).style("fill", p.tipo === "nivel" ? css("--tinta") : css("--tinta-2")).style("font-weight", p.tipo === "nivel" ? 600 : 400);
+      const g = svg.append("g").datum(p);
+      if (p.tipo === "nivel") {
+        g.append("rect").attr("class", "marca").attr("x", x(p.v) - 2).attr("y", y - 3).attr("width", 4).attr("height", h + 6).attr("rx", 1).attr("fill", css("--tinta"));
+        svg.append("text").attr("class", "valor").attr("x", x(p.v) + 8).attr("y", y + h - 3).text(f1.format(p.v) + " mi");
+        interativo(g, () => [[f1.format(p.v) + " milhões", "votos de Lula no 1º turno de " + p.rotulo + ", sem o exterior"]]);
+      } else {
+        const a = Math.min(p.de, p.para), b = Math.max(p.de, p.para);
+        g.append("rect").attr("class", "marca").attr("x", x(a)).attr("y", y).attr("width", Math.max(2, x(b) - x(a))).attr("height", h).attr("rx", 3)
+          .attr("fill", p.v >= 0 ? css("--pt") : css("--adv"));
+        if (i < passos.length - 1) svg.append("line").attr("x1", x(p.para)).attr("x2", x(p.para)).attr("y1", y + h).attr("y2", y + passo).attr("stroke", css("--eixo"));
+        const fora = p.v >= 0 ? x(b) + 6 : x(a) - 6;
+        svg.append("text").attr("class", "valor").attr("x", fora).attr("y", y + h - 3).attr("text-anchor", p.v >= 0 ? "start" : "end").text(sinal(p.v, nf(2)));
+        interativo(g, () => [[sinal(p.v, nf(2)) + " mi", p.rotulo]]);
+      }
+    });
+  }
+
+  // ---------- 1c. faixas de tamanho ----------
+  function gFaixas() {
+    const F = D.faixas, rotW = 88, h = 9, gap = 2, passo = 2 * h + gap + 12;
+    const { svg, largura } = svgEm("g-faixas", F.length * passo + 24);
+    const x = d3.scaleLinear().domain([0, 30]).range([rotW, largura - 40]);
+    [0, 10, 20, 30].forEach((t) => {
+      svg.append("line").attr("class", t ? "grade" : "base").attr("x1", x(t)).attr("x2", x(t)).attr("y1", 0).attr("y2", F.length * passo);
+      svg.append("text").attr("class", "eixo-t").attr("x", x(t)).attr("y", F.length * passo + 16).attr("text-anchor", "middle").text(t + "%");
+    });
+    F.forEach((f, i) => {
+      const y0 = i * passo + 4;
+      svg.append("text").attr("x", 0).attr("y", y0 + h + 4).text(f.faixa);
+      [["pct_eleitorado", "--eixo"], ["pct_perda", "--pt"]].forEach(([k, cor], j) => {
+        const y = y0 + j * (h + gap), g = svg.append("g").datum(f);
+        g.append("path").attr("class", "marca").attr("d", barraH(x(0), x(f[k]), y, h, 3)).attr("fill", css(cor));
+        g.append("rect").attr("x", rotW).attr("y", y - 1).attr("width", largura - rotW).attr("height", h + 2).attr("fill", "transparent");
+        svg.append("text").attr("class", "eixo-t").attr("x", x(f[k]) + 4).attr("y", y + h - 1).text(f1.format(f[k]));
+        interativo(g, () => [[pct(f.pct_perda, 1) + " da perda", f.faixa + " eleitores · " + f0.format(f.amcs) + " municípios"], [null, pct(f.pct_eleitorado, 1) + " do eleitorado; queda mediana " + sinal(f.mediana_pp, f1) + " pts"]]);
+      });
+    });
+    tabela("t-faixas", [
+      { t: "Eleitores aptos (2022)", f: (r) => r.faixa },
+      { t: "Municípios", n: 1, f: (r) => f0.format(r.amcs) },
+      { t: "% do eleitorado", n: 1, f: (r) => f1.format(r.pct_eleitorado) },
+      { t: "% da perda", n: 1, f: (r) => f1.format(r.pct_perda) },
+      { t: "Queda mediana (pts)", n: 1, f: (r) => sinal(r.mediana_pp, f1) },
+    ], F);
+  }
+
+  // ---------- 2. em bloco ----------
+  function gBloco() {
+    const T = D.distribuicoes, de = T.de, passoX = T.passo;
+    const colunas = estreito() ? 1 : 5;
+    const el = document.getElementById("g-bloco");
+    const larguraTot = Math.max(280, el.clientWidth || 900);
+    const painelW = colunas === 1 ? larguraTot : (larguraTot - 12 * (colunas - 1)) / colunas;
+    const painelH = colunas === 1 ? 118 : 190, cab = 46, rodape = 18;
+    const linhasN = Math.ceil(T.transicoes.length / colunas);
+    const altura = linhasN * (painelH + cab + rodape + 14);
+    const { svg } = svgEm("g-bloco", altura);
+    const maxPct = d3.max(T.transicoes, (t) => d3.max(t.caixas) / d3.sum(t.caixas) * 100);
+    T.transicoes.forEach((t, i) => {
+      const col = i % colunas, lin = Math.floor(i / colunas);
+      const ox = col * (painelW + 12), oy = lin * (painelH + cab + rodape + 14);
+      const g = svg.append("g").attr("transform", `translate(${ox},${oy})`);
+      const destaque = i === T.transicoes.length - 1;
+      g.append("text").attr("x", 0).attr("y", 14).text(t.transicao).style("font-weight", 700).style("fill", css("--tinta")).style("font-size", "13px");
+      g.append("text").attr("x", 0).attr("y", 32).attr("class", "eixo-t").style("font-size", "11.5px").style("fill", destaque ? css("--tinta") : css("--tinta-3"))
+        .text(`caiu em ${f0.format(t.pct_caiu)}% · mediana ${sinal(t.mediana_pp, f1)}`);
+      const x = d3.scaleLinear().domain([de, -de]).range([0, painelW]);
+      const y = d3.scaleLinear().domain([0, maxPct]).range([cab + painelH, cab]);
+      const total = d3.sum(t.caixas), bw = Math.max(1, x(de + passoX) - x(de) - 2);
+      g.append("line").attr("class", "base").attr("x1", 0).attr("x2", painelW).attr("y1", y(0)).attr("y2", y(0));
+      t.caixas.forEach((n, k) => {
+        if (!n) return;
+        const ini = de + k * passoX, centro = ini + passoX / 2, p = n / total * 100;
+        const b = g.append("g").datum({ ini, n, p });
+        b.append("path").attr("class", "marca").attr("d", barraV(x(ini) + 1, bw, y(0), y(p), 2))
+          .attr("fill", centro > 0 ? css("--pt") : css("--adv")).attr("opacity", destaque ? 1 : 0.85);
+        b.append("rect").attr("x", x(ini)).attr("y", cab).attr("width", bw + 2).attr("height", painelH).attr("fill", "transparent");
+        interativo(b, () => [[f1.format(p) + "% dos municípios", `variação entre ${sinal(ini, f0)} e ${sinal(ini + passoX, f0)} pts · ${t.transicao}`], [null, f0.format(n) + " municípios"]]);
+      });
+      g.append("line").attr("x1", x(0)).attr("x2", x(0)).attr("y1", cab - 4).attr("y2", y(0) + 4).attr("stroke", css("--tinta-3")).attr("stroke-width", 1);
+      [-30, 0, 30].forEach((v) => g.append("text").attr("class", "eixo-t").attr("x", x(v)).attr("y", cab + painelH + 14).attr("text-anchor", v === -30 ? "start" : v === 30 ? "end" : "middle").text(v === 0 ? "0" : sinal(v, f0)));
+    });
+    tabela("t-bloco", [
+      { t: "Transição", f: (r) => r.transicao },
+      { t: "Mediana (pts)", n: 1, f: (r) => sinal(r.mediana_pp, f1) },
+      { t: "Desvio-padrão (pts)", n: 1, f: (r) => f1.format(r.dp_pp) },
+      { t: "% que caiu", n: 1, f: (r) => f1.format(r.pct_caiu) },
+      { t: "10% mais baixos até", n: 1, f: (r) => sinal(r.p10_pp, f1) },
+      { t: "10% mais altos desde", n: 1, f: (r) => sinal(r.p90_pp, f1) },
+    ], T.transicoes);
+  }
+
+  // ---------- 3. pesquisas ----------
+  function gPesquisas() {
+    const P = D.pesquisas_1t, I = P.institutos, rotW = estreito() ? 104 : 130, passo = 24;
+    const { svg, largura } = svgEm("g-pesquisas", I.length * passo + 40);
+    const x = d3.scaleLinear().domain([47, 54]).range([rotW, largura - 52]);
+    const yFim = I.length * passo + 6;
+    d3.range(47, 55).forEach((t) => {
+      svg.append("line").attr("class", "grade").attr("x1", x(t)).attr("x2", x(t)).attr("y1", 0).attr("y2", yFim);
+      if (estreito() && t % 2) return;
+      svg.append("text").attr("class", "eixo-t").attr("x", x(t)).attr("y", yFim + 16).attr("text-anchor", "middle").text(t + "%");
+    });
+    svg.append("line").attr("x1", x(50)).attr("x2", x(50)).attr("y1", 0).attr("y2", yFim).attr("stroke", css("--tinta-3")).attr("stroke-width", 1);
+    svg.append("text").attr("class", "eixo-t").attr("x", x(50) + 4).attr("y", yFim + 30).text("empate");
+    svg.append("line").attr("x1", x(P.resultado_2p)).attr("x2", x(P.resultado_2p)).attr("y1", -2).attr("y2", yFim).attr("stroke", css("--tinta")).attr("stroke-width", 2);
+    svg.append("text").attr("class", "valor").attr("x", x(P.resultado_2p) - 4).attr("y", yFim + 30).attr("text-anchor", "end").text("resultado " + pct(P.resultado_2p, 1));
+    I.forEach((p, i) => {
+      const y = i * passo + 14;
+      svg.append("text").attr("x", 0).attr("y", y + 4).text(p.instituto);
+      svg.append("line").attr("x1", x(P.resultado_2p)).attr("x2", x(p.lula_2p)).attr("y1", y).attr("y2", y).attr("stroke", css("--eixo")).attr("stroke-width", 2);
+      const g = svg.append("g").datum(p);
+      g.append("circle").attr("class", "marca").attr("cx", x(p.lula_2p)).attr("cy", y).attr("r", 5.5).attr("fill", p.lula_2p > 50 ? css("--pt") : css("--adv")).attr("stroke", css("--superficie")).attr("stroke-width", 2);
+      g.append("rect").attr("x", rotW).attr("y", y - 11).attr("width", largura - rotW).attr("height", 22).attr("fill", "transparent");
+      svg.append("text").attr("class", "eixo-t").attr("x", Math.max(x(p.lula_2p), x(P.resultado_2p)) + 10).attr("y", y + 4).text(f1.format(p.lula_2p));
+      interativo(g, () => [[pct(p.lula_2p, 1) + " para Lula entre os dois", p.instituto + " · campo até " + p.campo_fim.split("-").reverse().join("/")], [null, `Lula ${f1.format(p.lula)}% · Flávio ${f1.format(p.flavio)}% (votos totais)`]]);
+    });
+  }
+
+  // ---------- 4. montanha ----------
+  function gMontanha() {
+    const demais = ST.outros_total - ["Augusto Cury", "Renan Santos", "Ronaldo Caiado", "Romeu Zema"].reduce((s, n) => s + (outros[n] || 0), 0);
+    const L = [
+      { r: "Vantagem de Flávio", v: ST.diferenca, cor: "--adv", forte: 1 },
+      { r: "Augusto Cury", v: outros["Augusto Cury"], cor: "--tinta-3" },
+      { r: "Renan Santos", v: outros["Renan Santos"], cor: "--tinta-3" },
+      { r: "Ronaldo Caiado", v: outros["Ronaldo Caiado"], cor: "--tinta-3" },
+      { r: "Romeu Zema e demais", v: (outros["Romeu Zema"] || 0) + demais, cor: "--tinta-3" },
+      { r: "Nulos", v: ST.nulos, cor: "--eixo" },
+      { r: "Brancos", v: ST.brancos, cor: "--eixo" },
+      { r: "Abstenção (Brasil)", v: ST.abstencao_brasil, cor: "--eixo" },
+    ];
+    const rotW = estreito() ? 128 : 150, h = 14, passo = 26;
+    const { svg, largura } = svgEm("g-montanha", L.length * passo + 22);
+    const x = d3.scaleLinear().domain([0, 34e6]).range([rotW, largura - 54]);
+    [0, 10e6, 20e6, 30e6].forEach((t) => {
+      svg.append("line").attr("class", t ? "grade" : "base").attr("x1", x(t)).attr("x2", x(t)).attr("y1", 0).attr("y2", L.length * passo);
+      svg.append("text").attr("class", "eixo-t").attr("x", x(t)).attr("y", L.length * passo + 16).attr("text-anchor", "middle").text(t / 1e6 + " mi");
+    });
+    L.forEach((l, i) => {
+      const y = i * passo + 5, g = svg.append("g").datum(l);
+      svg.append("text").attr("x", 0).attr("y", y + h - 2).text(l.r).style("font-weight", l.forte ? 700 : 400).style("fill", l.forte ? css("--tinta") : css("--tinta-2"));
+      g.append("path").attr("class", "marca").attr("d", barraH(x(0), x(l.v), y, h)).attr("fill", css(l.cor));
+      g.append("rect").attr("x", rotW).attr("y", y - 2).attr("width", largura - rotW).attr("height", h + 4).attr("fill", "transparent");
+      svg.append("text").attr("class", "valor").attr("x", x(l.v) + 5).attr("y", y + h - 2).text(f1.format(l.v / 1e6));
+      interativo(g, () => [[f0.format(l.v) + " votos", l.r]]);
+    });
+  }
+  function g2022() {
+    const E = ST.em_2022;
+    const L = [{ r: "Lula", v: E.lula_2t - E.lula_1t, cor: "--pt", n: "13" }, { r: "Bolsonaro", v: E.bolsonaro_2t - E.bolsonaro_1t, cor: "--adv", n: "22" }];
+    const rotW = 100, h = 22, passo = 40;
+    const { svg, largura } = svgEm("g-2022", L.length * passo + 24);
+    const x = d3.scaleLinear().domain([0, 8e6]).range([rotW, largura - 50]);
+    [0, 2e6, 4e6, 6e6, 8e6].forEach((t) => {
+      svg.append("line").attr("class", t ? "grade" : "base").attr("x1", x(t)).attr("x2", x(t)).attr("y1", 0).attr("y2", L.length * passo);
+      svg.append("text").attr("class", "eixo-t").attr("x", x(t)).attr("y", L.length * passo + 16).attr("text-anchor", "middle").text(t ? "+" + t / 1e6 + " mi" : "0");
+    });
+    L.forEach((l, i) => {
+      const y = i * passo + 8, g = svg.append("g").datum(l);
+      svg.append("text").attr("x", 0).attr("y", y + h - 6).text(l.r).style("fill", css("--tinta")).style("font-weight", 600);
+      g.append("path").attr("class", "marca").attr("d", barraH(x(0), x(l.v), y, h)).attr("fill", css(l.cor));
+      svg.append("text").attr("class", "valor").attr("x", x(l.v) + 5).attr("y", y + h - 6).text("+" + f1.format(l.v / 1e6));
+      interativo(g, () => [["+" + f0.format(l.v) + " votos", l.r + ", do 1º para o 2º turno de 2022"]]);
+    });
+  }
+
+  // ---------- 4b. ladrilhos por UF ----------
+  const GRADE_UF = {
+    RR: [0, 1], AP: [0, 3],
+    AM: [1, 1], PA: [1, 2], MA: [1, 3], CE: [1, 4], RN: [1, 5],
+    AC: [2, 0], RO: [2, 1], TO: [2, 2], PI: [2, 3], PE: [2, 4], PB: [2, 5],
+    MT: [3, 1], DF: [3, 2], BA: [3, 3], AL: [3, 4], SE: [3, 5],
+    MS: [4, 1], GO: [4, 2], MG: [4, 3], ES: [4, 4],
+    PR: [5, 1], SP: [5, 2], RJ: [5, 3],
+    SC: [6, 1], RS: [7, 1],
+  };
+  function corDiv(v) {
+    const t = Math.max(-1, Math.min(1, (v - 50) / 25));
+    return t >= 0 ? d3.interpolateLab(css("--meio"), css("--pt"))(t) : d3.interpolateLab(css("--meio"), css("--adv"))(-t);
+  }
+  function tintaSobre(cor) { const c = d3.lab(cor); return c.l > 62 ? "#141413" : "#ffffff"; }
+  function gLadrilhos() {
+    const el = document.getElementById("g-ladrilhos");
+    const largura = Math.max(280, el.clientWidth || 400);
+    const lado = Math.min(64, (largura - 6 * 4) / 6), gap = 4;
+    const { svg } = svgEm("g-ladrilhos", 8 * (lado + gap));
+    D.ufs.forEach((u) => {
+      const [lin, col] = GRADE_UF[u.uf];
+      const cor = corDiv(u.previsao_2t), tinta = tintaSobre(cor);
+      const g = svg.append("g").datum(u).attr("transform", `translate(${col * (lado + gap)},${lin * (lado + gap)})`);
+      g.append("rect").attr("class", "marca").attr("width", lado).attr("height", lado).attr("rx", 4).attr("fill", cor);
+      g.append("text").attr("x", 6).attr("y", 16).text(u.uf).style("fill", tinta).style("font-weight", 700).style("font-size", "12px");
+      g.append("text").attr("x", 6).attr("y", lado - 8).text(f0.format(u.previsao_2t)).style("fill", tinta).style("font-size", lado > 50 ? "15px" : "12px").style("font-variant-numeric", "tabular-nums");
+      interativo(g, () => [[pct(u.previsao_2t, 1) + " previsto para Lula", u.uf + " · 1º turno: " + pct(u.lula_2p_1t, 1)], [null, f0.format(u.aptos_26) + " eleitores aptos"]]);
+    });
+    const leg = document.getElementById("leg-ladrilhos");
+    leg.replaceChildren();
+    [[25, "25% ou menos"], [40, "40%"], [50, "50%"], [60, "60%"], [75, "75% ou mais"]].forEach(([v, t]) => {
+      const s = document.createElement("span"), i = document.createElement("i");
+      i.style.background = corDiv(v); s.append(i, document.createTextNode(t)); leg.appendChild(s);
+    });
+  }
+  function gUfs() {
+    const L = [...D.ufs].sort((a, b) => Math.abs(b.lula_delta) - Math.abs(a.lula_delta)).slice(0, 12).sort((a, b) => a.lula_delta - b.lula_delta);
+    const rotW = 34, h = 12, passo = 22;
+    const { svg, largura } = svgEm("g-ufs", L.length * passo + 22);
+    const minV = d3.min(L, (u) => u.lula_delta), maxV = Math.max(50000, d3.max(L, (u) => u.lula_delta));
+    const x = d3.scaleLinear().domain([minV * 1.05, maxV]).range([rotW + 64, largura - 56]);
+    [-1e6, -5e5, 0].forEach((t) => {
+      if (t < minV * 1.05) return;
+      svg.append("line").attr("class", t ? "grade" : "base").attr("x1", x(t)).attr("x2", x(t)).attr("y1", 0).attr("y2", L.length * passo);
+      svg.append("text").attr("class", "eixo-t").attr("x", x(t)).attr("y", L.length * passo + 16).attr("text-anchor", "middle").text(t ? MENOS + f0.format(Math.abs(t) / 1e3) + " mil" : "0");
+    });
+    L.forEach((u, i) => {
+      const y = i * passo + 4, g = svg.append("g").datum(u);
+      svg.append("text").attr("x", 0).attr("y", y + h - 1).text(u.uf).style("fill", css("--tinta")).style("font-weight", 600);
+      g.append("path").attr("class", "marca").attr("d", barraH(x(0), x(u.lula_delta), y, h)).attr("fill", css("--pt"));
+      g.append("rect").attr("x", rotW).attr("y", y - 3).attr("width", largura - rotW).attr("height", h + 6).attr("fill", "transparent");
+      const neg = u.lula_delta < 0;
+      svg.append("text").attr("class", "eixo-t").attr("x", neg ? x(u.lula_delta) - 5 : x(u.lula_delta) + 5).attr("y", y + h - 1).attr("text-anchor", neg ? "end" : "start")
+        .text(sinal(u.lula_delta / 1e3, f0) + " mil");
+      interativo(g, () => [[sinal(u.lula_delta, f0) + " votos de Lula", u.uf + ", 1º turno 2022 → 2026"], [null, "Flávio em relação a Bolsonaro: " + sinal(u.flavio_delta, f0)]]);
+    });
+  }
+  function gBf() {
+    const B = D.bolsa_familia;
+    const L = [{ r: "2022", s: "Auxílio Brasil", v: B.nivel_2022_pp }, { r: "2026", s: "Bolsa Família", v: B.nivel_2026_pp }];
+    const h = 12, passo = 38;
+    const { svg, largura } = svgEm("g-bf", L.length * passo + 2);
+    const x = d3.scaleLinear().domain([0, 2.6]).range([0, largura - 64]);
+    L.forEach((l, i) => {
+      const y = i * passo + 18, g = svg.append("g").datum(l);
+      svg.append("text").attr("x", 0).attr("y", y - 5).text(l.r + " · " + l.s).style("font-size", "11.5px");
+      g.append("path").attr("class", "marca").attr("d", barraH(x(0), x(l.v), y, h)).attr("fill", css("--pt"));
+      svg.append("text").attr("class", "valor").attr("x", x(l.v) + 5).attr("y", y + h - 2).text("+" + f1.format(l.v) + " pts");
+      interativo(g, () => [["+" + f1.format(l.v) + " pontos para o PT", "por " + f1.format(B.dp_cobertura) + " famílias a mais no programa por 100 habitantes · " + l.r]]);
+    });
+  }
+
+  // ---------- 5. raiz ----------
+  function gSerie() {
+    const S = D.raiz.nacional, cand = { 2006: "Lula", 2010: "Dilma", 2014: "Dilma", 2018: "Haddad", 2022: "Lula", 2026: "Lula" };
+    const { svg, largura } = svgEm("g-serie", 230);
+    const x = d3.scalePoint().domain(S.map((s) => s.ano)).range([40, largura - 40]);
+    const y = d3.scaleLinear().domain([35, 62]).range([180, 14]);
+    [40, 50, 60].forEach((t) => {
+      svg.append("line").attr("class", t === 50 ? "base" : "grade").attr("x1", 30).attr("x2", largura - 10).attr("y1", y(t)).attr("y2", y(t));
+      svg.append("text").attr("class", "eixo-t").attr("x", 0).attr("y", y(t) + 4).text(t + "%");
+    });
+    svg.append("path").datum(S).attr("fill", "none").attr("stroke", css("--pt")).attr("stroke-width", 2).attr("stroke-linejoin", "round")
+      .attr("d", d3.line().x((d) => x(d.ano)).y((d) => y(d.pt_2p)));
+    S.forEach((s) => {
+      const g = svg.append("g").datum(s);
+      g.append("circle").attr("class", "marca").attr("cx", x(s.ano)).attr("cy", y(s.pt_2p)).attr("r", 5).attr("fill", css("--pt")).attr("stroke", css("--papel")).attr("stroke-width", 2);
+      g.append("rect").attr("x", x(s.ano) - 20).attr("y", 0).attr("width", 40).attr("height", 190).attr("fill", "transparent");
+      const rotular = s.ano === 2018 || s.ano === 2026 || s.ano === 2010 || s.ano === 2022;
+      if (rotular) svg.append("text").attr("class", "valor").attr("x", x(s.ano)).attr("y", y(s.pt_2p) + (s.ano === 2018 ? 22 : -12)).attr("text-anchor", "middle").text(f1.format(s.pt_2p));
+      svg.append("text").attr("class", "eixo-t").attr("x", x(s.ano)).attr("y", 204).attr("text-anchor", "middle").text(s.ano);
+      svg.append("text").attr("class", "eixo-t").attr("x", x(s.ano)).attr("y", 220).attr("text-anchor", "middle").text(cand[s.ano]);
+      interativo(g, () => [[pct(s.pt_2p, 1), s.ano + " · " + cand[s.ano] + " (PT)"]]);
+    });
+  }
+  function gColunas(id, serie, dom, fmtTick) {
+    const { svg, largura } = svgEm(id, 210);
+    const x = d3.scaleBand().domain(serie.map((s) => s.transicao)).range([34, largura - 4]).padding(0.35);
+    const y = d3.scaleLinear().domain(dom).range([170, 12]);
+    d3.ticks(dom[0], dom[1], 4).forEach((t) => {
+      svg.append("line").attr("class", t === 0 ? "base" : "grade").attr("x1", 30).attr("x2", largura).attr("y1", y(t)).attr("y2", y(t));
+      svg.append("text").attr("class", "eixo-t").attr("x", 0).attr("y", y(t) + 4).text(fmtTick(t));
+    });
+    const bw = Math.min(24, x.bandwidth());
+    serie.forEach((s) => {
+      const alvo = s.transicao === "2014→2018", g = svg.append("g").datum(s);
+      const cx = x(s.transicao) + x.bandwidth() / 2 - bw / 2;
+      g.append("path").attr("class", "marca").attr("d", barraV(cx, bw, y(0), y(s.pp))).attr("fill", s.pp >= 0 ? css("--pt") : css("--adv")).attr("opacity", alvo ? 1 : 0.55);
+      g.append("rect").attr("x", x(s.transicao)).attr("y", 0).attr("width", x.bandwidth()).attr("height", 180).attr("fill", "transparent");
+      const ty = s.pp >= 0 ? y(s.pp) - 5 : y(s.pp) + 14;
+      svg.append("text").attr("class", alvo ? "valor" : "eixo-t").attr("x", cx + bw / 2).attr("y", ty).attr("text-anchor", "middle").text(sinal(s.pp, f1));
+      const [a, b] = s.transicao.split("→");
+      svg.append("text").attr("class", "eixo-t").attr("x", cx + bw / 2).attr("y", 188).attr("text-anchor", "middle").text(a + "→").style("font-weight", alvo ? 700 : 400);
+      svg.append("text").attr("class", "eixo-t").attr("x", cx + bw / 2).attr("y", 202).attr("text-anchor", "middle").text(b).style("font-weight", alvo ? 700 : 400);
+      interativo(g, () => [[sinal(s.pp, f1) + " pts", s.transicao]]);
+    });
+  }
+  function gRetencao() {
+    const L = D.raiz.retencao_2026, rotW = estreito() ? 150 : 250, h = 14, passo = 28;
+    const { svg, largura } = svgEm("g-retencao", L.length * passo + 22);
+    const x = d3.scaleLinear().domain([0, 100]).range([rotW, largura - 44]);
+    [0, 50, 100].forEach((t) => {
+      svg.append("line").attr("class", t ? "grade" : "base").attr("x1", x(t)).attr("x2", x(t)).attr("y1", 0).attr("y2", L.length * passo);
+      svg.append("text").attr("class", "eixo-t").attr("x", x(t)).attr("y", L.length * passo + 16).attr("text-anchor", "middle").text(t + "%");
+    });
+    L.forEach((l, i) => {
+      const y = i * passo + 6, g = svg.append("g").datum(l), passou = i === 0;
+      const rot = estreito() ? l.canal.replace(" (tamanho)", "").replace(" (Censo 2010)", "").replace(" (CNPJ)", "").replace(" para deputado", "") : l.canal;
+      svg.append("text").attr("x", 0).attr("y", y + h - 2).text(rot).style("font-size", estreito() ? "11px" : "12px");
+      g.append("path").attr("class", "marca").attr("d", barraH(x(0), x(l.pct), y, h)).attr("fill", passou ? css("--eixo") : css("--adv"));
+      svg.append("text").attr("class", "valor").attr("x", x(l.pct) + 5).attr("y", y + h - 2).text(f0.format(l.pct) + "%");
+      interativo(g, () => [[f0.format(l.pct) + "% ainda presente em 2026", l.canal]]);
+    });
+  }
+  function vereditos() {
+    const el = document.getElementById("vereditos");
+    el.replaceChildren();
+    const marca = { sim: "✓", nao: "✗", antiga: "◐" };
+    D.vereditos.forEach((v) => {
+      const d = document.createElement("div"); d.className = v.veredito;
+      const m = document.createElement("span"); m.className = "marca-v"; m.textContent = marca[v.veredito]; m.setAttribute("aria-label", v.veredito === "sim" ? "sustentou-se" : v.veredito === "nao" ? "não se sustentou" : "clivagem antiga");
+      const q = document.createElement("span"); q.className = "q"; q.textContent = v.pergunta;
+      const id = document.createElement("span"); id.className = "id"; id.textContent = v.id; q.appendChild(id);
+      const a = document.createElement("span"); a.className = "a"; a.textContent = v.resposta;
+      d.append(m, q, a); el.appendChild(d);
+    });
+  }
+
+  // ---------- 6. linha do tempo ----------
+  const GRAU = { documentado: "■", reportado: "□", alegado: "○", refutado: "×" };
+  const FAIXA = { eua: "EUA", brasil: "Brasil", urnas: "Urnas" };
+  const filtro = { periodo: "2025", faixa: "todas" };
+  function noPeriodo(ano) {
+    if (filtro.periodo === "tudo") return true;
+    if (filtro.periodo === "2025") return ano >= 2025;
+    if (filtro.periodo === "2019") return ano >= 2019 && ano <= 2024;
+    if (filtro.periodo === "2013") return ano >= 2013 && ano <= 2018;
+    return ano < 2013;
+  }
+  function dataBr(s) {
+    const [a, m, d] = s.split("-");
+    const meses = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+    return (d ? Number(d) + " " : "") + meses[Number(m) - 1];
+  }
+  function linhaDoTempo() {
+    const el = document.getElementById("tempo");
+    el.replaceChildren();
+    const ev = D.linha_do_tempo.filter((e) => e.conferido !== "nao")
+      .filter((e) => noPeriodo(Number(e.data.slice(0, 4))) && (filtro.faixa === "todas" || e.faixa === filtro.faixa))
+      .sort((a, b) => a.data.localeCompare(b.data));
+    if (!ev.length) {
+      const p = document.createElement("p"); p.className = "vazio";
+      p.textContent = D.linha_do_tempo.length ? "Nenhum evento com esse filtro." : "A linha do tempo ainda não foi carregada.";
+      el.appendChild(p); return;
+    }
+    d3.groups(ev, (e) => e.data.slice(0, 4)).forEach(([ano, itens]) => {
+      const bloco = document.createElement("div"); bloco.className = "ano";
+      const h = document.createElement("h3"); h.textContent = ano;
+      const ul = document.createElement("ul");
+      itens.forEach((e) => {
+        const li = document.createElement("li");
+        const q = document.createElement("div"); q.className = "quando";
+        const dt = document.createElement("span"); dt.textContent = e.data.length > 4 ? dataBr(e.data) : "";
+        const fx = document.createElement("span"); fx.className = "faixa-t " + e.faixa; fx.textContent = FAIXA[e.faixa] || e.faixa;
+        const gr = document.createElement("span"); gr.className = "selo"; gr.textContent = (GRAU[e.grau] || "") + " " + e.grau + (e.conferido === "parcial" ? " · conferido em parte" : "");
+        q.append(dt, fx, gr);
+        const t = document.createElement("div"); t.className = "ev"; t.textContent = e.evento;
+        const f = document.createElement("div"); f.className = "fonte";
+        if (e.url && /^https?:\/\//.test(e.url)) { const a = document.createElement("a"); a.href = e.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = e.fonte || "fonte"; f.appendChild(a); }
+        else f.textContent = e.fonte || "";
+        li.append(q, t, f); ul.appendChild(li);
+      });
+      bloco.append(h, ul); el.appendChild(bloco);
+    });
+  }
+  document.querySelectorAll("[data-periodo]").forEach((b) => b.addEventListener("click", () => {
+    filtro.periodo = b.dataset.periodo;
+    document.querySelectorAll("[data-periodo]").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+    linhaDoTempo();
+  }));
+  document.querySelectorAll("[data-faixa]").forEach((b) => b.addEventListener("click", () => {
+    filtro.faixa = b.dataset.faixa;
+    document.querySelectorAll("[data-faixa]").forEach((o) => o.setAttribute("aria-pressed", String(o === b)));
+    linhaDoTempo();
+  }));
+
+  // ---------- 7. pesquisas × eventos ----------
+  const parseD = d3.timeParse("%Y-%m-%d");
+  function meio(p) { const a = parseD(p.campo_inicio), b = parseD(p.campo_fim); return a && b ? new Date((a.getTime() + b.getTime()) / 2) : (b || a); }
+  function marcos() {
+    const ev = D.linha_do_tempo.filter((e) => e.conferido !== "nao" && e.data >= "2025-01" && e.data.length === 10
+      && (e.faixa === "eua" || e.faixa === "brasil" || (e.faixa === "urnas" && e.data < "2026-10-04")));
+    return ev.sort((a, b) => a.data.localeCompare(b.data)).map((e) => ({ ...e, d: parseD(e.data) }));
+  }
+  function gTempoPesq() {
+    const el = document.getElementById("g-tempo-pesq");
+    const P = D.pesquisas_2t.map((p) => ({ ...p, d: meio(p), v: Number(p.lula_2p) })).filter((p) => p.d && isFinite(p.v));
+    const A = D.aprovacao.map((a) => ({ ...a, d: meio(a), v: Number(a.aprova) - Number(a.desaprova) })).filter((a) => a.d && isFinite(a.v));
+    const leg = document.getElementById("leg-tempo-pesq"); leg.replaceChildren();
+    if (!P.length && !A.length) { el.innerHTML = '<p class="vazio">A série de pesquisas ainda não foi carregada.</p>'; return; }
+    const M = marcos();
+    let ne = 0, nb = 0;
+    M.forEach((m) => { m.rot = m.faixa === "eua" ? String(++ne) : String.fromCharCode(64 + ++nb); });
+    const inicio = d3.min([...P, ...A], (p) => p.d), fim = parseD("2026-10-25");
+    const largura = Math.max(280, el.clientWidth || 900);
+    const esq = 40, dir = 12, raio = estreito() ? 6 : 7.5, alturaFila = 2 * raio + 3;
+    const x0 = d3.scaleTime().domain([d3.timeMonth.floor(inicio), fim]).range([esq, largura - dir]);
+    // cada faixa (EUA, Brasil) empilha os marcos em filas para não sobrepor os círculos
+    const filas = { eua: [], brasil: [] };
+    M.forEach((m) => {
+      const fx = m.faixa === "eua" ? "eua" : "brasil", px = x0(m.d);
+      let k = filas[fx].findIndex((ult) => px - ult >= 2 * raio + 2);
+      if (k < 0) { k = filas[fx].length; filas[fx].push(px); } else filas[fx][k] = px;
+      m.fila = k; m.fx = fx;
+    });
+    const nEua = Math.max(1, filas.eua.length), nBr = Math.max(1, filas.brasil.length);
+    const topoMarcos = (nEua + nBr) * alturaFila + 10;
+    const hA = P.length ? 200 : 0, hB = A.length ? 120 : 0, sep = 30;
+    const altura = topoMarcos + hA + (hA && hB ? sep : 0) + hB + 28;
+    const { svg } = svgEm("g-tempo-pesq", altura);
+    const x = x0;
+    // marcos: hastes atravessando os painéis
+    const fundo = topoMarcos + hA + (hA && hB ? sep : 0) + hB;
+    M.forEach((m, i) => {
+      if (m.d < x.domain()[0]) return;
+      const eua = m.fx === "eua", cx = x(m.d), cy = raio + 2 + (eua ? m.fila : nEua + m.fila) * alturaFila;
+      if (cx < esq || cx > largura - dir) return;
+      svg.append("line").attr("x1", cx).attr("x2", cx).attr("y1", cy + 7).attr("y2", fundo).attr("stroke", eua ? css("--adv") : css("--eixo")).attr("stroke-width", 1).attr("opacity", eua ? 0.55 : 0.9);
+      const g = svg.append("g").datum(m);
+      g.append("circle").attr("class", "marca").attr("cx", cx).attr("cy", cy).attr("r", raio).attr("fill", eua ? css("--adv") : css("--superficie")).attr("stroke", eua ? css("--superficie") : css("--tinta-3")).attr("stroke-width", eua ? 2 : 1);
+      g.append("text").attr("x", cx).attr("y", cy + 3.2).attr("text-anchor", "middle").text(m.rot).style("font-size", estreito() ? "8px" : "9.5px").style("font-weight", 700).style("fill", eua ? "#fff" : css("--tinta"));
+      interativo(g, () => [[dataBr(m.data) + " de " + m.data.slice(0, 4), m.evento], [null, (eua ? "EUA" : "Brasil") + " · " + m.grau]]);
+      g.append("circle").attr("cx", cx).attr("cy", cy).attr("r", 12).attr("fill", "transparent");
+    });
+    // painel A: 2º turno simulado
+    if (hA) {
+      const y0 = topoMarcos, y = d3.scaleLinear().domain([38, 62]).range([y0 + hA - 8, y0 + 8]);
+      [40, 50, 60].forEach((t) => {
+        svg.append("line").attr("class", t === 50 ? "base" : "grade").attr("x1", esq).attr("x2", largura - dir).attr("y1", y(t)).attr("y2", y(t));
+        svg.append("text").attr("class", "eixo-t").attr("x", 0).attr("y", y(t) + 4).text(t + "%");
+      });
+      svg.append("text").attr("x", esq + 4).attr("y", y0 + 4).attr("class", "eixo-t").style("fill", css("--tinta-2")).text("Lula entre os dois, 2º turno simulado contra Flávio");
+      P.forEach((p) => {
+        const g = svg.append("g").datum(p);
+        g.append("circle").attr("class", "marca").attr("cx", x(p.d)).attr("cy", y(p.v)).attr("r", 4).attr("fill", css("--pt")).attr("opacity", 0.45);
+        g.append("circle").attr("cx", x(p.d)).attr("cy", y(p.v)).attr("r", 12).attr("fill", "transparent");
+        interativo(g, () => [[pct(p.v, 1) + " para Lula entre os dois", p.instituto + " · campo até " + p.campo_fim.split("-").reverse().join("/")], [null, `Lula ${p.lula}% · Flávio ${p.flavio}% (${p.base === "validos" ? "válidos" : "votos totais"})`]]);
+      });
+      // tendência: mediana móvel de 45 dias
+      const ord = [...P].sort((a, b) => a.d - b.d), J = 45 * 864e5;
+      const tend = [];
+      ord.forEach((p, i) => {
+        if (i && p.d - ord[i - 1].d > 60 * 864e5) tend.push({ d: p.d, v: null }); // lacuna: interrompe a linha
+        tend.push({ d: p.d, v: d3.median(ord.filter((q) => Math.abs(q.d - p.d) <= J / 2), (q) => q.v) });
+      });
+      svg.append("path").datum(tend).attr("fill", "none").attr("stroke", css("--pt")).attr("stroke-width", 2)
+        .attr("d", d3.line().defined((d) => d.v !== null).curve(d3.curveMonotoneX).x((d) => x(d.d)).y((d) => y(d.v)));
+      const r1 = parseD("2026-10-04");
+      svg.append("path").attr("d", d3.symbol(d3.symbolDiamond, 90)()).attr("transform", `translate(${x(r1)},${y(D.pesquisas_1t.resultado_2p)})`).attr("fill", css("--tinta")).attr("stroke", css("--superficie")).attr("stroke-width", 2);
+      svg.append("text").attr("class", "valor").attr("x", x(r1) - 8).attr("y", y(D.pesquisas_1t.resultado_2p) + 26).attr("text-anchor", "end").text((estreito() ? "urna: " : "urna, 1º turno: ") + pct(D.pesquisas_1t.resultado_2p, 1));
+    }
+    // painel B: aprovação
+    if (hB) {
+      const y0 = topoMarcos + hA + (hA ? sep : 0);
+      const ext = d3.extent(A, (a) => a.v), lim = Math.max(10, Math.ceil(Math.max(Math.abs(ext[0]), Math.abs(ext[1])) / 5) * 5);
+      const y = d3.scaleLinear().domain([-lim, lim]).range([y0 + hB - 6, y0 + 14]);
+      [-lim, 0, lim].forEach((t) => {
+        svg.append("line").attr("class", t === 0 ? "base" : "grade").attr("x1", esq).attr("x2", largura - dir).attr("y1", y(t)).attr("y2", y(t));
+        svg.append("text").attr("class", "eixo-t").attr("x", 0).attr("y", y(t) + 4).text(t === 0 ? "0" : sinal(t, f0));
+      });
+      const inst = A[0].instituto;
+      svg.append("text").attr("x", esq + 4).attr("y", y0 + 4).attr("class", "eixo-t").style("fill", css("--tinta-2")).text("Aprovação menos desaprovação do governo Lula (" + inst + ")");
+      const ord = [...A].sort((a, b) => a.d - b.d);
+      svg.append("path").datum(ord).attr("fill", "none").attr("stroke", css("--tinta")).attr("stroke-width", 2).attr("stroke-linejoin", "round").attr("d", d3.line().x((d) => x(d.d)).y((d) => y(d.v)));
+      ord.forEach((a) => {
+        const g = svg.append("g").datum(a);
+        g.append("circle").attr("class", "marca").attr("cx", x(a.d)).attr("cy", y(a.v)).attr("r", 3.5).attr("fill", css("--tinta")).attr("stroke", css("--superficie")).attr("stroke-width", 1.5);
+        g.append("circle").attr("cx", x(a.d)).attr("cy", y(a.v)).attr("r", 12).attr("fill", "transparent");
+        interativo(g, () => [[sinal(a.v, f0) + " pontos", a.instituto + " · campo até " + a.campo_fim.split("-").reverse().join("/")], [null, `aprova ${a.aprova}% · desaprova ${a.desaprova}%`]]);
+      });
+    }
+    // eixo do tempo
+    const ticks = x.ticks(d3.timeMonth.every(estreito() ? 6 : 3));
+    ticks.forEach((t) => svg.append("text").attr("class", "eixo-t").attr("x", x(t)).attr("y", altura - 6).attr("text-anchor", "middle").text(d3.timeFormat("%m/%y")(t)));
+    // legenda e lista de marcos
+    const add = (txt, estilo) => { const s = document.createElement("span"), i = document.createElement("i"); Object.assign(i.style, estilo); s.append(i, document.createTextNode(txt)); leg.appendChild(s); };
+    if (P.length) add("cada pesquisa (ponto) e a tendência (linha)", { background: css("--pt"), borderRadius: "50%" });
+    if (A.length) add("aprovação líquida", { background: css("--tinta"), height: "2px", width: "1rem", borderRadius: "0" });
+    add("ação dos EUA (número)", { background: css("--adv"), borderRadius: "50%" });
+    add("outro fato no Brasil (letra)", { background: css("--superficie"), border: "1px solid " + css("--tinta-3"), borderRadius: "50%" });
+    const lista = document.getElementById("lista-marcos"); lista.replaceChildren();
+    if (M.length) {
+      const det = document.createElement("details"); det.open = !estreito();
+      const sm = document.createElement("summary"); sm.textContent = "Os marcos do gráfico"; det.appendChild(sm);
+      const t = document.createElement("table"), tb = t.createTBody();
+      M.forEach((m) => { const tr = tb.insertRow(); [m.rot, m.data.split("-").reverse().join("/"), m.evento].forEach((v, k) => { const td = tr.insertCell(); td.textContent = v; if (k === 2) td.style.whiteSpace = "normal"; }); });
+      const w = document.createElement("div"); w.className = "tabela-rola"; w.appendChild(t); det.appendChild(w); lista.appendChild(det);
+    }
+  }
+
+  // ---------- 7b. canais ----------
+  const CANAIS = [
+    { t: "Econômico: as tarifas", selo: "■ ação documentada", p: "Exportadores para os EUA perderam mercado: café, carne, frutas, calçados, madeira, aço. A exposição varia muito de município para município. A direção do efeito não é óbvia: o eleitor pode culpar quem pediu as tarifas ou o governo que não as evitou. Por isso vale o teste.", teste: "Exportações para os EUA por município (Comex Stat), comparando produtos isentos em nov/2025 com os que seguiram taxados", custo: "médio", prazo: "dá para começar antes de 25/10" },
+    { t: "Narrativa nacional", selo: "■ ação documentada", p: "Soberania contra \"culpa do governo\": um tema que age no país inteiro ao mesmo tempo. É o tipo de causa que produz uma queda uniforme como a de 2026, e o painel de municípios não a enxerga.", teste: "Série de pesquisas por região e segmento, alinhada aos marcos (o gráfico acima é o primeiro passo)", custo: "baixo", prazo: "antes de 25/10" },
+    { t: "Segurança: PCC e CV", selo: "■ ação documentada", p: "A classificação das facções como terroristas pôs a segurança no centro da agenda. Em 2018, a violência local não deixou marca no voto (E5); em 2026, a pergunta é outra: a pauta nacional.", teste: "Homicídios 2022–2025 por município (SIM, já no projeto) contra a queda de 2026", custo: "baixo", prazo: "antes de 25/10" },
+    { t: "Digital: redes e vídeo curto", selo: "○ hipótese", p: "TikTok e Kwai não existiam como canal de massa em 2018, mas podem estar no afastamento dos pequenos desde então.", teste: "Acessos de internet móvel por município (Anatel), hipótese E3b já registrada", custo: "médio", prazo: "depois de 25/10" },
+    { t: "Redes organizadas", selo: "□ reportado em parte", p: "MBL e o partido Missão, a rede Atlas, lobby registrado nos EUA, a campanha de Eduardo Bolsonaro por sanções e o projeto de US$ 1 milhão do Departamento de Estado revelado pelo Guardian. É um caminho de dinheiro e organização, não de voto direto.", teste: "Trilha documental (série F): registros FARA, formulários fiscais de fundações, CNPJ e sócios", custo: "alto", prazo: "depois de 25/10" },
+    { t: "Igrejas", selo: "● pegada em 2018", p: "É o canal com mais evidência na virada de 2018, e o efeito persiste. Quem organiza o voto evangélico em 2026, e com que laços fora do país, é pergunta aberta.", teste: "Igrejas no CNPJ até 2025 e voto em pastores em 2022 contra a variação de 2026; trilha documental", custo: "médio", prazo: "depois de 25/10" },
+  ];
+  function canais() {
+    const el = document.getElementById("canais"); el.replaceChildren();
+    CANAIS.forEach((c) => {
+      const d = document.createElement("div"); d.className = "cartao";
+      const m = document.createElement("div"); m.className = "meta";
+      const s = document.createElement("span"); s.className = "selo"; s.textContent = c.selo; m.appendChild(s);
+      const h = document.createElement("h3"); h.textContent = c.t;
+      const p = document.createElement("p"); p.textContent = c.p;
+      const t = document.createElement("p"); const b = document.createElement("strong"); b.textContent = "Teste: "; t.append(b, document.createTextNode(c.teste));
+      const e = document.createElement("div"); e.className = "meta";
+      [["custo " + c.custo], [c.prazo]].forEach(([x]) => { const z = document.createElement("span"); z.className = "etq"; z.textContent = x; e.appendChild(z); });
+      d.append(m, h, p, t, e); el.appendChild(d);
+    });
+  }
+
+  // ---------- render ----------
+  function desenha() {
+    gRegioes(); gCascata(); gFaixas(); gBloco(); gPesquisas(); gMontanha(); g2022();
+    gLadrilhos(); gUfs(); gBf(); gSerie();
+    gColunas("g-tamanho", D.raiz.tamanho, [-18, 6], (t) => (t === 0 ? "0" : sinal(t, f0)));
+    gColunas("g-evangelicos", D.raiz.evangelicos, [-3, 1], (t) => (t === 0 ? "0" : sinal(t, f0)));
+    gRetencao(); gTempoPesq();
+  }
+  vereditos(); linhaDoTempo(); canais(); desenha();
+  let ultimaLargura = window.innerWidth, espera;
+  window.addEventListener("resize", () => {
+    if (Math.abs(window.innerWidth - ultimaLargura) < 24) return;
+    clearTimeout(espera); espera = setTimeout(() => { ultimaLargura = window.innerWidth; escondeDica(); desenha(); }, 150);
+  });
+  const temaObs = new MutationObserver(() => desenha());
+  temaObs.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => desenha());
+  window.addEventListener("scroll", escondeDica, { passive: true });
+
+  // ---------- comentários (composer do claude.ai) ----------
+  (async () => {
+    const comments = window.claude && (await window.claude.use("comments").catch(() => null));
+    if (!comments) return;
+    document.querySelectorAll(".comentar").forEach((b) => {
+      b.hidden = false;
+      b.addEventListener("click", async () => {
+        const alvo = b.closest("section").querySelector("h2");
+        try { await comments.openComposer({ element: alvo }); }
+        catch (e) { if (e && e.code === "unavailable") document.querySelectorAll(".comentar").forEach((x) => (x.hidden = true)); }
+      });
+    });
+  })();
+
+  // ---------- 8. urna de prioridades e mural ----------
+  const OPCOES = [
+    { id: "tarifas", t: "Tarifas: o voto mudou mais onde a exportação para os EUA pesa?", d: "Comex Stat por município, com a isenção de alimentos de nov/2025 como contraste.", custo: "médio", prazo: "começa antes de 25/10" },
+    { id: "pesquisas", t: "Pesquisas × eventos: aprofundar por região e segmento", d: "Separar o efeito das ações americanas de outros choques, nos dados das pesquisas.", custo: "baixo", prazo: "antes de 25/10" },
+    { id: "seguranca", t: "Segurança: PCC/CV e a pauta da violência em 2026", d: "Homicídios recentes por município (SIM) contra a queda de 2026.", custo: "baixo", prazo: "antes de 25/10" },
+    { id: "maquina", t: "Prefeitos e emendas: a máquina local explica o afastamento dos pequenos?", d: "Eleições municipais decididas por pouco em 2016, 2020 e 2024 (RDD) e emendas por habitante.", custo: "alto", prazo: "depois de 25/10" },
+    { id: "digital", t: "Redes e vídeo curto: internet móvel e o afastamento dos pequenos", d: "Acessos móveis por município (Anatel), hipótese E3b.", custo: "médio", prazo: "depois de 25/10" },
+    { id: "documental", t: "Trilha documental: dinheiro e organizações", d: "MBL e Missão, rede Atlas, registros de lobby nos EUA (FARA), Eduardo Bolsonaro.", custo: "alto", prazo: "depois de 25/10" },
+    { id: "igrejas", t: "Igrejas em 2026: quem organiza o voto evangélico agora", d: "Igrejas no CNPJ até 2025, pastores eleitos em 2022 e a variação de 2026.", custo: "médio", prazo: "depois de 25/10" },
+  ];
+  const MAX = 3;
+  const urna = { escolhas: new Set(), votos: {}, eu: null, db: null, podeEscrever: null, enviado: null };
+  const opcoesEl = document.getElementById("opcoes"), confirma = document.getElementById("confirma"), avisoUrna = document.getElementById("aviso-urna");
+  function desenhaOpcoes() {
+    const contagem = {}; OPCOES.forEach((o) => (contagem[o.id] = 0));
+    Object.values(urna.votos).forEach((lista) => lista.forEach((id) => { if (id in contagem) contagem[id]++; }));
+    const total = Object.keys(urna.votos).length, max = Math.max(1, ...Object.values(contagem));
+    opcoesEl.replaceChildren();
+    OPCOES.forEach((o) => {
+      const lab = document.createElement("label"); lab.className = "opcao"; lab.htmlFor = "op-" + o.id;
+      const inp = document.createElement("input"); inp.type = "checkbox"; inp.id = "op-" + o.id; inp.checked = urna.escolhas.has(o.id);
+      inp.disabled = urna.podeEscrever === false || (!inp.checked && urna.escolhas.size >= MAX);
+      inp.addEventListener("change", () => { inp.checked ? urna.escolhas.add(o.id) : urna.escolhas.delete(o.id); atualizaBotao(); desenhaOpcoes(); });
+      const corpo = document.createElement("div");
+      const t = document.createElement("div"); t.className = "o-t"; t.textContent = o.t;
+      const d = document.createElement("div"); d.className = "o-d"; d.textContent = o.d;
+      const m = document.createElement("div"); m.className = "o-meta";
+      ["custo " + o.custo, o.prazo].forEach((x) => { const z = document.createElement("span"); z.className = "etq"; z.textContent = x; m.appendChild(z); });
+      const barra = document.createElement("div"); barra.className = "barra"; const bi = document.createElement("i"); bi.style.width = (contagem[o.id] / max * 100) + "%"; barra.appendChild(bi);
+      corpo.append(t, d, m, barra);
+      const c = document.createElement("div"); c.className = "contagem"; c.textContent = contagem[o.id] + (contagem[o.id] === 1 ? " voto" : " votos");
+      lab.append(inp, corpo, c); opcoesEl.appendChild(lab);
+    });
+    if (urna.db) avisoUrna.textContent = total ? `${total} ${total === 1 ? "pessoa votou" : "pessoas votaram"}.` + (urna.enviado ? " Seu voto está registrado; você pode mudar e confirmar de novo." : "") : (urna.enviado ? "" : "Ninguém votou ainda.");
+  }
+  function atualizaBotao() {
+    const igual = urna.enviado && urna.enviado.length === urna.escolhas.size && urna.enviado.every((x) => urna.escolhas.has(x));
+    confirma.disabled = !urna.db || urna.podeEscrever === false || urna.escolhas.size === 0 || igual;
+  }
+  desenhaOpcoes();
+  avisoUrna.textContent = "A votação funciona quando a página está aberta no claude.ai.";
+
+  const ideiasEl = document.getElementById("ideias"), formIdeia = document.getElementById("form-ideia");
+  const textoIdeia = document.getElementById("texto-ideia"), tipoIdeia = document.getElementById("tipo-ideia");
+  const enviaIdeia = document.getElementById("envia-ideia"), avisoIdeia = document.getElementById("aviso-ideia");
+  const TIPOS = { hipotese: "Hipótese", evento: "Evento", pergunta: "Pergunta", fonte: "Fonte" };
+  let ideiasDocs = [], minhasIdeias = [];
+  async function desenhaIdeias(user) {
+    const itens = [];
+    ideiasDocs.forEach((doc) => ((doc.data() || {}).itens || []).forEach((it) => itens.push({ ...it, autor: doc.id })));
+    itens.sort((a, b) => String(b.em).localeCompare(String(a.em)));
+    if (!itens.length) { ideiasEl.innerHTML = '<p class="vazio">Ainda não há contribuições. A primeira aparece aqui assim que for enviada.</p>'; return; }
+    const perfis = user ? await user.profiles([...new Set(itens.map((i) => i.autor))]) : {};
+    ideiasEl.replaceChildren();
+    itens.forEach((it) => {
+      const d = document.createElement("div"); d.className = "ideia";
+      const q = document.createElement("div"); q.className = "quem";
+      const nome = it.autor === urna.eu ? "você" : ((perfis[it.autor] && perfis[it.autor].name) || "alguém do grupo");
+      q.textContent = (TIPOS[it.tipo] || "Contribuição") + " · " + nome + " · " + String(it.em || "").slice(0, 10).split("-").reverse().join("/");
+      const t = document.createElement("div"); t.className = "txt"; t.textContent = String(it.texto || "");
+      d.append(q, t); ideiasEl.appendChild(d);
+    });
+  }
+  textoIdeia.addEventListener("input", () => { enviaIdeia.disabled = !urna.db || urna.podeEscrever === false || !textoIdeia.value.trim(); });
+
+  (async () => {
+    if (!window.claude) return;
+    const [db, user] = await Promise.all([window.claude.use("db").catch(() => null), window.claude.use("user").catch(() => null)]);
+    if (!db) { avisoUrna.textContent = "A votação não está disponível nesta visualização. Use os comentários de cada seção."; return; }
+    urna.db = db; urna.eu = user ? await user.id() : null;
+    urna.podeEscrever = user ? await user.can("data.write") : null;
+    if (!urna.eu) urna.podeEscrever = false;
+    const somenteLeitura = (msg) => {
+      urna.podeEscrever = false; desenhaOpcoes(); atualizaBotao();
+      avisoIdeia.textContent = msg; enviaIdeia.disabled = true; textoIdeia.disabled = true;
+    };
+    const MSG_LEITURA = "Seu acesso nesta página é de leitura. Para votar e sugerir, peça acesso de colaborador a quem compartilhou a página.";
+    db.collection("prioridades").onSnapshot((snap) => {
+      urna.votos = {};
+      snap.docs.forEach((doc) => { const v = doc.data(); if (v && Array.isArray(v.opcoes)) urna.votos[doc.id] = v.opcoes; });
+      if (urna.eu && urna.votos[urna.eu] && !urna.enviado) { urna.enviado = [...urna.votos[urna.eu]]; urna.escolhas = new Set(urna.enviado); }
+      desenhaOpcoes(); atualizaBotao();
+    }, () => { avisoUrna.textContent = "Não foi possível carregar os votos agora."; });
+    db.collection("ideias").onSnapshot((snap) => {
+      ideiasDocs = snap.docs;
+      const meu = snap.docs.find((d) => d.id === urna.eu);
+      minhasIdeias = meu ? ((meu.data() || {}).itens || []).slice() : [];
+      desenhaIdeias(user);
+    }, () => { avisoIdeia.textContent = "Não foi possível carregar as contribuições agora."; });
+    if (urna.podeEscrever === false) somenteLeitura(MSG_LEITURA);
+    desenhaOpcoes(); atualizaBotao();
+    enviaIdeia.disabled = urna.podeEscrever === false || !textoIdeia.value.trim();
+
+    document.getElementById("urna").addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      if (confirma.disabled) return;
+      confirma.disabled = true; avisoUrna.textContent = "Registrando…";
+      const opcoes = [...urna.escolhas];
+      try {
+        await db.collection("prioridades").doc(urna.eu).set({ opcoes, em: new Date().toISOString() });
+        urna.enviado = opcoes; avisoUrna.textContent = "Voto registrado.";
+      } catch (e) {
+        if (e && e.code === "invalid_argument") somenteLeitura(MSG_LEITURA);
+        else avisoUrna.textContent = "O voto não foi registrado. Tente de novo em instantes.";
+      }
+      atualizaBotao();
+    });
+    formIdeia.addEventListener("submit", async (ev) => {
+      ev.preventDefault();
+      const texto = textoIdeia.value.trim();
+      if (!texto || urna.podeEscrever === false) return;
+      enviaIdeia.disabled = true; avisoIdeia.textContent = "Enviando…";
+      const itens = [...minhasIdeias, { tipo: tipoIdeia.value, texto: texto.slice(0, 1500), em: new Date().toISOString() }];
+      try {
+        await db.collection("ideias").doc(urna.eu).set({ itens });
+        minhasIdeias = itens; textoIdeia.value = ""; avisoIdeia.textContent = "Enviado. Obrigado.";
+      } catch (e) {
+        if (e && e.code === "invalid_argument") somenteLeitura(MSG_LEITURA);
+        else if (e && e.code === "quota_exceeded") avisoIdeia.textContent = "O espaço de contribuições encheu. Use os comentários da seção.";
+        else { avisoIdeia.textContent = "Não foi enviado. Seu texto continua no campo; tente de novo."; enviaIdeia.disabled = false; }
+      }
+    });
+  })();
+})();
+</script>
