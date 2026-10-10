@@ -5,6 +5,32 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-09 · o que foi momento e o que foi estrutura em 2018 (ensaio e plano)
+
+[ensaio_virada_2018.md](ensaio_virada_2018.md) · [plano_virada_2018.md](plano_virada_2018.md)
+
+Um ensaio que junta os resultados da série com o contexto de 2013–2018 e separa o que é dado,
+o que é fato documentado e o que ainda é suspeita (inclusive a hipótese de interferência
+externa). O plano propõe hipóteses novas, fusões e uma trilha documental (série F), e espera
+decisão antes de qualquer registro.
+
+**Duas contas exploratórias novas** (ainda sem registro):
+
+- **O choque urbano passou; o religioso ficou.** Medido desde 2014, o efeito do tamanho
+  retém 43% em 2022 e 19% em 2026. O da % evangélica retém 112% e 89%; o dos candidatos
+  religiosos, 103% e 81%. O choque urbano de 2018 se comporta como efeito de contexto e de
+  candidato; o religioso, como realinhamento.
+- **A C3 em valores absolutos.** O "pico de 2018" dos redutos é relativo: eles ficaram
+  estáveis em ~78% de 2014 a 2022 enquanto o país caía. Dois eixos explicam 77% da forma das
+  trajetórias, e os quatro tipos são os quadrantes desse plano (silhueta 0,22, partição de um
+  contínuo).
+
+**Releituras:** 2014 é o auge da polarização regional, não um primeiro pico do processo de
+2018 (nenhuma pegada de 2018 em 2010→2014); a C4 mostra uniformidade só em 2022→2026, e o que
+começa em 2018 é a estabilidade do mapa.
+
+---
+
 ## 2026-10-09 · igrejas: a pegada aparece exatamente em 2018 (E2a, E2c)
 
 [`notebooks/08_mecanismos.ipynb`](../notebooks/08_mecanismos.ipynb)
