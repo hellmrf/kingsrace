@@ -1,0 +1,13 @@
+md5: 0622164e785cc3c3478860781afcae96
+frozen: true
+deps:
+- checksum: '82725828949977872102004923619802811761'
+  size: 246
+  hash: md5
+  path: 
+    https://apisidra.ibge.gov.br/values/t/137/n6/all/v/1000093/p/2010/c133/95277
+outs:
+- md5: 73cae435dda445c0a2cade68c853fbe3
+  size: 1914003
+  hash: md5
+  path: religiao_2010.json

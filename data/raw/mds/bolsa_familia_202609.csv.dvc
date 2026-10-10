@@ -1,0 +1,12 @@
+md5: cb8cc5dac5644d319f7363dfe0ff55a9
+frozen: true
+deps:
+- checksum: '258728322304353799912495730103299577812'
+  hash: md5
+  path: 
+    https://aplicacoes.mds.gov.br/sagi/servicos/misocial?q=*:*&fq=anomes_s:202609&fq=tipo_s:mes_mu&wt=csv&rows=6000&fl=codigo_ibge,anomes,qtd_familias_beneficiarias_bolsa_familia_i,qtd_pessoas_beneficiarias_bolsa_familia_i,valor_repassado_bolsa_familia_f
+outs:
+- md5: 234d09076b5666f19920272ca0520881
+  size: 183802
+  hash: md5
+  path: bolsa_familia_202609.csv

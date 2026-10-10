@@ -1,0 +1,27 @@
+{
+    "panorama": {
+        "2022_1t": {
+            "pt_pct_validos": 48.43,
+            "adversario_pct_validos": 43.2,
+            "abstencao_pct": 20.79,
+            "pt_2p_pct": 52.85
+        },
+        "2022_2t": {
+            "pt_pct_validos": 50.9,
+            "adversario_pct_validos": 49.1,
+            "abstencao_pct": 20.43,
+            "pt_2p_pct": 50.9
+        },
+        "2026_1t": {
+            "adversario_pct_validos": 47.03,
+            "pt_pct_validos": 45.16,
+            "abstencao_pct": 20.84,
+            "pt_2p_pct": 48.98
+        },
+        "delta_pp": {
+            "nacional": -3.8700000000000045,
+            "mediana_amcs": -5.991925165899717,
+            "amcs_pt_subiu": 50
+        }
+    }
+}

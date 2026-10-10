@@ -24,9 +24,25 @@ fmt:
 repro *args:
     uv run dvc repro {{args}}
 
+# Roda os notebooks pendentes pelo DVC e mostra as métricas que mudaram desde o último
+# commit (D8). Limpa antes as saídas dos notebooks: o DVC calcula o hash do .ipynb com elas.
+resultados *args:
+    uv run nbstripout notebooks/*.ipynb
+    uv run dvc repro {{args}}
+    uv run dvc metrics diff
+
+# Compara métricas e gráficos com outra revisão (gráficos em dvc_plots/index.html)
+compara rev="main":
+    uv run dvc metrics diff {{rev}}
+    uv run dvc plots diff {{rev}}
+
 # Sincroniza dados versionados com o remoto R2
 push:
     uv run dvc push
 
 pull:
     uv run dvc pull
+
+# Gera e grava a previsão do 2º turno (ex.: just previsao v2 2026-10-24)
+previsao versao corte:
+    uv run python -m kingsrace.models.previsao_2t {{versao}} {{corte}}

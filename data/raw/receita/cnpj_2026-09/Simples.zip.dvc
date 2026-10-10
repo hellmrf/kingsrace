@@ -1,0 +1,14 @@
+md5: 8b45bbb32bbb3ce9ef0cb3188e98b8c4
+frozen: true
+deps:
+- checksum: '"b9cc6da9c805ce33dcb7209895aafe4f"'
+  size: 308027792
+  hash: md5
+  path: 
+    https://arquivos.receitafederal.gov.br/public.php/dav/files/gn672Ad4CF8N6TK/Dados/Cadastros/CNPJ/2026-09/Simples.zip
+outs:
+- md5: 967bea1fd383373f14e295b08b28a59a
+  size: 308027792
+  hash: md5
+  path: Simples.zip
+  push: false

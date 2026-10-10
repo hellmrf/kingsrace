@@ -1,0 +1,61 @@
+{
+    "A6": {
+        "componentes_mi": {
+            "variacao": -3.39842,
+            "eleitorado": 0.8755048175248225,
+            "comparecimento": 0.07300770331327842,
+            "validos": -0.27265604332919546,
+            "fatia": -4.074276477508908
+        },
+        "frac_desmobilizacao": 0.05874740026715857,
+        "sustenta": 0
+    },
+    "A6b": {
+        "beta": -0.01401853543394444,
+        "ic_inf": -0.025606188054388405,
+        "ic_sup": -0.002430882813500476,
+        "p": 0.017833412287564965,
+        "n": 5561,
+        "sustenta": 1
+    },
+    "A8": {
+        "menos_de_20mil": {
+            "frac_perda": 0.28888071515586655,
+            "frac_eleitorado": 0.21588768074629508,
+            "razao": 1.3381065290860703
+        },
+        "sustenta": 1
+    },
+    "A6_adversario": {
+        "N": {
+            "delta_votos_pt_mi": -0.004028,
+            "delta_votos_adv_mi": 0.613276,
+            "delta_votos_outros_mi": -0.090424,
+            "delta_aptos_mi": 0.546092
+        },
+        "NE": {
+            "delta_votos_pt_mi": -0.258555,
+            "delta_votos_adv_mi": 1.611579,
+            "delta_votos_outros_mi": -0.230285,
+            "delta_aptos_mi": 1.139323
+        },
+        "SE": {
+            "delta_votos_pt_mi": -1.799696,
+            "delta_votos_adv_mi": 1.42908,
+            "delta_votos_outros_mi": -0.500197,
+            "delta_aptos_mi": -0.372928
+        },
+        "S": {
+            "delta_votos_pt_mi": -0.972856,
+            "delta_votos_adv_mi": 0.951107,
+            "delta_votos_outros_mi": -0.004565,
+            "delta_aptos_mi": 0.299508
+        },
+        "CO": {
+            "delta_votos_pt_mi": -0.363285,
+            "delta_votos_adv_mi": 0.405764,
+            "delta_votos_outros_mi": 0.247797,
+            "delta_aptos_mi": 0.458317
+        }
+    }
+}

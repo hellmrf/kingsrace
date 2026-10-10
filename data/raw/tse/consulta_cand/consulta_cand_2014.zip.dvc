@@ -1,0 +1,13 @@
+md5: a4a94270d2117c08c17be7255dc5f680
+frozen: true
+deps:
+- checksum: '"45215f-63d479a022107"'
+  size: 4530527
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand/consulta_cand_2014.zip
+outs:
+- md5: 61656b3283a355dac77ef42caba84246
+  size: 4530527
+  hash: md5
+  path: consulta_cand_2014.zip

@@ -227,3 +227,5 @@ __marimo__/
 /data/interim/*
 /data/processed/*
 !/data/*/.gitkeep
+# Gráficos gerados por `dvc plots show/diff` (just compara)
+/dvc_plots/

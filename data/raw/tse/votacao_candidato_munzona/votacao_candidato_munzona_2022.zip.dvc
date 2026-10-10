@@ -1,0 +1,13 @@
+md5: 4854c45b4417e68456add12b8947e71f
+frozen: true
+deps:
+- checksum: '"22a07893-65d6328b7404b"'
+  size: 580941971
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_2022.zip
+outs:
+- md5: 44718473bf7cca6f4281be4c473c7553
+  size: 580941971
+  hash: md5
+  path: votacao_candidato_munzona_2022.zip

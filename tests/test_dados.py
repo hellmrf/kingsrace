@@ -109,3 +109,48 @@ def test_percentuais_entre_0_e_100(covariaveis):
     fora = [c for c in pct.columns if not pct[c].drop_nulls().is_between(0, 100).all()]
 
     assert fora == []
+
+
+def test_soja_nunca_ocupa_mais_que_o_territorio(covariaveis):
+    for ano in ("2021", "2025"):
+        excesso = covariaveis.filter(pl.col(f"area_soja_{ano}_ha") > 100 * pl.col("area_km2"))
+
+        assert excesso.is_empty(), excesso.select("cd_ibge", f"area_soja_{ano}_ha", "area_km2")
+
+
+def test_residuos_de_turnout_nao_sao_negativos(painel):
+    assert painel.filter(
+        (pl.col("nulos") < 0) | (pl.col("eleitores_nao_instalados") < 0)
+    ).is_empty()
+
+
+def test_religiosos_uma_linha_por_amc_e_eleicao():
+    rel = pl.read_parquet(paths.PROCESSED / "religiosos_amc.parquet")
+    amcs = pl.read_parquet(paths.PROCESSED / "painel_amc.parquet")["amc_id"].n_unique()
+
+    assert rel.group_by("ano").len()["len"].to_list() == [amcs] * 5
+    assert rel.null_count().sum_horizontal().item() == 0
+    assert rel["pct_religiosos"].is_between(0, 100).all()
+    assert (rel["votos_religiosos"] <= rel["nominais_validos"]).all()
+    assert (rel["nominais_validos"] <= rel["validos_deputado"]).all()
+
+
+def test_votos_nominais_de_deputado_batem_com_o_detalhe_por_uf():
+    from kingsrace.features.religiao import le_votos_deputado
+
+    interim = paths.INTERIM / "tse"
+    cand = (
+        le_votos_deputado(interim)
+        .group_by("ano_eleicao", "sg_uf")
+        .agg(pl.col("votos_validos").sum())
+    )
+    det = (
+        pl.read_parquet(interim / "detalhe_deputado" / "**" / "*.parquet", hive_partitioning=False)
+        .filter(pl.col("nr_turno") == 1)
+        .group_by("ano_eleicao", "sg_uf")
+        .agg(pl.col("qt_votos_nominais_validos").sum())
+    )
+    res = cand.join(det, on=["ano_eleicao", "sg_uf"], how="full")
+
+    assert res.height == 27 * 5
+    assert res.filter(pl.col("votos_validos") != pl.col("qt_votos_nominais_validos")).is_empty()

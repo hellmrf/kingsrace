@@ -1,0 +1,13 @@
+md5: a2be4b9d8e75f2c98dba2ed2e714823c
+frozen: true
+deps:
+- checksum: '61471061226510858318038350116380355362'
+  size: 246
+  hash: md5
+  path: 
+    https://apisidra.ibge.gov.br/values/t/5457/n6/all/v/8331/p/2021,2025/c782/40124
+outs:
+- md5: 7a27defd87935ee89a414c86244e53a1
+  size: 3700905
+  hash: md5
+  path: soja.json

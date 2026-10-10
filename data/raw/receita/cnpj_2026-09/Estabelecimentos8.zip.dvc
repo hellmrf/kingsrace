@@ -1,0 +1,13 @@
+md5: 3c7e4f45da13dd90b077435bafe64218
+frozen: true
+deps:
+- checksum: '"b4df54fa0d0655d856b0242afdd451dd"'
+  size: 340381627
+  hash: md5
+  path: https://arquivos.receitafederal.gov.br/public.php/dav/files/gn672Ad4CF8N6TK/Dados/Cadastros/CNPJ/2026-09/Estabelecimentos8.zip
+outs:
+- md5: 2af3a43bcf29f0b2875afd0d1b99319a
+  size: 340381627
+  hash: md5
+  path: Estabelecimentos8.zip
+  push: false

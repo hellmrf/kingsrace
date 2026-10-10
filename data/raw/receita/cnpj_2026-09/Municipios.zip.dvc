@@ -1,0 +1,14 @@
+md5: eaba3d172b2e9673c0ed975324f055c5
+frozen: true
+deps:
+- checksum: '"4480b392bc0e6540dbcb32e9198bff55"'
+  size: 43443
+  hash: md5
+  path: 
+    https://arquivos.receitafederal.gov.br/public.php/dav/files/gn672Ad4CF8N6TK/Dados/Cadastros/CNPJ/2026-09/Municipios.zip
+outs:
+- md5: 56196aa87fcf57f5f8c768b1c60db5ea
+  size: 43443
+  hash: md5
+  path: Municipios.zip
+  push: false

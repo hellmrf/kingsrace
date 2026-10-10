@@ -4,10 +4,10 @@ import polars as pl
 
 from kingsrace import paths
 
-BRANCO, NULO = 95, 96
+BRANCO, NULO, ANULADO_EM_SEPARADO = 95, 96, 97  # 97: seções anuladas pela Justiça Eleitoral
 
-# aptos = comparecimento + abstencoes + eleitores_nao_instalados (seções não instaladas)
-# comparecimento = validos + brancos + nulos (nulos inclui votos anulados)
+# aptos = comparecimento + abstencoes + eleitores_nao_instalados (resíduo; ver completa_turnout)
+# comparecimento = validos + brancos + nulos (resíduo: inclui anulados e apurados em separado)
 TURNOUT = [
     "aptos",
     "comparecimento",
@@ -18,6 +18,46 @@ TURNOUT = [
     "nulos",
 ]
 CONTAGENS = [*TURNOUT, "votos_pt", "votos_adv", "votos_outros"]
+
+
+def remapeia_transito(df, mapa: pl.DataFrame):
+    """Atribui à capital os votos da pseudo-UF "VT" (voto em trânsito com código próprio, 2010).
+
+    A partir de 2018 o TSE já conta o voto em trânsito no município onde ele é dado; isto
+    deixa 2010 consistente com os demais anos. Funciona em DataFrame ou LazyFrame com
+    colunas `uf` e `cd_tse`; mapa: cd_tse_vt, uf, cd_tse_capital (data/reference).
+    """
+    m = mapa.select(
+        pl.col("cd_tse_vt").cast(pl.Int32),
+        pl.col("uf").alias("_uf_capital"),
+        pl.col("cd_tse_capital").cast(pl.Int32).alias("_cd_capital"),
+    )
+    if isinstance(df, pl.LazyFrame):
+        m = m.lazy()
+    return (
+        df.with_columns(pl.col("cd_tse").cast(pl.Int32))
+        .join(m, left_on="cd_tse", right_on="cd_tse_vt", how="left", maintain_order="left")
+        .with_columns(
+            pl.coalesce("_uf_capital", "uf").alias("uf"),
+            pl.coalesce("_cd_capital", "cd_tse").alias("cd_tse"),
+        )
+        .drop("_uf_capital", "_cd_capital")
+    )
+
+
+def completa_turnout(detalhe):
+    """Define `nulos` e `eleitores_nao_instalados` pelos resíduos das contagens do TSE.
+
+    O sentido das colunas de nulos do TSE muda entre anos (em 2006 há duas colunas que
+    diferem; em 2010 e 2018 parte dos votos está em "anulados e apurados em separado"; em
+    2026 os votos anulados de candidato entram no "total de nulos"). Os resíduos fecham sempre:
+    nulos = comparecimento − válidos − brancos (todo voto não válido e não branco);
+    eleitores_nao_instalados = aptos − comparecimento − abstenções.
+    """
+    return detalhe.with_columns(
+        nulos=pl.col("comparecimento") - pl.col("validos") - pl.col("brancos"),
+        eleitores_nao_instalados=pl.col("aptos") - pl.col("comparecimento") - pl.col("abstencoes"),
+    )
 
 
 def classifica_votos(votos: pl.DataFrame, candidatos: pl.DataFrame) -> pl.DataFrame:
@@ -31,6 +71,8 @@ def classifica_votos(votos: pl.DataFrame, candidatos: pl.DataFrame) -> pl.DataFr
         .then(pl.lit("branco"))
         .when(pl.col("nr_votavel") == NULO)
         .then(pl.lit("nulo"))
+        .when(pl.col("nr_votavel") == ANULADO_EM_SEPARADO)
+        .then(pl.lit("anulado"))
         .otherwise(pl.lit("outro"))
         .alias("papel")
     )
@@ -121,19 +163,23 @@ def executa() -> None:
         "nm_votavel",
         pl.col("qt_votos").alias("votos"),
     )
-    detalhe = pl.read_parquet(interim / "detalhe_munzona" / "*" / "*.parquet").select(
-        pl.col("ano_eleicao").cast(pl.Int16).alias("ano"),
-        pl.col("nr_turno").alias("turno"),
-        pl.col("sg_uf").alias("uf"),
-        pl.col("cd_municipio").alias("cd_tse"),
-        pl.col("qt_aptos").alias("aptos"),
-        pl.col("qt_comparecimento").alias("comparecimento"),
-        pl.col("qt_abstencoes").alias("abstencoes"),
-        pl.col("qt_eleitores_secoes_nao_instaladas").alias("eleitores_nao_instalados"),
-        pl.col("qt_total_votos_validos").alias("validos"),
-        pl.col("qt_votos_brancos").alias("brancos"),
-        pl.col("qt_total_votos_nulos").alias("nulos"),
+    detalhe = (
+        pl.read_parquet(interim / "detalhe_munzona" / "*" / "*.parquet")
+        .select(
+            pl.col("ano_eleicao").cast(pl.Int16).alias("ano"),
+            pl.col("nr_turno").alias("turno"),
+            pl.col("sg_uf").alias("uf"),
+            pl.col("cd_municipio").alias("cd_tse"),
+            pl.col("qt_aptos").alias("aptos"),
+            pl.col("qt_comparecimento").alias("comparecimento"),
+            pl.col("qt_abstencoes").alias("abstencoes"),
+            pl.col("qt_total_votos_validos").alias("validos"),
+            pl.col("qt_votos_brancos").alias("brancos"),
+        )
+        .pipe(completa_turnout)
     )
+    transito = pl.read_csv(paths.REFERENCE / "voto_transito_2010.csv")
+    secao, detalhe = remapeia_transito(secao, transito), remapeia_transito(detalhe, transito)
     candidatos = pl.read_csv(paths.REFERENCE / "candidatos.csv").with_columns(
         pl.col("ano").cast(pl.Int16)
     )

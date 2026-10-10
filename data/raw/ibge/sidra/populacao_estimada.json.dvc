@@ -1,0 +1,13 @@
+md5: e8a08264e9b197463a6aa9952ca7f299
+frozen: true
+deps:
+- checksum: '322828346744497765947353958424199898503'
+  size: 246
+  hash: md5
+  path: 
+    https://apisidra.ibge.gov.br/values/t/6579/n6/all/v/9324/p/2004,2008,2012,2016,2020,2024
+outs:
+- md5: f77759450193769963c74f564dc1a08e
+  size: 9049600
+  hash: md5
+  path: populacao_estimada.json

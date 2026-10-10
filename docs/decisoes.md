@@ -69,6 +69,137 @@ entram no `pyproject.toml` no marco em que forem usadas.
 
 ---
 
+## D5 — Série histórica 2006–2026: particularidades do TSE
+
+**Data:** 2026-10-09 · **Status:** em vigor
+
+- **Totais conferidos:** PT e adversário batem exatamente com os totais oficiais nos 11
+  turnos (2006–2026).
+- **Votos anulados de candidato:** além do nº 28 em 2026, o nº 29 em 2006 (Rui Costa
+  Pimenta, candidatura indeferida, 25.769 votos) vai como `anulado` em `candidatos.csv`.
+- **Código 97, "voto anulado e apurado em separado":** votos de seções anuladas pela
+  Justiça Eleitoral (272 em 2010 2T, 746 em 2018 1T). Tratado como `anulado` em todos os anos.
+- **Nulos e eleitores não instalados por resíduo:** o significado das colunas de nulos do
+  TSE muda entre anos (em 2006, `QT_VOTOS_NULOS` e `QT_TOTAL_VOTOS_NULOS` diferem em 3 por
+  linha; em 2026 só o "total" inclui os anulados do nº 28). Por isso `nulos` = comparecimento
+  − válidos − brancos e `eleitores_nao_instalados` = aptos − comparecimento − abstenções. A
+  checagem independente continua: válidos (detalhe) = pt + adversário + outros (seções).
+- **Voto em trânsito de 2010:** veio numa pseudo-UF "VT" (códigos 999xx, ~80 mil eleitores);
+  atribuído à capital correspondente (`voto_transito_2010.csv`), como o TSE faz desde 2018.
+- **AMCs da série:** os 5 municípios instalados em 2013 (Mojuí dos Campos, Paraíso das Águas,
+  Pinto Bandeira, Pescaria Brava, Balneário Rincão) formam AMC com os de origem: 5.562 AMCs,
+  iguais em todos os 11 turnos. Curiosidade: Mojuí dos Campos e Paraíso das Águas já aparecem
+  nos dados de 2010 do TSE.
+- **AMC em mais de uma região imediata** (Paraíso das Águas + Costa Rica + Água Clara +
+  Chapadão do Sul): fica com a região mais frequente entre os membros.
+- **Efeito nas análises 2022→2026:** desprezível (A1 M3: +0,0244 → +0,0243; A4a idêntico).
+
+---
+
+## D6 — Deputado federal e candidatos religiosos (medida E2c)
+
+**Data:** 2026-10-09 · **Status:** em vigor
+
+- **Fontes:** `consulta_cand_{ano}` (ocupação), `votacao_candidato_munzona_{ano}` (votos por
+  candidato, município e zona) e `detalhe_votacao_munzona_{ano}_BRASIL.csv` (válidos). O
+  `_BR.csv` do detalhe só tem presidente.
+- **Votos nominais válidos:** até 2014 o `QT_VOTOS_NOMINAIS` já vem sem os anulados; a partir
+  de 2018 o TSE separa `QT_VOTOS_NOMINAIS_VALIDOS` (em 2022, ~1 milhão de votos de
+  candidatos indeferidos ficam de fora). A soma bate com o detalhe em todas as UFs nos cinco
+  anos (teste em `test_dados.py`).
+- **Denominador:** `QT_TOTAL_VOTOS_VALIDOS` do detalhe (nominais + legenda).
+- **Chave do candidato:** (ano, UF, `SQ_CANDIDATO`); em 2006 o sequencial se repete entre UFs.
+- **Candidatos com voto e sem cadastro:** 1 em 2006 (GO, 51.839 votos) e 3 em 2014. O nome de
+  urna vem do arquivo de votação; sem ocupação conhecida, contam só pelo título.
+- **A regra registrada é seguida à risca**, com dois efeitos conhecidos: entra quem declara
+  ocupação religiosa sem título católico no nome (ex.: o padre Luiz Couto, PT-PB, em 2022) e
+  fica de fora quem é evangélico mas não usa título nem declara a ocupação (muitos deputados
+  da bancada evangélica). A medida é um **limite inferior** da presença religiosa explícita.
+
+---
+
+## D7 — Fontes grandes com pouco disco: CNPJ, RAIS, SIM e Anatel
+
+**Data:** 2026-10-09 · **Status:** em vigor; leitura do CNPJ e pipeline revistos em D9
+
+- **Cache do DVC em hardlinks** (`dvc config --local cache.type hardlink,symlink`, só nesta
+  máquina): cada bruto existe uma vez no disco, não duas. O DVC deixa os brutos só para
+  leitura; o código nunca os altera.
+- **CNPJ (Receita) fora do R2:** são ~7 GB por versão, além da cota gratuita. Os `.dvc` têm
+  `push: false` e guardam URL + hash; os zips de Estabelecimentos são baixados, processados
+  e apagados um por vez (`python -m kingsrace.ingest.receita todos`, retomável). Refazer do
+  zero = baixar de novo da Receita (que mantém as versões mensais anteriores no
+  compartilhamento público). A leitura direta do zip pela extensão `zipfs` foi trocada em D9.
+- **RAIS e SIM vêm por FTP**, que o `dvc import-url` não suporta: baixados com `curl`,
+  versionados com `dvc add` e com a URL de origem em `data/reference/fontes_ftp.csv`.
+- **SIM 2025 é preliminar** (pasta PRELIM do DATASUS); entra no último triênio da E5
+  (2023–2025). **RAIS:** a partir de 2018 o layout muda (vírgula, aspas, colunas
+  "… - Código"); o leitor acha as colunas pelo prefixo. Totais conferidos com os oficiais
+  (2006: 35.155.249 vínculos; 2013: 48.948.433). SIM 2012: 57.045 homicídios, igual ao Atlas
+  da Violência.
+- **E3 cai para a medida alternativa registrada (banda larga fixa).** Não há série municipal
+  do 4G anterior a 2018 nos dados abertos da Anatel: os acessos móveis só vêm por DDD até
+  2018 (por município só a partir de 2019), a cobertura por município começa em 2021 e as
+  estações rádio-base do SMP não estão no arquivo público de estações licenciadas (só os
+  radioenlaces). A banda larga fixa tem acessos por município desde 2007. Decidido antes de
+  cruzar qualquer dado da Anatel com o voto.
+- **Por habitante:** igrejas e MEIs usam a população do Censo 2022 em todos os anos; as taxas
+  de homicídio usam as estimativas do IBGE no ano do meio de cada triênio (SIDRA 6579).
+
+---
+
+## D8 — Resultados versionados: notebooks como etapas do DVC, com DVCLive
+
+**Data:** 2026-10-09 · **Status:** em vigor
+
+Até aqui os números de cada teste viviam só no kernel dos notebooks e eram copiados à mão
+para `hipoteses.md`; o DVC não via nenhum resultado. Agora:
+
+- **Cada notebook é uma etapa** (`nb_<nn>_<nome>` no `dvc.yaml`), executada pelo papermill.
+  Ele registra pelo DVCLive (`kingsrace.resultados`) o que vai para o registro, com o ID da
+  hipótese no nome: `A1/M3/beta`, `E2a/salto/p`, `B4/backtest_2022/G0/rmse_pp`; vereditos
+  como `<ID>/sustenta` (0/1), pelo critério registrado.
+- **O que fica onde:** `resultados/<nb>/metrics.json` e as tabelas de coeficientes
+  (`plots/custom/`) no **git**, para comparar commits e branches sem baixar nada; o
+  notebook executado (`reports/notebooks/`) e os PNGs dos gráficos (`plots/images/`) no
+  **cache do DVC** (R2). O notebook no git continua sem saídas.
+- **Tabelas de coeficientes** usam o template `.dvc/plots/coeficientes.json` (ponto e IC de
+  95%, uma cor por revisão): `dvc plots diff main` põe lado a lado o mesmo teste em duas
+  revisões.
+- **Confirmatório é o que está comitado:** um resultado entra em `hipoteses.md` a partir do
+  `metrics.json` de um commit, gerado por `just resultados` com `dvc status` limpo. Rodar o
+  notebook à mão grava os mesmos arquivos, mas conta como rascunho.
+- **Experimentos (`dvc exp run -S`) são exploração.** Só os parâmetros da seção
+  `exploracao` do `params.yaml` servem para isso. `serie_e` (Holm) e `previsao_2t` vêm do
+  registro e mudam só com nova entrada nele. Um experimento fica fora do git até um
+  `dvc exp apply`/`dvc exp branch` explícito.
+- **Limite:** o hash do notebook inclui as saídas; `just resultados` roda o `nbstripout`
+  antes do `dvc repro` para que um notebook aberto e executado não pareça alterado.
+
+---
+
+## D9 — Pipeline completo para a série E e leitura do CNPJ em máquinas de 8 GB
+
+**Data:** 2026-10-09 · **Status:** em vigor; revê em parte D7
+
+- **Etapas novas no `dvc.yaml`:** `rais`, `sim`, `cnpj` e `mecanismos`, antes rodadas à
+  mão (as saídas só existiam na máquina que as gerou).
+- **`receita` é uma etapa congelada (`frozen`).** O `todos` chama `dvc import-url`, que não
+  roda dentro do `dvc repro`. Para refazer: rodar o `todos` fora do DVC e `dvc commit
+  receita`. As três parquets da Receita (pequenas) **vão para o R2**: uma máquina nova as
+  recebe com `dvc pull`, sem baixar 7 GB. Os zips continuam fora (`push: false`), então o
+  `dvc pull` ainda acusa a falta deles; isso é esperado.
+- **Leitura do CNPJ:** cada CSV é extraído para o disco já em UTF-8, lido pelo DuckDB e
+  apagado. A extensão `zipfs` descomprime o arquivo inteiro na memória (7 GB num zip de
+  Estabelecimentos) e derrubava uma máquina de 8 GB; o latin-1 nativo do DuckDB recusa os
+  bytes 0x80–0x9F que aparecem em alguns registros (0x8F em Estabelecimentos0 de 2026-09); o
+  ISO_8859_1 da extensão `encodings` aceita, mas é ~15× mais lento. O DuckDB roda com
+  memória limitada (`KINGSRACE_DUCKDB_MEMORIA`, 2 GB por padrão) e leitor sequencial (o
+  paralelo recusa os CSVs da Receita com `strict_mode=false`). O escape é fixo em `"`: o
+  detector escolheu `'` em Estabelecimentos4, e `"SABESP'"` engolia os campos seguintes.
+
+---
+
 ## Armadilhas metodológicas (valem para todas as análises)
 
 - **Falácia ecológica:** escrever conclusões em nível de lugar ("municípios com X"),

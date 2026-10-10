@@ -2,7 +2,7 @@
 
 Tabelas de `data/processed/`, geradas por `just repro` (etapas em `dvc.yaml`). O esquema
 executável está em `src/kingsrace/esquemas.py`; este arquivo explica o significado.
-Pleitos disponíveis: os de `params.yaml` (hoje 2022 1T/2T e 2026 1T).
+Pleitos disponíveis: os de `params.yaml` (2006–2022, 1º e 2º turnos, e 2026 1º turno).
 
 ## `municipios.parquet`
 
@@ -41,13 +41,13 @@ Pleitos disponíveis: os de `params.yaml` (hoje 2022 1T/2T e 2026 1T).
 | Coluna | Tipo | Descrição |
 |---|---|---|
 | `cd_ibge`, `ano`, `turno`, `uf` | | chave |
-| `aptos` | Int32 | eleitores aptos = `comparecimento + abstencoes + eleitores_nao_instalados` |
-| `comparecimento` | Int32 | = `validos + brancos + nulos` |
-| `abstencoes` | Int32 | eleitores que não compareceram |
-| `eleitores_nao_instalados` | Int32 | eleitores de seções não instaladas (raros; ex.: Manaus 2022, 84) |
-| `validos` | Int32 | votos válidos = `votos_pt + votos_adv + votos_outros` |
-| `brancos`, `nulos` | Int32 | `nulos` inclui votos anulados (candidatos indeferidos) |
-| `votos_pt`, `votos_adv`, `votos_outros` | Int32 | votos do PT, do principal adversário e dos demais válidos |
+| `aptos` | Int64 | eleitores aptos = `comparecimento + abstencoes + eleitores_nao_instalados` |
+| `comparecimento` | Int64 | = `validos + brancos + nulos` |
+| `abstencoes` | Int64 | eleitores que não compareceram |
+| `eleitores_nao_instalados` | Int64 | resíduo aptos − comparecimento − abstenções: eleitores de seções não instaladas (ex.: Manaus 2022, 84) e pequenas diferenças do TSE em 2006–2014 |
+| `validos` | Int64 | votos válidos = `votos_pt + votos_adv + votos_outros` |
+| `brancos`, `nulos` | Int64 | `nulos` é o resíduo comparecimento − válidos − brancos: nulos, votos de candidatos indeferidos e anulados apurados em separado |
+| `votos_pt`, `votos_adv`, `votos_outros` | Int64 | votos do PT, do principal adversário e dos demais válidos |
 | `pt_validos`, `adv_validos` | Float64 | proporção nos válidos |
 | `pt_2p` | Float64 | PT / (PT + adversário) — métrica principal entre pleitos |
 | `pt_2p_logit` | Float64 | logit de `pt_2p` |
@@ -81,10 +81,32 @@ comparar pleitos; tem o mesmo número de linhas em todos os anos.
 | `va_2021`, `va_agro_2021`, `va_adm_2021` | 5938 | valor adicionado total, da agropecuária e da administração pública (mil R$) |
 | `pct_va_agro_2021`, `pct_va_adm_2021` | 5938 | participação no VA (%); nula se o VA total ≤ 0 (Cachoeira Dourada/GO) |
 
+| `pct_evangelica_2010`, `delta_evangelica` | 137 | % evangélica no Censo 2010 (sobre a população **total**; em 2022 é sobre 10+ anos) e crescimento 2010→2022 em pp. Ausente nos municípios criados depois de 2010 |
+| `area_soja_2021_ha`, `area_soja_2025_ha` | 5457 (PAM) | área plantada de soja (ha). "…" (município sem lavoura) vira 0; área maior que o território vira ausente (Mariópolis/PR, 2025) |
+| `soja_2021_pct_territorio`, `exp_soja_pct_territorio` | 5457 | soja em % do território em 2021 e sua expansão 2021→2025, em pp do território |
+| `familias_ab_2022`, `valor_ab_2022` | MDS (MiSocial, set/2022) | famílias no Auxílio Brasil e valor pago no mês |
+| `familias_bf_2026`, `pessoas_bf_2026`, `valor_bf_2026` | MDS (MiSocial, set/2026) | famílias e pessoas no Bolsa Família e valor repassado no mês |
+| `familias_ab_100hab_2022`, `familias_bf_100hab_2026` | MDS + Censo | famílias beneficiárias por 100 habitantes (população de 2022) |
+
 O VA por setor de 2023 ainda não foi publicado por município; por isso os setores usam 2021.
+Símbolos do IBGE: "-" é zero absoluto; "..", "..." e "X" são ausentes.
 
 ## `covariaveis_amc.parquet`
 
-As mesmas colunas por `amc_id`: população e área somadas, densidade recalculada, demais
-colunas pela média ponderada pela população (aproximação para taxas com denominadores
-diferentes, aceitável porque só agrupa municípios vizinhos).
+As mesmas colunas por `amc_id`. Colunas extensivas (população, área, PIB, VA, soja, famílias,
+valores) são **somadas**; as taxas do Censo são ponderadas pela população; as derivadas
+(per capita, participações, por 100 habitantes, densidade) são **recalculadas a partir das
+somas**. Município sem população no Censo (Boa Esperança do Norte) entra nas somas, não nos
+pesos.
+
+## `religiosos_amc.parquet`
+
+Uma linha por `amc_id` × `ano` (eleições gerais de 2006 a 2022, 1º turno), deputado federal.
+Regra de classificação e particularidades em [decisoes.md](decisoes.md) (D6).
+
+| coluna | descrição |
+|---|---|
+| `votos_religiosos` | votos nominais válidos em candidatos religiosos (regra da E2c) |
+| `nominais_validos` | votos nominais válidos para deputado federal |
+| `validos_deputado` | votos válidos para deputado federal (nominais + legenda) |
+| `pct_religiosos` | 100 × `votos_religiosos` / `validos_deputado` |

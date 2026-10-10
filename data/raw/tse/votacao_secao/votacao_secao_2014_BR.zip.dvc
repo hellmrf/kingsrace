@@ -1,0 +1,13 @@
+md5: fb7d86bad52d48e3f73849abcdf0e003
+frozen: true
+deps:
+- checksum: '"1c368ba-5cb1cf2685580"'
+  size: 29583546
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2014_BR.zip
+outs:
+- md5: bc7cac6028574d196f416bd9aa592067
+  size: 29583546
+  hash: md5
+  path: votacao_secao_2014_BR.zip

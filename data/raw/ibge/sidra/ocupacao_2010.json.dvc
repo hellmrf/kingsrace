@@ -1,0 +1,13 @@
+md5: a9b6ea8bf88b21f450a333251e9c87ba
+frozen: true
+deps:
+- checksum: '315173300382375742995247898652449150814'
+  size: 246
+  hash: md5
+  path: 
+    https://apisidra.ibge.gov.br/values/t/2031/n6/all/v/1000696/p/2010/c11913/96171
+outs:
+- md5: eafb8af986741dcfb1eafa74f0125ca5
+  size: 2193685
+  hash: md5
+  path: ocupacao_2010.json

@@ -14,6 +14,23 @@ stages:
         - data/interim/tse/detalhe_munzona/ano=${item}:
             cache: false
 
+  converte_deputados:
+    foreach: ${anos_deputados}
+    do:
+      cmd: python -m kingsrace.ingest.tse deputados ${item}
+      deps:
+        - src/kingsrace/ingest/tse.py
+        - data/raw/tse/consulta_cand/consulta_cand_${item}.zip
+        - data/raw/tse/votacao_candidato_munzona/votacao_candidato_munzona_${item}.zip
+        - data/raw/tse/detalhe_votacao_munzona/detalhe_votacao_munzona_${item}.zip
+      outs:
+        - data/interim/tse/candidatos/ano=${item}:
+            cache: false
+        - data/interim/tse/votacao_deputado/ano=${item}:
+            cache: false
+        - data/interim/tse/detalhe_deputado/ano=${item}:
+            cache: false
+
   municipios:
     cmd: python -m kingsrace.harmonize.municipios
     deps:
@@ -30,6 +47,7 @@ stages:
     deps:
       - src/kingsrace/features/painel.py
       - data/reference/candidatos.csv
+      - data/reference/voto_transito_2010.csv
       - data/processed/municipios.parquet
       - data/interim/tse/votacao_secao
       - data/interim/tse/detalhe_munzona
@@ -42,9 +60,295 @@ stages:
     cmd: python -m kingsrace.features.covariaveis
     deps:
       - src/kingsrace/ingest/ibge.py
+      - src/kingsrace/ingest/mds.py
       - src/kingsrace/features/covariaveis.py
       - data/raw/ibge/sidra
+      - data/raw/mds
       - data/processed/municipios.parquet
     outs:
       - data/processed/covariaveis_municipio.parquet
       - data/processed/covariaveis_amc.parquet
+
+  religiosos:
+    cmd: python -m kingsrace.features.religiao
+    deps:
+      - src/kingsrace/features/religiao.py
+      - data/processed/municipios.parquet
+      - data/interim/tse/candidatos
+      - data/interim/tse/votacao_deputado
+      - data/interim/tse/detalhe_deputado
+    outs:
+      - data/processed/religiosos_amc.parquet
+
+  # --- Fontes da série E (D7, D9) ---
+
+  rais:
+    cmd: python -m kingsrace.ingest.rais
+    deps:
+      - src/kingsrace/ingest/rais.py
+      - data/raw/rais
+    outs:
+      - data/interim/rais/emprego.parquet:
+          cache: false
+
+  sim:
+    cmd: python -m kingsrace.ingest.sim
+    deps:
+      - src/kingsrace/ingest/sim.py
+      - data/raw/datasus/sim
+    outs:
+      - data/interim/sim/homicidios.parquet:
+          cache: false
+
+  # Congelada: os zips do CNPJ (~7 GB) não ficam no disco nem no R2 e `todos` chama
+  # `dvc import-url`, que não roda dentro do `dvc repro`. Para refazer:
+  # `python -m kingsrace.ingest.receita todos` fora do DVC, depois `dvc commit receita`.
+  # As três saídas, pequenas, vão para o R2: uma máquina nova as recebe com `dvc pull`.
+  receita:
+    cmd: python -m kingsrace.ingest.receita todos
+    frozen: true
+    deps:
+      - src/kingsrace/ingest/receita.py
+    outs:
+      - data/interim/receita/religiosas.parquet
+      - data/interim/receita/mei_estoque.parquet
+      - data/interim/receita/municipios_receita.parquet
+
+  cnpj:
+    cmd: python -m kingsrace.features.cnpj
+    deps:
+      - src/kingsrace/features/cnpj.py
+      - src/kingsrace/harmonize/municipios.py
+      - data/raw/ibge/municipios.json
+      - data/reference/denominacoes.csv
+      - data/reference/municipios_overrides_receita.csv
+      - data/processed/municipios.parquet
+      - data/processed/covariaveis_amc.parquet
+      - data/interim/receita/religiosas.parquet
+      - data/interim/receita/mei_estoque.parquet
+      - data/interim/receita/municipios_receita.parquet
+    outs:
+      - data/processed/igrejas_denominacao_amc.parquet
+      - data/processed/cnpj_amc.parquet
+
+  mecanismos:
+    cmd: python -m kingsrace.features.mecanismos
+    deps:
+      - src/kingsrace/features/mecanismos.py
+      - data/processed/municipios.parquet
+      - data/interim/rais/emprego.parquet
+      - data/interim/sim/homicidios.parquet
+    outs:
+      - data/processed/emprego_amc.parquet
+      - data/processed/homicidios_amc.parquet
+
+  # --- Notebooks (D8) ---
+  # Cada notebook roda pelo papermill e registra no DVCLive (kingsrace.resultados):
+  # resultados/<nb>/metrics.json e plots/custom (tabelas de coeficientes) ficam no git;
+  # o notebook executado e os PNGs dos gráficos vão para o cache do DVC (R2).
+  # Rodar via `just resultados`, que limpa as saídas dos notebooks antes (o hash do .ipynb
+  # é calculado com as saídas).
+
+  nb_01_panorama:
+    cmd: >-
+      papermill notebooks/01_panorama.ipynb reports/notebooks/01_panorama.ipynb
+      -k python3 --cwd notebooks --no-progress-bar --log-level WARNING
+    deps:
+      - notebooks/01_panorama.ipynb
+      - src/kingsrace/resultados.py
+      - src/kingsrace/viz/tema.py
+      - data/processed/municipios.parquet
+      - data/processed/painel_municipio.parquet
+      - data/processed/painel_amc.parquet
+      - data/processed/votos_municipio.parquet
+    outs:
+      - reports/notebooks/01_panorama.ipynb
+    metrics:
+      - resultados/01_panorama/metrics.json:
+          cache: false
+    plots:
+      - resultados/01_panorama/plots/images
+
+  nb_02_tamanho:
+    cmd: >-
+      papermill notebooks/02_tamanho.ipynb reports/notebooks/02_tamanho.ipynb
+      -k python3 --cwd notebooks --no-progress-bar --log-level WARNING
+    deps:
+      - notebooks/02_tamanho.ipynb
+      - src/kingsrace/resultados.py
+      - src/kingsrace/viz/tema.py
+      - src/kingsrace/features/base.py
+      - data/processed/painel_amc.parquet
+      - data/processed/covariaveis_amc.parquet
+      - data/processed/municipios.parquet
+    outs:
+      - reports/notebooks/02_tamanho.ipynb
+    metrics:
+      - resultados/02_tamanho/metrics.json:
+          cache: false
+    plots:
+      - resultados/02_tamanho/plots/custom:
+          cache: false
+          template: coeficientes
+          x: rotulo
+          y: coef
+          x_label: modelo
+          y_label: coeficiente (IC 95%)
+      - resultados/02_tamanho/plots/images
+
+  nb_03_previsao_2t:
+    cmd: >-
+      papermill notebooks/03_previsao_2t.ipynb reports/notebooks/03_previsao_2t.ipynb
+      -k python3 --cwd notebooks --no-progress-bar --log-level WARNING
+    params:
+      - previsao_2t.versao
+    deps:
+      - notebooks/03_previsao_2t.ipynb
+      - src/kingsrace/resultados.py
+      - src/kingsrace/viz/tema.py
+      - src/kingsrace/models/previsao_2t.py
+      - data/processed/painel_municipio.parquet
+      - data/processed/votos_municipio.parquet
+      - data/reference/transferencias_2t.csv
+      - data/reference/previsoes/previsao_2t_2026_${previsao_2t.versao}.csv
+      - data/reference/previsoes/previsao_2t_2026_${previsao_2t.versao}.json
+    outs:
+      - reports/notebooks/03_previsao_2t.ipynb
+    metrics:
+      - resultados/03_previsao_2t/metrics.json:
+          cache: false
+    plots:
+      - resultados/03_previsao_2t/plots/images
+
+  nb_04_decomposicao:
+    cmd: >-
+      papermill notebooks/04_decomposicao.ipynb reports/notebooks/04_decomposicao.ipynb
+      -k python3 --cwd notebooks --no-progress-bar --log-level WARNING
+    deps:
+      - notebooks/04_decomposicao.ipynb
+      - src/kingsrace/resultados.py
+      - src/kingsrace/viz/tema.py
+      - src/kingsrace/features/decomposicao.py
+      - data/processed/painel_amc.parquet
+      - data/processed/municipios.parquet
+    outs:
+      - reports/notebooks/04_decomposicao.ipynb
+    metrics:
+      - resultados/04_decomposicao/metrics.json:
+          cache: false
+    plots:
+      - resultados/04_decomposicao/plots/images
+
+  nb_05_composicao:
+    cmd: >-
+      papermill notebooks/05_composicao.ipynb reports/notebooks/05_composicao.ipynb
+      -k python3 --cwd notebooks --no-progress-bar --log-level WARNING
+    deps:
+      - notebooks/05_composicao.ipynb
+      - src/kingsrace/resultados.py
+      - src/kingsrace/viz/tema.py
+      - src/kingsrace/features/base.py
+      - data/processed/painel_amc.parquet
+      - data/processed/covariaveis_amc.parquet
+      - data/processed/municipios.parquet
+    outs:
+      - reports/notebooks/05_composicao.ipynb
+    metrics:
+      - resultados/05_composicao/metrics.json:
+          cache: false
+    plots:
+      - resultados/05_composicao/plots/custom:
+          cache: false
+          template: coeficientes
+          x: rotulo
+          y: coef
+          x_label: teste
+          y_label: coeficiente (IC 95%)
+      - resultados/05_composicao/plots/images
+
+  nb_06_serie:
+    cmd: >-
+      papermill notebooks/06_serie.ipynb reports/notebooks/06_serie.ipynb
+      -k python3 --cwd notebooks --no-progress-bar --log-level WARNING
+    params:
+      - exploracao
+    deps:
+      - notebooks/06_serie.ipynb
+      - src/kingsrace/resultados.py
+      - src/kingsrace/viz/tema.py
+      - src/kingsrace/features/base.py
+      - data/processed/painel_amc.parquet
+      - data/processed/covariaveis_amc.parquet
+      - data/processed/municipios.parquet
+    outs:
+      - reports/notebooks/06_serie.ipynb
+    metrics:
+      - resultados/06_serie/metrics.json:
+          cache: false
+    plots:
+      - resultados/06_serie/plots/custom:
+          cache: false
+          template: coeficientes
+          x: rotulo
+          y: coef
+          x_label: pleito ou transição
+          y_label: coeficiente (IC 95%)
+      - resultados/06_serie/plots/images
+
+  nb_07_virada_2018:
+    cmd: >-
+      papermill notebooks/07_virada_2018.ipynb reports/notebooks/07_virada_2018.ipynb
+      -k python3 --cwd notebooks --no-progress-bar --log-level WARNING
+    deps:
+      - notebooks/07_virada_2018.ipynb
+      - src/kingsrace/resultados.py
+      - src/kingsrace/viz/tema.py
+      - src/kingsrace/features/base.py
+      - src/kingsrace/features/decomposicao.py
+      - data/processed/painel_amc.parquet
+      - data/processed/municipios.parquet
+    outs:
+      - reports/notebooks/07_virada_2018.ipynb
+    metrics:
+      - resultados/07_virada_2018/metrics.json:
+          cache: false
+    plots:
+      - resultados/07_virada_2018/plots/custom:
+          cache: false
+          template: coeficientes
+          x: rotulo
+          y: coef
+          x_label: transição
+          y_label: efeito de log(eleitorado) sobre Δ logit do PT
+      - resultados/07_virada_2018/plots/images
+
+  nb_08_mecanismos:
+    cmd: >-
+      papermill notebooks/08_mecanismos.ipynb reports/notebooks/08_mecanismos.ipynb
+      -k python3 --cwd notebooks --no-progress-bar --log-level WARNING
+    params:
+      - serie_e
+    deps:
+      - notebooks/08_mecanismos.ipynb
+      - src/kingsrace/resultados.py
+      - src/kingsrace/viz/tema.py
+      - src/kingsrace/features/base.py
+      - src/kingsrace/models/event_study.py
+      - data/processed/painel_amc.parquet
+      - data/processed/municipios.parquet
+      - data/processed/covariaveis_amc.parquet
+      - data/processed/religiosos_amc.parquet
+    outs:
+      - reports/notebooks/08_mecanismos.ipynb
+    metrics:
+      - resultados/08_mecanismos/metrics.json:
+          cache: false
+    plots:
+      - resultados/08_mecanismos/plots/custom:
+          cache: false
+          template: coeficientes
+          x: rotulo
+          y: coef
+          x_label: transição
+          y_label: efeito de 1 dp de X sobre Δ logit do PT
+      - resultados/08_mecanismos/plots/images
