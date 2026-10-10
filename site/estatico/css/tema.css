@@ -1,0 +1,107 @@
+/* Tema do site kingsrace: tokens (claro e escuro), fontes e base. Herdado da página
+   "O que os votos mostram"; as cores de partido seguem viz/tema.py (PT vermelho, adversário azul). */
+
+/* Fontes servidas pelo próprio site (SIL OFL; licenças em estatico/fontes/). */
+@font-face { font-family: "Archivo"; src: url("../fontes/archivo-wdth.woff2") format("woff2-variations");
+  font-weight: 400 800; font-stretch: 62% 125%; font-display: swap; }
+@font-face { font-family: "IBM Plex Sans"; src: url("../fontes/ibm-plex-sans-wght.woff2") format("woff2-variations");
+  font-weight: 100 700; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("../fontes/ibm-plex-mono-400.woff2") format("woff2");
+  font-weight: 400; font-display: swap; }
+@font-face { font-family: "IBM Plex Mono"; src: url("../fontes/ibm-plex-mono-500.woff2") format("woff2");
+  font-weight: 500; font-display: swap; }
+
+:root {
+  --papel: #f5f5f2;
+  --superficie: #fcfcfb;
+  --tinta: #141413;
+  --tinta-2: #4f4e4b;
+  --tinta-3: #85837d;
+  --linha: #e1e0d9;
+  --eixo: #c3c2b7;
+  --pt: #e34948;
+  --pt-lavado: rgba(227, 73, 72, 0.12);
+  --adv: #2a78d6;
+  --adv-lavado: rgba(42, 120, 214, 0.12);
+  --meio: #f0efec;
+  --confirma: #1d7f45;
+  --realce: #fff3c4;
+  --anel: rgba(20, 20, 19, 0.10);
+  --f-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --f-texto: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-dado: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --t-1: clamp(2.6rem, 7vw, 4.4rem);
+  --t-2: clamp(1.55rem, 3.6vw, 2.15rem);
+  --t-3: 1.2rem;
+  --t-corpo: 1.0625rem;
+  --t-nota: 0.875rem;
+  --t-micro: 0.75rem;
+  --coluna: 42rem;
+  --larga: 60rem;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --papel: #121211;
+    --superficie: #1a1a19;
+    --tinta: #f0efec;
+    --tinta-2: #c3c2b7;
+    --tinta-3: #8f8d86;
+    --linha: #2c2c2a;
+    --eixo: #45453f;
+    --pt: #e66767;
+    --pt-lavado: rgba(230, 103, 103, 0.16);
+    --adv: #3987e5;
+    --adv-lavado: rgba(57, 135, 229, 0.16);
+    --meio: #383835;
+    --confirma: #2fa865;
+    --realce: #3a3315;
+    --anel: rgba(255, 255, 255, 0.10);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --papel: #121211;
+  --superficie: #1a1a19;
+  --tinta: #f0efec;
+  --tinta-2: #c3c2b7;
+  --tinta-3: #8f8d86;
+  --linha: #2c2c2a;
+  --eixo: #45453f;
+  --pt: #e66767;
+  --pt-lavado: rgba(230, 103, 103, 0.16);
+  --adv: #3987e5;
+  --adv-lavado: rgba(57, 135, 229, 0.16);
+  --meio: #383835;
+  --confirma: #2fa865;
+  --realce: #3a3315;
+  --anel: rgba(255, 255, 255, 0.10);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--f-texto);
+  font-size: var(--t-corpo);
+  line-height: 1.6;
+  padding-inline: 16px;
+  padding-block: 0 4rem;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration-color: var(--eixo); text-underline-offset: 3px; }
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--adv); outline-offset: 2px; border-radius: 2px; }
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.08; }
+h2 { font-size: var(--t-2); font-weight: 750; font-stretch: 82%; letter-spacing: -0.01em; }
+h3 { font-size: var(--t-3); font-weight: 700; font-stretch: 90%; }
+p { margin: 0; }
+.coluna { width: 100%; max-width: var(--coluna); margin-inline: auto; }
+.larga { width: 100%; max-width: var(--larga); margin-inline: auto; }
+.rotulo {
+  font-family: var(--f-dado); font-size: var(--t-micro); letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--tinta-3);
+}
+.num { font-variant-numeric: tabular-nums; }
+

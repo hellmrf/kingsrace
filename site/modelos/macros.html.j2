@@ -1,0 +1,42 @@
+{# Selo do grau de evidência de cada afirmação (mesma escala da página da conjuntura). #}
+{% set SELOS = {
+  "testado": ("●", "dado testado", "hipótese registrada antes dos dados e testada"),
+  "descritivo": ("●", "conta registrada", "conta registrada antes dos dados; descreve, não testa"),
+  "exploratorio": ("◐", "exploratório", "olhado depois dos dados; pista, não conclusão"),
+  "inferencia": ("○", "inferência", "recomendação nossa a partir dos números"),
+  "documentado": ("■", "documentado", "documento primário ou decisão oficial"),
+  "reportado": ("□", "reportado", "jornalismo com documentos citados"),
+} %}
+
+{% macro selo(tipo, id=none) -%}
+{% set s = SELOS[tipo] %}
+<span class="selo" title="{{ s[2] }}"><b>{{ s[0] }}</b>&nbsp;{{ s[1] }}{% if id %} · {{ id }}{% endif %}</span>
+{%- endmacro %}
+
+{% macro legenda_selos(tipos) -%}
+<div class="selos">
+  {% for t in tipos %}<span>{{ selo(t) }}<span>{{ SELOS[t][2] }}</span></span>{% endfor %}
+</div>
+{%- endmacro %}
+
+{# Figura: título, subtítulo, área do gráfico (preenchida pelo JS) e fonte. O <noscript> e a
+   tabela em <details> garantem que o dado se lê sem JavaScript. #}
+{% macro figura(id, titulo, sub, fonte) -%}
+<figure>
+  <div class="titulo-graf">{{ titulo }}</div>
+  {% if sub %}<div class="sub">{{ sub }}</div>{% endif %}
+  <div class="graf" data-grafico="{{ id }}"></div>
+  {{ caller() if caller else "" }}
+  <figcaption>{{ fonte }}</figcaption>
+</figure>
+{%- endmacro %}
+
+{% macro secao(id, numero, rotulo, titulo) -%}
+<section id="{{ id }}" class="larga">
+  <div class="cabeca coluna">
+    <div class="linha-sup"><span class="rotulo">{{ numero }} · {{ rotulo }}</span></div>
+    <h2>{{ titulo }}</h2>
+  </div>
+  {{ caller() }}
+</section>
+{%- endmacro %}

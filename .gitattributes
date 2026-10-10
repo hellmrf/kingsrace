@@ -1,3 +1,5 @@
 *.ipynb filter=nbstripout
 *.zpln filter=nbstripout
 *.ipynb diff=ipynb
+# Cópias executadas pelo papermill: ficam com as saídas, para ler no GitHub (D14)
+reports/notebooks/*.ipynb -filter

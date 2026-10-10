@@ -100,6 +100,28 @@ original, o hash no `.dvc` muda (aparece no `git diff`) e os resultados podem di
 registrados. O mesmo vale para os arquivos do FTP: se o `dvc commit` alterar algum `.dvc`,
 o arquivo baixado não é o mesmo que foi usado.
 
+## Site público
+
+As páginas públicas saem pelo GitHub Pages em <https://hellmrf.github.io/kingsrace/>
+(decisão D12). A ordem é sempre a mesma:
+
+1. **Pipeline (DVC):** as etapas gravam tabelas em `data/processed/` e as próprias métricas e
+   gráficos em `resultados/<etapa>/`.
+2. **Notebooks:** a análise em cima do pipeline. A cópia executada fica no git com as
+   saídas, em `reports/notebooks/` (D14).
+3. **Público:** `src/kingsrace/publica/<página>.py` só lê saídas do DVC e grava os dados da
+   página em `site/dados/`. `site/` guarda os templates Jinja e os gráficos em JS.
+
+```sh
+just site          # dados do site (dvc repro site_*) e build em _site/
+just site-serve    # prévia em http://localhost:8000
+```
+
+O merge na `main` publica: o Actions (`.github/workflows/pages.yml`) baixa do R2 só os
+dados do site, com uma chave somente de leitura (`R2_ACCESS_KEY_ID`,
+`R2_SECRET_ACCESS_KEY` nos secrets do repositório), monta o site e faz o deploy. Antes do
+merge, rode `just push` para que os dados do site estejam no R2.
+
 ## Estrutura
 
 ```
@@ -111,7 +133,8 @@ data/
 src/kingsrace/  ingest → harmonize → features → models → viz
 notebooks/      numerados (01_panorama … 08_mecanismos); saídas removidas no commit
 resultados/     métricas e gráficos de cada notebook, registrados pelo DVCLive (D8)
-reports/        relatório Quarto; notebooks/ guarda as cópias executadas (cache do DVC)
+reports/        relatório Quarto; notebooks/ guarda as cópias executadas, com saídas (D14)
+site/           site público: templates, estático e dados (gerados pelo DVC)
 docs/           plano, decisões, hipóteses, dicionário de dados
 tests/          esquemas e reconciliação com totais oficiais
 ```

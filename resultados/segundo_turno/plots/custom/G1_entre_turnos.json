@@ -1,0 +1,42 @@
+[
+    {
+        "ano": "2006",
+        "pt_mi": 11.630279999999999,
+        "adv_mi": -2.42859,
+        "comparecimento_mi": -2.821733,
+        "outros_1t_mi": 9.359986,
+        "vantagem_pt_1t_mi": 6.695958
+    },
+    {
+        "ano": "2010",
+        "pt_mi": 8.099019,
+        "adv_mi": 10.565125,
+        "comparecimento_mi": -4.584147,
+        "outros_1t_mi": 20.787101999999997,
+        "vantagem_pt_1t_mi": 14.522048
+    },
+    {
+        "ano": "2014",
+        "pt_mi": 11.226744,
+        "adv_mi": 16.105536,
+        "comparecimento_mi": -2.4393759999999998,
+        "outros_1t_mi": 25.81625,
+        "vantagem_pt_1t_mi": 8.411817
+    },
+    {
+        "ano": "2018",
+        "pt_mi": 15.664665,
+        "adv_mi": 8.502856,
+        "comparecimento_mi": -1.429603,
+        "outros_1t_mi": 26.371537,
+        "vantagem_pt_1t_mi": -17.840809
+    },
+    {
+        "ano": "2022",
+        "pt_mi": 3.072523,
+        "adv_mi": 7.111293,
+        "comparecimento_mi": 0.5643079999999999,
+        "outros_1t_mi": 9.864825999999999,
+        "vantagem_pt_1t_mi": 6.170774
+    }
+]

@@ -39,6 +39,14 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | E2d | A pegada religiosa de 2018 vem das organizações aliadas ao PT em 2014 (troca de lado), não da política religiosa em geral | **testada** | ver [E2d](#e2d--a-troca-de-lado-das-organizações-religiosas) | **Não se sustenta; sinal contrário.** Por pp: coligação −0,005 (IC −0,012 a +0,002), demais −0,015 (IC −0,023 a −0,006); diferença +0,010 (IC −0,001 a +0,021) | `08_mecanismos.ipynb` |
 | E3b | Internet móvel depois de 2018 (acessos por município) prevê o afastamento dos pequenos em 2018→2022 e 2022→2026 | registrada (condicional aos dados) | ver [E3b e E3c](#e3b-e-e3c--duas-medidas-novas-para-o-ambiente-digital) | | |
 | E3c | Celular e internet nos domicílios (Censo 2010) preveem o afastamento do PT em 2014→2018 | registrada (condicional aos dados) | ver [E3b e E3c](#e3b-e-e3c--duas-medidas-novas-para-o-ambiente-digital) | | |
+| G1 | Aritmética do 2º turno de 2026: que combinações de transferência, comparecimento e conversão fecham a diferença | registrada (descritiva) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G2 | Transferências do 1º para o 2º turno de 2022, por seção (inferência ecológica), e a faixa que elas dão para 2026 | registrada (descritiva; conferida pela B1) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G3 | Reserva de comparecimento: abstencionistas e votantes perdidos onde Lula lidera, por município e local de votação | registrada (descritiva; conferida pela B2) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G3b | A base de Lula falta mais no 2º turno onde não há governador em disputa | exploratória (vista depois da G2) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G4 | Ex-eleitores: votos de Lula no 2º turno de 2022 que faltaram no 1º turno de 2026, por lugar | registrada (descritiva) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G5 | Que tipo de lugar andou para o PT entre os turnos, de 2006 a 2022 | exploratória | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G6 | Pesquisas do 2º turno de 2026, com o erro do 1º turno descontado, e os cruzamentos por voto no 1º turno | exploratória | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G7 | O que está documentado sobre mobilização no dia da eleição e sobre o 2º turno de 2006 | documental | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `linha_do_tempo.csv` |
 
 ---
 
@@ -553,3 +561,161 @@ SIM de 2003–2005 e população zero de Nazária em 2004), que afetavam só o p
   canal próprio além da composição.
 - **Limite:** os nulos de E4, E5 e E7a rejeitam a exposição **local**; recessão, Lava Jato e
   violência também agiram como fatos nacionais, que caem na variação média de cada transição.
+
+### Série G: o caminho do 2º turno de 2026
+
+**Registrado em 2026-10-10, antes de qualquer conta da série.** Até aqui, dos dados que ela
+usa, só os totais nacionais por pleito e turno foram olhados: a diferença de 2,22 mi no 1º
+turno de 2026 e os ganhos de cada lado entre os turnos de 2006 e de 2022. Plano completo em
+[plano_segundo_turno.md](plano_segundo_turno.md).
+
+**Para que serve.** Medir, antes de 25/10, quanto cada caminho pode render para Lula e onde
+estão esses votos. A série é quase toda descritiva e não tem veredito. O que vale como teste
+é a conferência depois de 25/10, quando a B1 e a B2 medirem o que de fato aconteceu. A B4
+não muda: a previsão v2 continua em 24/10.
+
+**Definições.**
+
+- **D** = votos de Flávio − votos de Lula no 1º turno de 2026, com o exterior.
+- **Grupos de origem k** do 1º turno:
+  - eleitores de Lula, de Flávio e de cada eliminado;
+  - brancos e nulos;
+  - abstenção.
+- **p_k^L e p_k^F:** as frações de cada grupo que votam em Lula e em Flávio no 2º turno.
+- **Variação da margem entre os turnos:** ΔM = Σ_k N_k · (p_k^L − p_k^F). Lula vira se
+  ΔM > D.
+- **Três caminhos:**
+  - transferência: eliminados e brancos/nulos;
+  - comparecimento: abstencionistas do 1º turno que votam no 2º;
+  - conversão: eleitores de Flávio que passam a Lula, e o inverso. Cada um vale 2 na margem.
+
+#### G1 · aritmética
+
+- **O que se calcula:** a identidade acima, no país e por UF. Para cada caminho, o tamanho
+  do estoque N_k e a taxa líquida (p_k^L − p_k^F) que fecharia D sozinha.
+- **Série histórica:** ganho de votos do PT e do adversário entre os turnos, e variação do
+  comparecimento, de 2006 a 2022.
+- **Na página:** uma calculadora que aplica a identidade às taxas escolhidas pelo leitor.
+
+#### G2 · transferências de 2022, por seção
+
+- **Unidade:** a seção. Ela é casada entre os turnos por UF, município, zona e seção; as
+  sem par ficam de fora e são contadas.
+- **Origens no 1º turno de 2022:**
+  - Lula, Bolsonaro, Ciro, Tebet e os demais candidatos juntos;
+  - brancos + nulos;
+  - abstenção.
+- **Destinos no 2º turno:** Lula, Bolsonaro, brancos + nulos e abstenção. As frações são
+  sobre os aptos da seção (o cadastro é o mesmo nos dois turnos; a diferença é conferida).
+- **Estimador:**
+  - por UF, mínimos quadrados ponderados pelos aptos para a matriz B (origens × destinos),
+    com B ≥ 0 e cada linha somando 1;
+  - IC de 95% por bootstrap de municípios (200 réplicas);
+  - o nacional é a média das UFs ponderada pelos votos de cada origem.
+- **Validação:**
+  - recuperar uma matriz conhecida em dados sintéticos;
+  - informar a diferença entre os totais do 2º turno implicados por B e os oficiais;
+  - a retenção dos finalistas (Lula→Lula, Bolsonaro→Bolsonaro) precisa passar de 0,9. Se
+    não passar, o problema está no estimador, não no eleitor.
+- **Robustez (exploratória):** estimar por UF × faixa de tamanho, porque a taxa constante
+  dentro da UF é a principal fonte de viés.
+- **Uso para 2026, que não é previsão:** a faixa de taxas plausíveis para Cury, Renan e
+  Caiado vai das taxas dos eleitores de Tebet às dos demais candidatos (direita) de 2022,
+  confrontada com os cruzamentos das pesquisas (G6).
+- **Conferência depois de 25/10:** a B1, quando registrada, usa o mesmo estimador na
+  transição de 2026. Anotar onde cada taxa caiu em relação à faixa da G2.
+- **Expectativa do autor (prior, sem critério):** a maior parte do ganho de Bolsonaro entre os
+  turnos de 2022 veio dos eleitores de Ciro, Tebet e dos demais, não da abstenção.
+
+#### G3 · reserva de comparecimento
+
+- **Reserva líquida por unidade u** (seção, local de votação, município, UF):
+  R_u = A_u · (2p_u − 1).
+  - A_u: abstenções no 1º turno de 2026.
+  - p_u: Lula / (Lula + Flávio) no mesmo turno.
+  - R_u é o saldo de votos se os abstencionistas votassem como os votantes do lugar.
+- **Rendimento por ponto:** aptos_u · 0,01 · (2p_u − 1). São os votos líquidos de cada ponto
+  de comparecimento a mais.
+- **Votantes perdidos:** P_u = (t_u,2T-2022 − t_u,1T-2026) · aptos_u,2026, quando positivo
+  (t é a taxa de comparecimento).
+  - Por município pelo painel.
+  - Por local de votação, casando os locais de 2022 e 2026 por município, zona e número do
+    local, com o nome igual depois de normalizado. A taxa de casamento é informada.
+- **Lição de 2022:** variação do comparecimento entre os turnos, por seção, contra p_u do
+  1º turno, com efeito fixo de município e peso dos aptos. Junto, a linha "abstenção" da
+  matriz da G2.
+- **Ressalva:** (2p − 1) supõe que quem se absteve votaria como quem votou no mesmo lugar. Os
+  abstencionistas têm outro perfil, e parte deles é cadastro inflado. A linha "abstenção"
+  da G2 mostra quanto essa suposição errou em 2022.
+- **Conferência depois de 25/10:** a B2 mede onde o comparecimento subiu no 2º turno de 2026 e
+  a quem favoreceu.
+
+#### G3b · a base que falta onde não há governador em disputa (exploratória)
+
+**Adendo de 2026-10-10, depois de ver a G2.** É exploratória: a ideia veio do próprio
+resultado, que mostra 2,6% dos eleitores de Lula no 1º turno de 2022 sem votar no 2º, contra
+~0% dos de Bolsonaro.
+
+- **Pergunta:** a perda da base entre os turnos foi maior nas UFs sem 2º turno para
+  governador?
+- **Medida:** a linha "Lula → abstenção" da matriz de cada UF, em média ponderada pelos votos
+  de Lula. É comparada entre as UFs com e sem 2º turno para governador em 2022 (cadastro de
+  candidatos do TSE), e o mesmo é feito para o adversário.
+- **Uso para 2026:** lista das UFs com 2º turno para governador em 2026 e os votos de Lula no
+  1º turno nas que não têm.
+- **Limite:** são 27 unidades, e a diferença se mistura com a região (as UFs do Norte sem
+  2º turno local têm as maiores perdas). Não vira afirmação sem registro próprio.
+
+#### G4 · ex-eleitores
+
+- **Decomposição:** LMDI (`features/decomposicao.py`) dos votos de Lula do 2º turno de 2022
+  para o 1º turno de 2026, por AMC, nos componentes eleitorado, comparecimento, válidos e
+  fatia.
+- **Alvo de persuasão:** a parcela "fatia" negativa, em votos. São lugares onde quem votou
+  deixou de votar em Lula; no nível de pessoa é ecológico, já que troca de eleitores conta
+  como fatia.
+- **Tabelas:** por UF × faixa de tamanho (as faixas da A8), com a mesma conta do 1º turno de
+  2022 ao 1º de 2026 (A8) para comparar.
+- **Perfil (exploratório):** médias ponderadas das covariáveis nas AMCs que concentram 50% da
+  fatia perdida, contra as demais.
+- **Ressalva:** comparar o 2º turno de 2022 com o 1º de 2026 mistura a dinâmica entre turnos,
+  e isso é dito junto do número.
+
+#### G5 · quem se moveu entre os turnos (exploratória)
+
+- **Modelo:** Δ logit(`pt_2p`) do 1º para o 2º turno, em cada eleição de 2006 a 2022, contra
+  log(aptos), nível do 1º turno, % evangélica, renda, cobertura do Auxílio Brasil (só 2022) e
+  efeito fixo de UF.
+- **Estimação:** peso dos aptos e erros agrupados por região imediata.
+- **Sem veredito:** serve para dizer que tipo de lugar se moveu no 2º turno.
+
+#### G6 · pesquisas (exploratória)
+
+- **Fonte:** pesquisas de 2º turno de 2026 desde 06/10, em votos válidos, em
+  `pesquisas_2026.csv` com `turno=2`.
+- **Correção:** a de `alvo_das_pesquisas` da B4 (λ × o viés de cada instituto no 1º turno),
+  com a faixa de λ entre 0 e 1. É leitura do momento, não previsão.
+- **Cruzamentos:** voto no 2º turno por voto no 1º, quando publicados, em
+  `pesquisas_2t_cruzamentos.csv`.
+- **Conferência:** ~20% das pesquisas conferidas na fonte, e todas as que entram nos
+  cruzamentos.
+
+#### G7 · documental
+
+Itens em `linha_do_tempo.csv`, com o grau de evidência da série F (documentado, reportado,
+alegado, refutado) e a fonte conferida:
+
+- transporte gratuito no dia da eleição em 2022;
+- operações da PRF no 2º turno de 2022;
+- evidência experimental sobre mobilização porta a porta;
+- a campanha do 2º turno de 2006.
+
+#### Síntese
+
+Uma tabela de alavancas. Cada linha traz o estoque, a faixa de taxas e de onde ela vem (G2,
+G3 ou G6), o ganho líquido em votos, onde ele está e o que fazer. As recomendações levam selo
+de inferência: os dados dizem onde e quanto, não qual mensagem.
+
+**Premissa do plano e o que a derrubaria:** só transferência não fecha D. A premissa cai se,
+com as taxas de 2022 (G2) ou com as dos cruzamentos (G6), o saldo líquido das transferências
+for ≥ D.

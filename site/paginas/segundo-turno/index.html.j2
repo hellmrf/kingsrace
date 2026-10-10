@@ -1,0 +1,196 @@
+{% extends "base.html.j2" %}
+{% import "macros.html.j2" as m with context %}
+{% set e = estoques_mi %}
+{% set perfil = cenarios.perfil %}
+{% set p22 = padrao_2022 %}
+{% set eliminados_mi = e.eliminados %}
+{% block titulo %}Como virar: o 2º turno em números{% endblock %}
+{% block descricao %}Flávio largou {{ diferenca_mi|mi }} de votos à frente. Se o 2º turno repetir o padrão de 2022, a diferença vai a {{ (-perfil.margem_mi)|mi }}. Onde estão os votos que podem virar a eleição, e quanto cada caminho rende.{% endblock %}
+
+{% block corpo %}
+<header class="capa coluna">
+  <span class="rotulo">kingsrace · 2º turno de 25 de outubro de 2026</span>
+  <h1>Como virar</h1>
+  <p class="lede">Flávio Bolsonaro terminou o 1º turno com <b class="num">{{ diferenca_mi|mi }}</b> de votos a mais que Lula. Isso é o ponto de partida, não o tamanho do desafio: se os eleitores se moverem entre os turnos como se moveram em 2022, a diferença cresce para cerca de <b class="num">{{ (-perfil.margem_mi)|mi }}</b>. É uma conta, não uma previsão: mostra o padrão que precisa ser quebrado. Esta página mostra de onde viria essa perda, quanto cada caminho pode render e onde estão os votos, município por município e escola por escola.</p>
+  <div class="placar">
+    <div><span class="rotulo">diferença no 1º turno</span><span class="grande adv num">{{ (-diferenca_mi)|sinal }} mi</span><p>Lula − Flávio, com o exterior. Fonte: TSE.</p></div>
+    <div><span class="rotulo">se 2022 se repetir</span><span class="grande adv num">{{ perfil.margem_mi|sinal }} mi</span><p>Margem de Lula no 2º turno com as taxas de 2022 entre os turnos (faixa dos cenários: {{ cenarios.como_direita.margem_mi|sinal }} a {{ cenarios.como_ciro.margem_mi|sinal }} mi).</p></div>
+    <div><span class="rotulo">pesquisas (8/10)</span><span class="grande adv num">{{ b4_central_pct|br }}%</span><p>Lula entre os dois, na previsão congelada em 8/10 a partir do Datafolha, descontada metade do erro do instituto no 1º turno.</p></div>
+  </div>
+  {{ m.legenda_selos(["descritivo", "exploratorio", "inferencia"]) }}
+</header>
+
+<nav class="indice" aria-label="Seções">
+  <ol>
+    <li><a href="#partida"><span>1</span>O ponto de partida</a></li>
+    <li><a href="#pesa"><span>2</span>O que mais pesa</a></li>
+    <li><a href="#calculadora"><span>3</span>Calculadora</a></li>
+    <li><a href="#base"><span>4</span>A base que falta</a></li>
+    <li><a href="#onde"><span>5</span>Onde estão os votos</a></li>
+    <li><a href="#fazer"><span>6</span>O que fazer</a></li>
+    <li><a href="#direcao"><span>7</span>Para a direção</a></li>
+    <li><a href="#metodo"><span>8</span>Método</a></li>
+  </ol>
+</nav>
+
+<main>
+{% call m.secao("partida", 1, "o ponto de partida", "O 2º turno não é uma repetição do 1º") %}
+  <div class="texto coluna">
+    <p>{{ m.selo("descritivo", "G1") }}</p>
+    <p>Em 2022, do 1º para o 2º turno, Bolsonaro ganhou <b class="num">{{ entre_turnos["2022"].adv_mi|mi }}</b> de votos e Lula, <b class="num">{{ entre_turnos["2022"].pt_mi|mi }}</b>. Lula venceu porque tinha largado {{ entre_turnos["2022"].vantagem_pt_1t_mi|mi }} à frente. Agora larga atrás.</p>
+    <p>O 2º turno pode mudar o jogo. Em 2006, Lula ganhou {{ entre_turnos["2006"].pt_mi|mi }} de votos entre os turnos e Alckmin <em>perdeu</em> {{ (-entre_turnos["2006"].adv_mi)|mi }}: é a única vez na série em que o adversário do PT saiu do 2º turno com menos votos do que entrou.</p>
+  </div>
+  {% call m.figura("G1_entre_turnos", "Votos ganhos do 1º para o 2º turno", "Milhões de votos, PT e principal adversário, de 2006 a 2022", "Fonte: TSE. Etapa segundo_turno, gráfico G1_entre_turnos.") %}{% endcall %}
+{% endcall %}
+
+{% call m.secao("pesa", 2, "o que mais pesa", "Se 2022 se repetir, de onde viria a perda") %}
+  <div class="texto coluna">
+    <p>{{ m.selo("descritivo", "G2") }}</p>
+    <p>Em 2022, cada seção eleitoral teve o mesmo eleitorado nos dois turnos. Comparando 471 mil seções, dá para estimar para onde foi, em média, cada grupo de eleitores do 1º turno. Aplicamos essas taxas, estado por estado, aos eleitores de 2026.</p>
+    <p>O resultado: a margem de Lula iria de {{ (-diferenca_mi)|sinal }} para <b class="num">{{ perfil.margem_mi|sinal }} milhões</b>. As duas maiores perdas vêm de lugares diferentes. Uma é a própria base: pela estimativa, em 2022 {{ (p22.perda_base)|pct }} dos eleitores de Lula no 1º turno não votaram nele no 2º, contra {{ (p22.perda_flavio)|pct }} dos de Bolsonaro. Em 2026, isso custaria {{ (-efeito_perfil_mi.pt)|mi }}. A outra são os eleitores de Renan Santos e Ronaldo Caiado, que em 2022 se pareceriam com a direita que votou em Soraya, d'Avila e Kelmon: {{ (-efeito_perfil_mi.renan_caiado)|mi }}.</p>
+  </div>
+  {% call m.figura("G2_efeito_por_origem", "Quanto cada grupo do 1º turno move a margem de Lula", "Milhões de votos em relação ao 1º turno, com as taxas de 2022 (cenário: cada eliminado como o mais parecido de 2022)", "Fonte: TSE, seções de 2022 e 2026. Etapa segundo_turno, gráfico G2_efeito_por_origem.") %}{% endcall %}
+  <div class="texto coluna">
+    <p>Os eleitores dos eliminados somam {{ eliminados_mi|mi }}. Quanto eles pesam depende de com quem se parecem. Nos quatro cenários abaixo, Flávio vence por {{ (-cenarios.como_ciro.margem_mi)|mi }} a {{ (-cenarios.como_direita.margem_mi)|mi }}. A previsão de 8 de outubro, feita só com pesquisas e por outro caminho, dava a Lula {{ b4_central_pct|br }}% dos votos entre os dois, o que também é uma desvantagem dessa ordem.</p>
+  </div>
+  <div class="coluna tabela-rola">
+    <table>
+      <thead><tr><th>Cenário para os eleitores dos eliminados</th><th class="n">Margem de Lula</th><th class="n">IC 95%</th></tr></thead>
+      <tbody>
+      {% for nome in ["como_ciro", "como_tebet", "perfil", "como_direita"] %}
+        {% set c = cenarios[nome] %}
+        <tr><td>{{ c.rotulo }}</td><td class="n">{{ c.margem_mi|sinal }} mi</td><td class="n">{{ c.ic_inf_mi|sinal }} a {{ c.ic_sup_mi|sinal }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="nao-diz coluna"><strong>O que isso não diz.</strong> 2026 não é 2022: Lula agora é o governo, o adversário é outro e a campanha é outra. As taxas mostram o padrão a vencer, não um destino. A estimativa também só vê o saldo de cada grupo: quem troca Bolsonaro por Lula e quem troca Lula por Bolsonaro se anulam na conta. O intervalo cobre o erro da estimativa, não a chance de 2026 ser diferente de 2022.</p>
+{% endcall %}
+
+{% call m.secao("calculadora", 3, "calculadora", "Quanto cada mudança rende") %}
+  <div class="texto coluna">
+    <p>{{ m.selo("descritivo", "G1") }}</p>
+    <p>A calculadora começa no padrão de 2022. Mude uma alavanca e veja quanto ela move a margem. Para virar, a margem precisa passar de zero, e nenhuma alavanca sozinha chega lá sem um salto grande. Exemplo: cada 1% dos eleitores de Flávio que passa a votar em Lula vale {{ valor_1pct_mi.conversao|mi(2) }}, porque o voto sai de um lado e entra no outro.</p>
+  </div>
+  <div class="coluna calc" data-calculadora>
+    <div class="calc-resultado" aria-live="polite">
+      <span class="rotulo">margem de Lula no 2º turno</span>
+      <span class="grande adv num" data-calc-margem>{{ perfil.margem_mi|sinal }} mi</span>
+      <p data-calc-veredito>Flávio vence por {{ (-perfil.margem_mi)|mi }} de votos</p>
+      <p class="nota" data-calc-desvio>padrão de 2022</p>
+    </div>
+    {% set alavancas = [
+      ("perda_base", "Eleitores de Lula no 1º turno que não votam nele no 2º", "em 2022: " ~ p22.perda_base|pct, e.pt|mi ~ " de eleitores"),
+      ("conversao", "Eleitores de Flávio que passam a votar em Lula", "em 2022: saldo perto de zero", e.adv|mi ~ "; cada um vale 2 na margem"),
+      ("saldo_eliminados", "Eleitores dos eliminados: Lula menos Flávio", "padrão de 2022: " ~ (100 * p22.saldo_eliminados)|sinal(0) ~ " pp", eliminados_mi|mi ~ " de Cury, Renan, Caiado, Zema e outros"),
+      ("abst_votam", "Quem não votou no 1º turno e vota no 2º", "em 2022: " ~ p22.abst_votam|pct, e.abst|mi ~ " de eleitores"),
+      ("abst_lula", "Desses, quantos votam em Lula", "em 2022: " ~ p22.abst_lula|pct(0), "entre os dois"),
+      ("saldo_bn", "Brancos e nulos do 1º turno: Lula menos Flávio", "em 2022: " ~ (100 * p22.saldo_bn)|sinal(0) ~ " pp", e.bn|mi ~ " de votos"),
+      ("perda_flavio", "Eleitores de Flávio no 1º turno que não votam nele", "em 2022: " ~ p22.perda_flavio|pct, ""),
+    ] %}
+    <div class="calc-alavancas">
+    {% for id, rotulo, ref, base in alavancas %}
+      <label class="alavanca">
+        <span class="a-rotulo">{{ rotulo }}</span>
+        <input type="range" name="{{ id }}" disabled>
+        <span class="a-valor num" data-calc-valor="{{ id }}">—</span>
+        <span class="a-ref">{{ ref }}{% if base %} · {{ base }}{% endif %}</span>
+        <span class="a-efeito num" data-calc-efeito="{{ id }}">±0,00 mi</span>
+      </label>
+    {% endfor %}
+    </div>
+    <button type="button" class="botao-sec" data-calc-reinicia hidden>Voltar ao padrão de 2022</button>
+    <noscript><p class="aviso">A calculadora precisa de JavaScript. Os números de partida estão na seção 2.</p></noscript>
+  </div>
+{% endcall %}
+
+{% call m.secao("base", 4, "a base que falta", "Onde não há governador em disputa, a base de Lula falta mais") %}
+  <div class="texto coluna">
+    <p>{{ m.selo("exploratorio", "G3b") }}</p>
+    <p>Em 2022, nos estados sem 2º turno para governador, {{ g3b["2022"].pt.sem_governador.abst|pct }} dos eleitores de Lula no 1º turno não votaram no 2º. Nos estados com 2º turno para governador, foram {{ g3b["2022"].pt.com_governador.abst|pct }}. Entre os eleitores de Bolsonaro, {{ g3b["2022"].adv.sem_governador.abst|pct }} e {{ g3b["2022"].adv.com_governador.abst|pct }}.</p>
+    <p>Em 2026, só {{ governador_2t_2026|length }} estados têm 2º turno para governador: {{ governador_2t_2026|join(", ") }}. Nos outros {{ sem_governador_2026|length }}, entre eles São Paulo, Minas Gerais, Bahia, Pernambuco e Ceará, a eleição de 25 de outubro é só para presidente. Lá estão <b class="num">{{ g3b["2026"].votos_lula_sem_governador_mi|mi }}</b> dos votos de Lula no 1º turno.</p>
+  </div>
+  <p class="nao-diz coluna"><strong>O que isso não diz.</strong> São 27 estados, e a diferença se mistura com a região: as maiores perdas de 2022 estão em estados do Norte sem disputa local. Notamos isso depois de ver os dados, então é uma pista, não uma conclusão.</p>
+{% endcall %}
+
+{% call m.secao("onde", 5, "onde estão os votos", "Onde mobilizar e onde conversar") %}
+  <div class="texto coluna">
+    <p>{{ m.selo("descritivo", "G3 · G4") }}</p>
+    <p><b>Mobilizar.</b> {{ g3.nao_votou_mi|mi }} de eleitores não votaram no 1º turno. Onde Lula lidera, cada ponto a mais de comparecimento rende cerca de <b class="num">{{ g3.rendimento_pp_lula_mil|mil }}</b> votos líquidos, se quem for votar se dividir como quem já votou no lugar. Na seção 2 há a ressalva: em 2022, quem foi votar só no 2º turno pendeu para Bolsonaro.</p>
+    <p><b>Conversar.</b> Do 2º turno de 2022 ao 1º de 2026, Lula perdeu {{ (-g4.delta)|mi }} de votos. A perda está toda na fatia de Lula entre quem votou ({{ g4.fatia|sinal }} milhões); o eleitorado cresceu ({{ g4.eleitorado|sinal }} milhão) e a abstenção quase não mudou. Em proporção, os municípios pequenos perderam mais. Em votos, o maior pedaço está nas cidades grandes: {{ (-g4_faixa_mil["100_500_mil"] / 1000)|mi }} nas de 100 a 500 mil eleitores e {{ (-g4_faixa_mil["500_mil"] / 1000)|mi }} nas de mais de 500 mil. Por estado, São Paulo, Minas Gerais, Bahia e Rio Grande do Sul lideram.</p>
+  </div>
+  <div class="par">
+    {% call m.figura("G3_reserva_uf", "Reserva de comparecimento", "Mil votos líquidos se todos que não votaram nos municípios onde Lula lidera votassem como os vizinhos", "Fonte: TSE. Etapa segundo_turno, gráfico G3_reserva_uf.") %}{% endcall %}
+    {% call m.figura("G4_fatia_uf", "Ex-eleitores de Lula", "Mil votos perdidos na fatia de Lula, 2º turno de 2022 → 1º de 2026", "Fonte: TSE. Etapa segundo_turno, gráfico G4_fatia_uf.") %}{% endcall %}
+  </div>
+  <div class="coluna busca" data-busca>
+    <h3>Seu município e seus locais de votação</h3>
+    <p class="nota">Digite o nome do município. Escolha um para ver os locais de votação, ordenados pelo rendimento de cada ponto de comparecimento.</p>
+    <input type="search" placeholder="Ex.: Feira de Santana" aria-label="Buscar município" disabled>
+    <div class="tabela-rola" data-busca-municipios>
+      <table>
+        <thead><tr><th>Município</th><th class="n">Eleitores</th><th class="n">Lula*</th><th class="n">Abstenção</th><th class="n">Votos por ponto</th><th class="n">Votantes perdidos</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="tabela-rola" data-busca-locais hidden>
+      <p class="titulo-graf" data-busca-titulo></p>
+      <table>
+        <thead><tr><th>Local</th><th>Bairro</th><th class="n">Eleitores</th><th class="n">Abstenção</th><th class="n">Lula*</th><th class="n">Votos por ponto</th><th class="n">Votantes perdidos</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="nota">* Lula entre os dois no 1º turno. "Votos por ponto": votos líquidos para Lula a cada ponto de comparecimento a mais (negativo onde Flávio lidera). "Votantes perdidos": quantos votaram no 2º turno de 2022 e não no 1º de 2026, pela taxa de comparecimento ({{ locais_casados|pct(0) }} dos locais casados entre os dois anos). Listas completas por estado:
+    {% for uf in (governador_2t_2026 + sem_governador_2026)|sort %}<a href="{{ raiz }}dados/segundo-turno/listas/{{ uf }}.csv" download>{{ uf }}</a>{{ ", " if not loop.last else "." }}{% endfor %}</p>
+  </div>
+{% endcall %}
+
+{% call m.secao("fazer", 6, "o que fazer", "Cinco frentes, em ordem de peso") %}
+  <div class="texto coluna">
+    <p>{{ m.selo("inferencia") }} Os dados dizem onde e quanto, não qual mensagem. O que segue é a nossa leitura dos números acima.</p>
+  </div>
+  <div class="cartoes coluna">
+    <div class="cartao"><h3>1. Segurar quem já votou em Lula</h3><p>É a maior perda do padrão de 2022 ({{ (-efeito_perfil_mi.pt)|mi }}) e a que depende só da própria campanha. O risco cresce nos {{ sem_governador_2026|length }} estados sem governador em disputa. Lembrar a data, organizar transporte e buscar o eleitor nos locais onde Lula teve mais votos.</p></div>
+    <div class="cartao"><h3>2. Disputar os eleitores de Renan, Caiado e Cury</h3><p>São {{ eliminados_mi|mi }}. Com o padrão da direita de 2022, Renan e Caiado sozinhos tirariam {{ (-efeito_perfil_mi.renan_caiado)|mi }} da margem. Cada ponto que Lula ganha nesse saldo vale {{ (1000 * valor_1pct_mi.eliminados)|mil }} votos.</p></div>
+    <div class="cartao"><h3>3. Reconquistar ex-eleitores</h3><p>{{ (-g4.fatia)|mi }} de pessoas votaram em Lula no 2º turno de 2022 e não no 1º de 2026, sobretudo em São Paulo, Minas, Bahia, Rio Grande do Sul e Paraná, e nas cidades grandes. Quem volta de Flávio para Lula vale dois votos na margem.</p></div>
+    <div class="cartao"><h3>4. Trazer quem ficou em casa, onde Lula lidera</h3><p>Cada ponto de comparecimento nos municípios em que Lula lidera rende {{ g3.rendimento_pp_lula_mil|mil }} votos líquidos. A busca da seção 5 mostra os locais com maior rendimento.</p></div>
+    <div class="cartao"><h3>5. Brancos e nulos</h3><p>São {{ e.bn|mi }}. Em 2022 penderam para Bolsonaro no 2º turno. É a frente menor.</p></div>
+  </div>
+{% endcall %}
+
+{% call m.secao("direcao", 7, "para a direção", "A matriz de 2022 e as checagens") %}
+  <div class="texto coluna">
+    <p>{{ m.selo("descritivo", "G2") }} Para onde foi cada grupo de eleitores do 1º turno de 2022, no país (média das estimativas por estado, com intervalo de 95% por reamostragem de municípios).</p>
+  </div>
+  <div class="coluna tabela-rola">
+    <table>
+      <thead><tr><th>No 1º turno de 2022</th><th class="n">Lula</th><th class="n">Bolsonaro</th><th class="n">Branco ou nulo</th><th class="n">Não votou</th></tr></thead>
+      <tbody>
+      {% for o in ["pt", "adv", "tebet", "ciro", "direita", "esquerda", "bn", "abst"] %}
+        <tr><td>{{ rotulo_origem[o] }}</td>
+        {% for d in ["pt", "adv", "bn", "abst"] %}<td class="n">{{ matriz[o][d].b|pct }}</td>{% endfor %}</tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="texto coluna">
+    <p>Checagens registradas antes da conta: a retenção dos finalistas ({{ validacao.retencao_pt|pct }} e {{ validacao.retencao_adv|pct }}) passa do mínimo de 90%; os totais do 2º turno de 2022 implicados pela matriz diferem dos oficiais em {{ validacao.implicado_menos_real_mil.pt|sinal(0) }} mil votos para Lula e {{ validacao.implicado_menos_real_mil.adv|sinal(0) }} mil para Bolsonaro.</p>
+  </div>
+{% endcall %}
+
+{% call m.secao("metodo", 8, "método", "Como os números foram feitos") %}
+  <div class="texto coluna">
+    <p>Dados: votação e comparecimento por seção eleitoral do TSE (2022 e 2026), cadastro de locais de votação de 2026 e cadastro de candidatos (2º turno para governador). As contas foram registradas antes de olhar os resultados, com o que contaria contra cada uma.</p>
+    <p>A matriz de transição vem de uma regressão por seção, dentro de cada estado, com as taxas entre 0 e 1 e cada linha somando 1. É inferência ecológica: diz como grupos de seções se moveram, não o que cada eleitor fez. A reserva de comparecimento supõe que quem não votou votaria como os vizinhos que votaram, e a seção 2 mostra que, em 2022, não foi assim.</p>
+    <p>Depois de 25 de outubro, os mesmos métodos medem o que aconteceu de fato, e cada faixa desta página será conferida em público.</p>
+  </div>
+{% endcall %}
+</main>
+{% endblock %}
+
+{% block rodape %}
+<script type="module">
+  import { iniciar } from "{{ raiz }}estatico/js/paginas/segundo-turno.js";
+  iniciar("{{ raiz }}dados/segundo-turno/");
+</script>
+{% endblock %}

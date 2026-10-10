@@ -1,0 +1,137 @@
+[
+    {
+        "uf": "BA",
+        "reserva_lula_mil": 896.0947472219474,
+        "rendimento_pp_lula_mil": 45.10272456005934
+    },
+    {
+        "uf": "PE",
+        "reserva_lula_mil": 481.02923413563497,
+        "rendimento_pp_lula_mil": 25.055338706004147
+    },
+    {
+        "uf": "CE",
+        "reserva_lula_mil": 391.18923805593266,
+        "rendimento_pp_lula_mil": 23.787277753273404
+    },
+    {
+        "uf": "MA",
+        "reserva_lula_mil": 386.6592858484715,
+        "rendimento_pp_lula_mil": 18.777150735413574
+    },
+    {
+        "uf": "MG",
+        "reserva_lula_mil": 250.89093777444614,
+        "rendimento_pp_lula_mil": 9.4974579186922
+    },
+    {
+        "uf": "PI",
+        "reserva_lula_mil": 231.76461264925442,
+        "rendimento_pp_lula_mil": 13.332013006401834
+    },
+    {
+        "uf": "PB",
+        "reserva_lula_mil": 179.8244669701165,
+        "rendimento_pp_lula_mil": 9.753034269564896
+    },
+    {
+        "uf": "SP",
+        "reserva_lula_mil": 159.24074771862337,
+        "rendimento_pp_lula_mil": 6.89945393342027
+    },
+    {
+        "uf": "PA",
+        "reserva_lula_mil": 154.98284939148414,
+        "rendimento_pp_lula_mil": 8.683131363089673
+    },
+    {
+        "uf": "RN",
+        "reserva_lula_mil": 128.2484149395673,
+        "rendimento_pp_lula_mil": 7.093296543891781
+    },
+    {
+        "uf": "AL",
+        "reserva_lula_mil": 108.08601107053612,
+        "rendimento_pp_lula_mil": 4.775316088907633
+    },
+    {
+        "uf": "SE",
+        "reserva_lula_mil": 106.6671503719171,
+        "rendimento_pp_lula_mil": 5.987533284269207
+    },
+    {
+        "uf": "AM",
+        "reserva_lula_mil": 90.62215258652125,
+        "rendimento_pp_lula_mil": 3.9671207969015443
+    },
+    {
+        "uf": "RS",
+        "reserva_lula_mil": 40.655149506828266,
+        "rendimento_pp_lula_mil": 1.6538162290706322
+    },
+    {
+        "uf": "TO",
+        "reserva_lula_mil": 15.593494250644543,
+        "rendimento_pp_lula_mil": 0.797912066059306
+    },
+    {
+        "uf": "RJ",
+        "reserva_lula_mil": 6.7411975222231515,
+        "rendimento_pp_lula_mil": 0.3220428224665001
+    },
+    {
+        "uf": "ES",
+        "reserva_lula_mil": 6.441770314216841,
+        "rendimento_pp_lula_mil": 0.25703344026691677
+    },
+    {
+        "uf": "GO",
+        "reserva_lula_mil": 6.187518839703672,
+        "rendimento_pp_lula_mil": 0.23172442510256344
+    },
+    {
+        "uf": "AP",
+        "reserva_lula_mil": 5.2375369382012975,
+        "rendimento_pp_lula_mil": 0.24566594707582431
+    },
+    {
+        "uf": "PR",
+        "reserva_lula_mil": 3.913995704048374,
+        "rendimento_pp_lula_mil": 0.18130114083624888
+    },
+    {
+        "uf": "MT",
+        "reserva_lula_mil": 2.678732945112332,
+        "rendimento_pp_lula_mil": 0.1252156107941831
+    },
+    {
+        "uf": "MS",
+        "reserva_lula_mil": 2.484348205811641,
+        "rendimento_pp_lula_mil": 0.09080875243463253
+    },
+    {
+        "uf": "RR",
+        "reserva_lula_mil": 0.4756811217865491,
+        "rendimento_pp_lula_mil": 0.03612327187743444
+    },
+    {
+        "uf": "SC",
+        "reserva_lula_mil": 0.40339426894358155,
+        "rendimento_pp_lula_mil": 0.019850640718038756
+    },
+    {
+        "uf": "AC",
+        "reserva_lula_mil": 0.23493796535786787,
+        "rendimento_pp_lula_mil": 0.01072940666837706
+    },
+    {
+        "uf": "DF",
+        "reserva_lula_mil": 0.0,
+        "rendimento_pp_lula_mil": 0.0
+    },
+    {
+        "uf": "RO",
+        "reserva_lula_mil": 0.0,
+        "rendimento_pp_lula_mil": 0.0
+    }
+]
