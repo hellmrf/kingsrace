@@ -232,6 +232,25 @@ para `hipoteses.md`; o DVC não via nenhum resultado. Agora:
 
 ---
 
+## D11 — Zips de Estabelecimentos do CNPJ fora do DVC; `just status`
+
+**Data:** 2026-10-10 · **Status:** em vigor; revê em parte D7
+
+- **O problema:** os 10 zips de Estabelecimentos (~11 GB) são baixados, processados e
+  apagados um por vez (D7), mas continuavam declarados como saídas do DVC (`dvc import-url`).
+  O `dvc status` acusava os 10 como "not in cache" para sempre, e o aviso esperado se
+  confundia com um problema real.
+- **Agora:** esses zips saem do DVC. URL, md5 e tamanho de cada um ficam em
+  `data/reference/fontes_receita.csv` (como os brutos do FTP em `fontes_ftp.csv`). A ingestão
+  baixa direto, confere o md5 com o anotado (para a ingestão se a Receita trocar o arquivo da
+  mesma versão) e apaga depois de processar. Empresas, Simples e Municípios (~1,3 GB) ficam no
+  disco e no DVC como antes, com `push: false`.
+- **`Naturezas.zip.dvc` removido:** nenhum código o usava e o arquivo não existia.
+- **`just status`:** o `dvc status` sem os ~60 avisos de etapa congelada (cada `dvc
+  import-url` é congelado por definição; o DVC não tem opção para silenciá-los).
+
+---
+
 ## Armadilhas metodológicas (valem para todas as análises)
 
 - **Falácia ecológica:** escrever conclusões em nível de lugar ("municípios com X"),

@@ -1,7 +1,7 @@
 """CNPJ da Receita Federal: organizações religiosas (E2b) e MEIs (E7a).
 
-Arquivos brutos em data/raw/receita/cnpj_<versão>/ (dvc import-url do compartilhamento
-público da Receita). CSVs sem cabeçalho, `;`, latin-1, um por zip. Cada CSV é extraído para
+Arquivos brutos em data/raw/receita/cnpj_<versão>/, do compartilhamento público da Receita.
+CSVs sem cabeçalho, `;`, latin-1, um por zip. Cada CSV é extraído para
 o disco já convertido para UTF-8 (`csv_extraido`), lido pelo DuckDB e apagado:
 
 - a extensão `zipfs` do DuckDB descomprime o arquivo inteiro na memória (7 GB num zip de
@@ -15,7 +15,10 @@ situação atual.
 
 Os brutos não ficam no disco nem no R2 (decisões D7): `python -m kingsrace.ingest.receita
 todos` baixa cada zip de Estabelecimentos, extrai dele uma parte pequena e apaga a cópia
-local (o `.dvc` guarda URL e hash). Saídas em data/interim/receita/:
+local. Esses zips (~11 GB por versão) ficam fora do DVC: URL, md5 e tamanho de cada um vão
+para data/reference/fontes_receita.csv, e um novo download precisa bater com o md5 anotado.
+Os demais (Empresas, Simples, Municipios) ficam no disco, via `dvc import-url` com
+`push: false`. Saídas em data/interim/receita/:
 
 - `religiosas.parquet`: estabelecimentos (matriz e filiais) com CNAE principal 9491-0/00,
   com razão social e natureza jurídica da empresa e a data em que deixaram de existir;
@@ -23,6 +26,8 @@ local (o `.dvc` guarda URL e hash). Saídas em data/interim/receita/:
 - `municipios_receita.parquet`: código da Receita, nome e UF (a tabela da Receita não tem UF).
 """
 
+import csv
+import hashlib
 import os
 import subprocess
 import sys
@@ -32,6 +37,7 @@ from contextlib import contextmanager
 from pathlib import Path
 
 import duckdb
+import httpx
 import yaml
 
 from kingsrace import paths
@@ -41,6 +47,7 @@ URL = (
     "https://arquivos.receitafederal.gov.br/public.php/dav/files/gn672Ad4CF8N6TK/"
     "Dados/Cadastros/CNPJ/{versao}/{arquivo}"
 )
+FONTES = paths.REFERENCE / "fontes_receita.csv"
 CNAE_RELIGIOSA = "9491000"
 # situação cadastral que encerra o CNPJ na data da situação: 1 nula, 4 inapta, 8 baixada
 SITUACOES_FIM = (1, 4, 8)
@@ -277,12 +284,57 @@ def baixa(arquivo: str, versao: str = VERSAO) -> Path:
     return raw / arquivo
 
 
-def apaga_local(arquivo: Path) -> None:
-    """Apaga o arquivo e o objeto do cache do DVC (fica só o `.dvc`, com URL e hash)."""
-    md5 = yaml.safe_load(Path(f"{arquivo}.dvc").read_text())["outs"][0]["md5"]
-    cache = paths.ROOT / ".dvc" / "cache" / "files" / "md5" / md5[:2] / md5[2:]
-    arquivo.unlink(missing_ok=True)
-    cache.unlink(missing_ok=True)
+def registra_fonte(fonte: dict[str, str | int], fontes: Path = FONTES) -> None:
+    """Anota versão, arquivo, URL, md5 e tamanho; se já anotado, o md5 tem de bater.
+
+    Um md5 diferente para a mesma versão quer dizer que a Receita trocou o arquivo: os
+    resultados deixariam de ser reprodutíveis, então a ingestão para.
+    """
+    campos = ["versao", "arquivo", "url", "md5", "tamanho"]
+    linhas = list(csv.DictReader(fontes.open())) if fontes.exists() else []
+    for linha in linhas:
+        if (linha["versao"], linha["arquivo"]) == (fonte["versao"], fonte["arquivo"]):
+            if linha["md5"] != fonte["md5"]:
+                raise ValueError(
+                    f"{fonte['arquivo']} ({fonte['versao']}) mudou na origem: md5 "
+                    f"{fonte['md5']}, anotado {linha['md5']} em {fontes.name}"
+                )
+            return
+    linhas.append({c: fonte[c] for c in campos})
+    linhas.sort(key=lambda linha: (linha["versao"], linha["arquivo"]))
+    with fontes.open("w", newline="") as f:
+        escritor = csv.DictWriter(f, fieldnames=campos)
+        escritor.writeheader()
+        escritor.writerows(linhas)
+
+
+def baixa_temporario(arquivo: str, versao: str = VERSAO) -> Path:
+    """Baixa um zip que não fica no disco (Estabelecimentos) e confere/anota o md5."""
+    raw, _ = pastas(versao)
+    destino = raw / arquivo
+    url = URL.format(versao=versao, arquivo=arquivo)
+    md5, tamanho = hashlib.md5(), 0
+    with httpx.stream("GET", url, follow_redirects=True, timeout=None) as resposta:
+        resposta.raise_for_status()
+        with destino.open("wb") as f:
+            for bloco in resposta.iter_bytes(1 << 20):
+                f.write(bloco)
+                md5.update(bloco)
+                tamanho += len(bloco)
+    try:
+        registra_fonte(
+            {
+                "versao": versao,
+                "arquivo": arquivo,
+                "url": url,
+                "md5": md5.hexdigest(),
+                "tamanho": tamanho,
+            }
+        )
+    except ValueError:
+        destino.unlink()
+        raise
+    return destino
 
 
 def todos(versao: str = VERSAO) -> None:
@@ -298,9 +350,9 @@ def todos(versao: str = VERSAO) -> None:
             continue  # já processado (permite retomar depois de uma falha)
         zip_path = raw / f"Estabelecimentos{i}.zip"
         if not zip_path.exists():  # sobra de uma execução que falhou no processamento
-            baixa(zip_path.name, versao)
+            baixa_temporario(zip_path.name, versao)
         processa_estabelecimentos(i, versao)
-        apaga_local(zip_path)
+        zip_path.unlink()
         print(f"Estabelecimentos{i} processado", flush=True)
     finaliza(versao)
 

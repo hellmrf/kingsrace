@@ -50,9 +50,14 @@ uv run dvc remote modify --local r2 secret_access_key <SECRET_ACCESS_KEY>
 just pull
 ```
 
-O `just pull` sempre termina acusando a falta dos zips do CNPJ
-(`data/raw/receita/cnpj_*`). Isso é esperado: são ~7 GB por versão e ficam fora do R2
-(decisões D7 e D9). O que a análise usa deles já vem pronto pela etapa `receita`.
+O `just pull` sempre termina acusando a falta dos zips de Empresas, Simples e Municípios do
+CNPJ (`data/raw/receita/cnpj_*`, ~1,3 GB). Isso é esperado: eles ficam fora do R2 (decisões D7,
+D9 e D11). Os de Estabelecimentos (~11 GB) nem ficam no DVC: são baixados, processados e
+apagados, com URL e md5 em `data/reference/fontes_receita.csv`. O que a análise usa do CNPJ
+já vem pronto pela etapa `receita`.
+
+Para ver o estado do pipeline, prefira `just status` ao `dvc status`: é o mesmo comando sem
+as dezenas de avisos de "etapa congelada" que todo `dvc import-url` produz.
 
 ### Sem acesso: reconstruir a partir das fontes públicas
 

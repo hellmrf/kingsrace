@@ -24,6 +24,11 @@ fmt:
 repro *args:
     uv run dvc repro {{args}}
 
+# `dvc status` sem os avisos de etapa congelada: todo `dvc import-url` é congelado
+status *args:
+    @echo "\$ uv run dvc status {{args}}\n"
+    @uv run dvc status {{args}} 2>&1 | grep -v "is frozen. Its dependencies are not going to be shown"
+
 # Roda os notebooks pendentes pelo DVC e mostra as métricas que mudaram desde o último
 # commit (D8). Limpa antes as saídas dos notebooks: o DVC calcula o hash do .ipynb com elas.
 resultados *args:
