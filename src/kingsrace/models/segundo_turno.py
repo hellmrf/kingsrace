@@ -234,14 +234,36 @@ def saldo_por_origem(b: dict[str, np.ndarray], estoques: pl.DataFrame, mapa: dic
     return saldo
 
 
-def cenarios(
-    matriz: pl.DataFrame, replicas: pl.DataFrame, estoques: pl.DataFrame, exterior: float
-) -> tuple[pl.DataFrame, pl.DataFrame]:
-    """Margem de Lula no 2º turno (votos) em cada cenário, com IC do bootstrap da G2.
+def votos_finalistas(b: dict[str, np.ndarray], estoques: pl.DataFrame, mapa: dict) -> tuple:
+    """Votos de Lula e de Flávio no 2º turno no cenário (sem o exterior): Σ N_k · B[destino]."""
+    linha = {o: i for i, o in enumerate(ORIGENS_2022)}
+    ipt, iadv = DESTINOS.index("pt"), DESTINOS.index("adv")
+    lula = flavio = 0.0
+    for uf, n, origem in estoques.select("uf", "n", "origem").iter_rows():
+        bl = b[uf][linha[(FIXAS | mapa)[origem]]]
+        lula += n * bl[ipt]
+        flavio += n * bl[iadv]
+    return lula, flavio
 
-    O exterior entra com a margem do 1º turno, fixa. Devolve a tabela dos cenários e o saldo
-    por origem do cenário `perfil`, comparado ao do 1º turno (quanto cada origem move a margem).
+
+def cenarios(
+    matriz: pl.DataFrame,
+    replicas: pl.DataFrame,
+    estoques: pl.DataFrame,
+    exterior: dict[str, float],
+) -> tuple[pl.DataFrame, pl.DataFrame]:
+    """Margem de Lula no 2º turno (votos) e fatia entre os dois em cada cenário, com IC.
+
+    O exterior entra com os votos do 1º turno de cada finalista, fixos (`exterior`: pt, adv).
+    A fatia `pt_2p` é a unidade das pesquisas (G6). Devolve também o saldo por origem do
+    cenário `perfil`, comparado ao do 1º turno (quanto cada origem move a margem).
     """
+    ext_margem = exterior["pt"] - exterior["adv"]
+
+    def fatia(b, mapa):
+        lula, flavio = votos_finalistas(b, estoques, mapa)
+        return (lula + exterior["pt"]) / (lula + flavio + exterior["pt"] + exterior["adv"])
+
     ufs = [u for u in matriz["uf"].unique().to_list() if u != "BR"]
 
     def matrizes(df):
@@ -258,10 +280,16 @@ def cenarios(
     reps = [matrizes(r) for _, r in replicas.sort("rep").group_by("rep", maintain_order=True)]
     linhas = []
     for nome, mapa in CENARIOS.items():
-        m = sum(saldo_por_origem(ponto, estoques, mapa).values()) + exterior
-        dist = [sum(saldo_por_origem(b, estoques, mapa).values()) + exterior for b in reps]
+        m = sum(saldo_por_origem(ponto, estoques, mapa).values()) + ext_margem
+        dist = [sum(saldo_por_origem(b, estoques, mapa).values()) + ext_margem for b in reps]
         inf, sup = np.percentile(dist, [2.5, 97.5]) if dist else (m, m)
-        linhas.append({"cenario": nome, "margem": m, "ic_inf": inf, "ic_sup": sup})
+        f = fatia(ponto, mapa)
+        dist_f = [fatia(b, mapa) for b in reps]
+        f_inf, f_sup = np.percentile(dist_f, [2.5, 97.5]) if dist_f else (f, f)
+        linhas.append(
+            {"cenario": nome, "margem": m, "ic_inf": inf, "ic_sup": sup,
+             "pt_2p": f, "pt_2p_inf": f_inf, "pt_2p_sup": f_sup}
+        )  # fmt: skip
 
     primeiro = dict(estoques.group_by("origem").agg(pl.col("n").sum()).iter_rows())
     base = {"pt": primeiro["pt"], "adv": -primeiro["adv"]}
@@ -493,7 +521,8 @@ def registra(live, t: dict) -> None:
         resultados.metricas(
             live, f"G2/cenarios/{row['cenario']}",
             {"margem_mi": row["margem"] / 1e6, "ic_inf_mi": row["ic_inf"] / 1e6,
-             "ic_sup_mi": row["ic_sup"] / 1e6},
+             "ic_sup_mi": row["ic_sup"] / 1e6, "pt_2p": row["pt_2p"],
+             "pt_2p_inf": row["pt_2p_inf"], "pt_2p_sup": row["pt_2p_sup"]},
         )  # fmt: skip
     resultados.coeficientes(
         live,
@@ -621,7 +650,12 @@ def executa() -> None:
         v26.filter(pl.col("uf") == "ZZ").group_by("papel").agg(pl.col("votos").sum()).iter_rows()
     )
     t["exterior"] = ext.get("pt", 0) - ext.get("adversario", 0)
-    t["cenarios"], t["componentes"] = cenarios(t["matriz"], replicas, t["estoques"], t["exterior"])
+    t["cenarios"], t["componentes"] = cenarios(
+        t["matriz"],
+        replicas,
+        t["estoques"],
+        {"pt": ext.get("pt", 0), "adv": ext.get("adversario", 0)},
+    )
     t["cenarios"].write_parquet(SAIDA / "cenarios_2026.parquet")
     t["componentes"].write_parquet(SAIDA / "efeito_por_origem_2026.parquet")
 

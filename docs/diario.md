@@ -5,6 +5,47 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-10 (noite) · G6, G7 e o mapa: as pesquisas estão 0,3 ponto acima do padrão de 2022
+
+Etapas `pesquisas` (`models/pesquisas.py`) e `coordenadas`. Regra da G6 detalhada em
+[hipoteses.md](hipoteses.md) antes das contas, com um adendo na B4.
+
+**Pesquisas (G6):**
+
+- Cinco pesquisas de 2º turno desde 05/10: Datafolha, PoderData/Aya, Vox, AtlasIntel e Ipespe.
+  Todas conferidas na fonte; a Vox foi conferida hoje.
+- **Corrigida pelo viés de cada instituto no 1º turno (λ = 0,5), a média dá Lula com 47,2%**
+  entre os dois. Sem correção, 48,0%; com a correção inteira, 46,3%.
+- **O modelo:** o padrão de 2022 (G2, cenário perfil) dá 46,8%, e a previsão v1 (B4), 46,9%.
+  São dois métodos independentes no mesmo lugar.
+- **A distância:** as pesquisas estão 0,3 ponto acima do padrão de 2022 (~0,8 mi de votos na
+  margem). É menos que o erro médio dos institutos no 1º turno (1,6 ponto), então ainda não
+  dá para dizer que a campanha quebrou o padrão.
+- **Cruzamentos por voto no 1º turno:** nenhum instituto publicou até agora. A tabela já
+  existe, vazia.
+- **Fonte única:** a série de pesquisas agora serve à G6 e à v2 da B4 (adendo de 10/10).
+  `institutos.csv` corrige um problema que a v2 teria: "Vox Brasil" e "Vox" eram tratados
+  como institutos diferentes, e a pesquisa ficaria com o viés médio no lugar do próprio.
+- **Pesquisa nova:** uma linha na série e `just pesquisas`.
+
+**Documental (G7):**
+
+- A decisão de Barroso que liberou o transporte gratuito no 2º turno de 2022 (ADPF 1013).
+- As operações da PRF em 30/10/2022 e a condenação de Silvinei Vasques em 2025.
+- A disputa em torno da privatização no 2º turno de 2006.
+- O estudo de Pereira et al. (2023): o transporte gratuito encheu os ônibus em 2022 (+7% a
+  +18%), mas **não mudou o comparecimento**. A página deixou de sugerir transporte como
+  solução.
+
+**Mapa:** pontos proporcionais por município, no centro eleitoral (média dos locais de
+votação ponderada pelos aptos), em dois modos: mobilizar (votos por ponto de
+comparecimento) e conversar (ex-eleitores por AMC).
+
+**Também:** cada cenário da G2 agora traz a fatia de Lula entre os dois (`pt_2p`), a unidade
+das pesquisas.
+
+---
+
 ## 2026-10-10 · série G: se 2022 se repetir, Flávio vence por ~7,6 milhões
 
 Etapa `segundo_turno` (`models/segundo_turno.py`), notebook

@@ -60,3 +60,10 @@ site:
 # Prévia local do site em http://localhost:8000
 site-serve porta="8000":
     uv run python -m kingsrace.publica serve {{porta}}
+
+# Pesquisa nova (linha em data/reference/pesquisas_serie_2025_2026.csv): refaz a G6, os dados do
+# site e o build, e mostra o que mudou nas métricas desde o último commit
+pesquisas:
+    uv run dvc repro pesquisas site_segundo_turno
+    uv run python -m kingsrace.publica build
+    uv run dvc metrics diff --targets resultados/pesquisas/metrics.json

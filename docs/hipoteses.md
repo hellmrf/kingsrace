@@ -120,6 +120,14 @@ pesquisas finais). Cada versão tem commit e tag `previsao-2t-2026-<versão>`.
    valor se bater essa referência.
 5. **Por UF:** erro do total de cada UF.
 
+**Adendo de 2026-10-10 (antes da v2; não muda o método nem os critérios):**
+- A partir da v2, as pesquisas de 2º turno vêm da mesma tabela da G6
+  (`pesquisas_serie_2025_2026.csv`, fim de campo a partir de 05/10).
+- `pesquisas_2026.csv` fica só com as pesquisas de 1º turno, que dão o viés de cada instituto.
+- Os nomes passam por `institutos.csv` ("Vox Brasil" e "Vox" eram tratados como institutos
+  diferentes, e a pesquisa ficaria com o viés médio no lugar do próprio).
+- A v1 continua congelada como está.
+
 **Expectativas registradas (o que contaria como surpresa):** G0 ≤ G1 em RMSE, ou seja,
 as transferências por perfil não ajudam, como no backtest de 2022 (0,95 contra 1,16 pp);
 e G2 ≤ G0, ou seja, a compressão de 2022 se repete.
@@ -691,14 +699,32 @@ resultado, que mostra 2,6% dos eleitores de Lula no 1º turno de 2022 sem votar 
 
 #### G6 · pesquisas (exploratória)
 
-- **Fonte:** pesquisas de 2º turno de 2026 desde 06/10, em votos válidos, em
-  `pesquisas_2026.csv` com `turno=2`.
-- **Correção:** a de `alvo_das_pesquisas` da B4 (λ × o viés de cada instituto no 1º turno),
-  com a faixa de λ entre 0 e 1. É leitura do momento, não previsão.
-- **Cruzamentos:** voto no 2º turno por voto no 1º, quando publicados, em
-  `pesquisas_2t_cruzamentos.csv`.
-- **Conferência:** ~20% das pesquisas conferidas na fonte, e todas as que entram nos
-  cruzamentos.
+**Regra detalhada em 2026-10-10, antes de qualquer conta com as pesquisas de 2º turno.**
+Até aqui só se olharam os números brutos das cinco pesquisas publicadas depois do 1º turno.
+
+- **Fonte única:** `pesquisas_serie_2025_2026.csv`. Cada pesquisa nova vira uma linha nessa
+  tabela, com fonte, url e `conferido`. Contam como pesquisas do 2º turno as com fim de campo
+  a partir de 05/10/2026. Os nomes vão para o canônico de `institutos.csv`, o mesmo da
+  correção abaixo.
+- **Fatia:** s = Lula / (Lula + Flávio), seja a base total ou de válidos.
+- **Correção por instituto:** a mesma da B4 (`alvo_das_pesquisas`). O viés é a fatia de Lula
+  na última pesquisa de 1º turno do instituto (`pesquisas_2026.csv`) menos o resultado real.
+  O corrigido é s − λ · viés, com λ = 0,5 no central e faixa de λ = 0 a 1. Quem não tem
+  pesquisa de 1º turno recebe o viés médio.
+- **Média do dia d:** a pesquisa mais recente de cada instituto com fim de campo entre
+  d − 14 dias e d, com o mesmo peso para todos os institutos. A série vai de 05/10 até o
+  último fim de campo.
+- **Comparação com o modelo** (é o acompanhamento, não um teste):
+  - a previsão v1 da B4 (46,9%);
+  - a fatia de Lula entre os dois em cada cenário da G2 ("padrão de 2022").
+  - Métrica: `G6/distancia_pp/<cenário>` = média corrigida − fatia do cenário, em pp.
+    Positiva quando as pesquisas veem Lula melhor que o padrão de 2022.
+- **Cruzamentos:** voto no 2º turno por voto no 1º (`pesquisas_2t_cruzamentos.csv`), quando
+  publicados. Para cada grupo, o saldo Lula − Flávio entre os válidos do grupo, comparado com
+  o saldo da G2 no cenário `perfil`.
+- **Não é previsão.** A previsão registrada continua sendo a v2 da B4, em 24/10. Cada
+  pesquisa nova muda as métricas G6 num commit, e o histórico fica no `dvc metrics diff` e no
+  `dvc exp show`.
 
 #### G7 · documental
 

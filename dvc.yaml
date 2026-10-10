@@ -94,6 +94,15 @@ stages:
       - data/processed/painel_secao.parquet
       - data/processed/painel_local.parquet
 
+  coordenadas:
+    cmd: python -m kingsrace.features.coordenadas
+    deps:
+      - src/kingsrace/features/coordenadas.py
+      - data/processed/painel_local.parquet
+    outs:
+      - data/processed/coordenadas_municipio.parquet
+      - data/processed/coordenadas_amc.parquet
+
   segundo_turno:
     # Série G (docs/hipoteses.md): tabelas em processed/segundo_turno/ e as métricas e os
     # dados de gráfico da própria etapa em resultados/segundo_turno/ (D12). Os gráficos estão
@@ -218,6 +227,31 @@ stages:
       - data/processed/emprego_amc.parquet
       - data/processed/homicidios_amc.parquet
 
+  pesquisas:
+    # G6: as pesquisas do 2º turno ao lado do modelo. Uma pesquisa nova é uma linha em
+    # data/reference/pesquisas_serie_2025_2026.csv e `just pesquisas`.
+    cmd: python -m kingsrace.models.pesquisas
+    deps:
+      - src/kingsrace/models/pesquisas.py
+      - src/kingsrace/features/pesquisas.py
+      - src/kingsrace/models/previsao_2t.py
+      - src/kingsrace/resultados.py
+      - data/reference/pesquisas_serie_2025_2026.csv
+      - data/reference/pesquisas_2026.csv
+      - data/reference/institutos.csv
+      - data/reference/pesquisas_2t_cruzamentos.csv
+      - data/reference/previsoes/previsao_2t_2026_v1.json
+      - data/processed/painel_municipio.parquet
+      - data/processed/votos_municipio.parquet
+      - resultados/segundo_turno/metrics.json
+    outs:
+      - data/processed/pesquisas
+      - resultados/pesquisas/plots:
+          cache: false
+    metrics:
+      - resultados/pesquisas/metrics.json:
+          cache: false
+
   # --- Site público (D12): só lê saídas do DVC; site/dados vai ao R2 e o Actions baixa dali ---
   site_segundo_turno:
     cmd: python -m kingsrace.publica dados segundo-turno
@@ -227,9 +261,18 @@ stages:
       - resultados/segundo_turno/metrics.json
       - resultados/segundo_turno/plots
       - resultados/03_previsao_2t/metrics.json
+      - resultados/pesquisas/metrics.json
+      - resultados/pesquisas/plots
+      - data/processed/pesquisas
       - data/processed/segundo_turno
       - data/processed/municipios.parquet
       - data/reference/totais_oficiais.csv
+      - data/reference/pesquisas_serie_2025_2026.csv
+      - data/reference/institutos.csv
+      - data/reference/linha_do_tempo.csv
+      - data/reference/evidencias_mobilizacao.csv
+      - data/processed/coordenadas_municipio.parquet
+      - data/processed/coordenadas_amc.parquet
     outs:
       - site/dados/segundo-turno
 
@@ -466,7 +509,9 @@ stages:
       - src/kingsrace/resultados.py
       - src/kingsrace/viz/tema.py
       - resultados/segundo_turno/metrics.json
+      - resultados/pesquisas/metrics.json
       - data/processed/segundo_turno
+      - data/processed/pesquisas
       - data/processed/municipios.parquet
     outs:
       - reports/notebooks/09_segundo_turno.ipynb:
@@ -558,3 +603,24 @@ plots:
       title: "G5 · Auxílio Brasil e a variação do PT entre os turnos"
       x_label: "eleição"
       y_label: "efeito de 1 dp sobre Δ logit"
+  - G6_media:
+      template: linear
+      x: data
+      y:
+        resultados/pesquisas/plots/custom/G6_media.json: [bruta, corrigida, correcao_total]
+      title: "G6 · média das pesquisas do 2º turno: Lula entre os dois (%)"
+      y_label: "% de Lula entre os dois"
+  - G6_pesquisas:
+      template: scatter
+      x: campo_fim
+      y:
+        resultados/pesquisas/plots/custom/G6_pesquisas.json: [s, corrigido]
+      title: "G6 · cada pesquisa do 2º turno, bruta e corrigida (%)"
+      y_label: "% de Lula entre os dois"
+  - resultados/pesquisas/plots/custom/G6_modelo.json:
+      template: coeficientes
+      x: rotulo
+      y: coef
+      title: "G6 · pesquisas contra o modelo: Lula entre os dois (%)"
+      x_label: ""
+      y_label: "% (faixa)"

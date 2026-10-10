@@ -264,7 +264,8 @@ para `hipoteses.md`; o DVC não via nenhum resultado. Agora:
      contribuidores, com as próprias métricas e gráficos. A cópia executada fica no git com
      as saídas (D14).
   3. **Público.** `src/kingsrace/publica/<página>.py` só **lê** saídas do DVC (`processed/` e
-     `resultados/`) e grava JSON e CSV em `site/dados/`; é também uma etapa do DVC, com as
+     `resultados/`) e tabelas de referência (`data/reference/`, para textos e procedência,
+     como a linha do tempo) e grava JSON e CSV em `site/dados/`; é também uma etapa do DVC, com as
      saídas no R2. `site/` guarda os templates Jinja (`StrictUndefined`: um número que falta
      derruba o build) e os módulos JS dos gráficos. Nenhum número é digitado no HTML.
 - **Regra:** todo número e todo gráfico de página pública é antes uma saída declarada no

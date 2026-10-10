@@ -770,8 +770,8 @@ stages:
       size: 16646
     - path: src/kingsrace/models/previsao_2t.py
       hash: md5
-      md5: 80067333841607c85357696952dc774a
-      size: 10375
+      md5: 81aee540cf1e1709d78ed949da60cdbf
+      size: 10626
     - path: src/kingsrace/resultados.py
       hash: md5
       md5: ab842b8fa121c44cb870da43873ec923
@@ -1260,8 +1260,8 @@ stages:
       size: 5096
     - path: src/kingsrace/models/segundo_turno.py
       hash: md5
-      md5: 30685b5e204c768a71640077243b9803
-      size: 28084
+      md5: 9406ddc7369ffe7dc4935190cb1dab4e
+      size: 29403
     - path: src/kingsrace/resultados.py
       hash: md5
       md5: ab842b8fa121c44cb870da43873ec923
@@ -1274,30 +1274,59 @@ stages:
     outs:
     - path: data/processed/segundo_turno
       hash: md5
-      md5: 8e1bf0f531a8bd4e5764247cba2be9d0.dir
-      size: 10464193
+      md5: d7cbf07c5d9363647026a7517841d3d3.dir
+      size: 10465212
       nfiles: 9
     - path: resultados/segundo_turno/metrics.json
       hash: md5
-      md5: 15d16efb288b0c32b1f2f0f41798d206
-      size: 15652
+      md5: aa0f6ac339577aeb94718a93e1dad12d
+      size: 16227
     - path: resultados/segundo_turno/plots
       hash: md5
-      md5: a3e945c0d142374e3e2dafbd93d65be7.dir
+      md5: ee986cf0e9f2db06095925e2891f30a1.dir
       size: 14467
       nfiles: 12
   site_segundo_turno:
     cmd: python -m kingsrace.publica dados segundo-turno
     deps:
+    - path: data/processed/coordenadas_amc.parquet
+      hash: md5
+      md5: 9f61b28526ffce9616b3a00b341c3c1f
+      size: 97360
+    - path: data/processed/coordenadas_municipio.parquet
+      hash: md5
+      md5: 1e823874ebfe90def2f6560692dba28a
+      size: 97510
     - path: data/processed/municipios.parquet
       hash: md5
       md5: 4826b4242cdbf5aef3cb2c990bde5a46
       size: 99065
+    - path: data/processed/pesquisas
+      hash: md5
+      md5: c7231c19c69d46ad4a38bbf842c57ec4.dir
+      size: 5274
+      nfiles: 3
     - path: data/processed/segundo_turno
       hash: md5
-      md5: 8e1bf0f531a8bd4e5764247cba2be9d0.dir
-      size: 10464193
+      md5: d7cbf07c5d9363647026a7517841d3d3.dir
+      size: 10465212
       nfiles: 9
+    - path: data/reference/evidencias_mobilizacao.csv
+      hash: md5
+      md5: b2328172a9a4cc921bdf0cd4eb8ed12f
+      size: 566
+    - path: data/reference/institutos.csv
+      hash: md5
+      md5: e881552f9a9556a67bc1dae126158962
+      size: 391
+    - path: data/reference/linha_do_tempo.csv
+      hash: md5
+      md5: f93f1d00698bd897efa5edbf8f95d396
+      size: 26230
+    - path: data/reference/pesquisas_serie_2025_2026.csv
+      hash: md5
+      md5: cbaf9fdbc7903918158f562f36f33af3
+      size: 34218
     - path: data/reference/totais_oficiais.csv
       hash: md5
       md5: e6fdbf5a7e70aa865e3b81b63511452c
@@ -1306,13 +1335,22 @@ stages:
       hash: md5
       md5: a380642cf095fce179b3ff928bcc7494
       size: 3148
+    - path: resultados/pesquisas/metrics.json
+      hash: md5
+      md5: 9191c5c33e947978348b913915bd4baf
+      size: 2068
+    - path: resultados/pesquisas/plots
+      hash: md5
+      md5: 31e6082e07bc44ef679f370adbda20ed.dir
+      size: 2117
+      nfiles: 3
     - path: resultados/segundo_turno/metrics.json
       hash: md5
-      md5: 15d16efb288b0c32b1f2f0f41798d206
-      size: 15652
+      md5: aa0f6ac339577aeb94718a93e1dad12d
+      size: 16227
     - path: resultados/segundo_turno/plots
       hash: md5
-      md5: a3e945c0d142374e3e2dafbd93d65be7.dir
+      md5: ee986cf0e9f2db06095925e2891f30a1.dir
       size: 14467
       nfiles: 12
     - path: src/kingsrace/publica/comum.py
@@ -1321,14 +1359,14 @@ stages:
       size: 3181
     - path: src/kingsrace/publica/segundo_turno.py
       hash: md5
-      md5: d7978b79c6b535276b21d18a2a08277c
-      size: 6652
+      md5: 1873d3acedac225973dc5895f2f9a1bd
+      size: 10065
     outs:
     - path: site/dados/segundo-turno
       hash: md5
-      md5: 62f89810032e56ce35b9af02984231d6.dir
-      size: 42011578
-      nfiles: 5601
+      md5: 887a70a9c6a36873230f3dc89927266b.dir
+      size: 42798014
+      nfiles: 5602
   nb_09_segundo_turno:
     cmd: papermill notebooks/09_segundo_turno.ipynb 
       reports/notebooks/09_segundo_turno.ipynb -k python3 --cwd notebooks 
@@ -1338,19 +1376,28 @@ stages:
       hash: md5
       md5: 4826b4242cdbf5aef3cb2c990bde5a46
       size: 99065
+    - path: data/processed/pesquisas
+      hash: md5
+      md5: c7231c19c69d46ad4a38bbf842c57ec4.dir
+      size: 5274
+      nfiles: 3
     - path: data/processed/segundo_turno
       hash: md5
-      md5: 8e1bf0f531a8bd4e5764247cba2be9d0.dir
-      size: 10464193
+      md5: d7cbf07c5d9363647026a7517841d3d3.dir
+      size: 10465212
       nfiles: 9
     - path: notebooks/09_segundo_turno.ipynb
       hash: md5
-      md5: 22a0a780737cc41815e08d6684b4c570
-      size: 14330
+      md5: 5b8cf9787e3f716331eb4dae3ae54829
+      size: 16728
+    - path: resultados/pesquisas/metrics.json
+      hash: md5
+      md5: 9191c5c33e947978348b913915bd4baf
+      size: 2068
     - path: resultados/segundo_turno/metrics.json
       hash: md5
-      md5: 15d16efb288b0c32b1f2f0f41798d206
-      size: 15652
+      md5: aa0f6ac339577aeb94718a93e1dad12d
+      size: 16227
     - path: src/kingsrace/resultados.py
       hash: md5
       md5: ab842b8fa121c44cb870da43873ec923
@@ -1362,14 +1409,100 @@ stages:
     outs:
     - path: reports/notebooks/09_segundo_turno.ipynb
       hash: md5
-      md5: 8ba29c1b0b185cca5ad9a127dca5bb7b
-      size: 779123
+      md5: 284408dca7b1d3d786cda3038186abcc
+      size: 800021
     - path: resultados/09_segundo_turno/metrics.json
       hash: md5
       md5: 8a80554c91d9fca8acb82f023de02f11
       size: 3
     - path: resultados/09_segundo_turno/plots/images
       hash: md5
-      md5: 368bca3eadf8b134bfa3ae5694514ae7.dir
-      size: 282381
-      nfiles: 4
+      md5: 63e8543b3abaec54568f24eb0cdbdbab.dir
+      size: 305460
+      nfiles: 5
+  pesquisas:
+    cmd: python -m kingsrace.models.pesquisas
+    deps:
+    - path: data/processed/painel_municipio.parquet
+      hash: md5
+      md5: 2cb278f11df4f7974363fad152bcb6a3
+      size: 4030992
+    - path: data/processed/votos_municipio.parquet
+      hash: md5
+      md5: 4b722c875f390c3c9d15d5b0b681f084
+      size: 1548772
+    - path: data/reference/institutos.csv
+      hash: md5
+      md5: e881552f9a9556a67bc1dae126158962
+      size: 391
+    - path: data/reference/pesquisas_2026.csv
+      hash: md5
+      md5: dba23f22ee11cc6b1961efb64c5b71ef
+      size: 1937
+    - path: data/reference/pesquisas_2t_cruzamentos.csv
+      hash: md5
+      md5: 5e378cd0be8e214c3a47202c5126c444
+      size: 109
+    - path: data/reference/pesquisas_serie_2025_2026.csv
+      hash: md5
+      md5: cbaf9fdbc7903918158f562f36f33af3
+      size: 34218
+    - path: data/reference/previsoes/previsao_2t_2026_v1.json
+      hash: md5
+      md5: 9f1d80c68f0ae7d7db827206c60fd1f8
+      size: 1693
+    - path: resultados/segundo_turno/metrics.json
+      hash: md5
+      md5: aa0f6ac339577aeb94718a93e1dad12d
+      size: 16227
+    - path: src/kingsrace/features/pesquisas.py
+      hash: md5
+      md5: 87cf9a3bd49c13d00a49277eb991bca3
+      size: 2852
+    - path: src/kingsrace/models/pesquisas.py
+      hash: md5
+      md5: 1c6abd1ba124c48f61b7c363bb17eb82
+      size: 9216
+    - path: src/kingsrace/models/previsao_2t.py
+      hash: md5
+      md5: 81aee540cf1e1709d78ed949da60cdbf
+      size: 10626
+    - path: src/kingsrace/resultados.py
+      hash: md5
+      md5: ab842b8fa121c44cb870da43873ec923
+      size: 5648
+    outs:
+    - path: data/processed/pesquisas
+      hash: md5
+      md5: c7231c19c69d46ad4a38bbf842c57ec4.dir
+      size: 5274
+      nfiles: 3
+    - path: resultados/pesquisas/metrics.json
+      hash: md5
+      md5: 9191c5c33e947978348b913915bd4baf
+      size: 2068
+    - path: resultados/pesquisas/plots
+      hash: md5
+      md5: 31e6082e07bc44ef679f370adbda20ed.dir
+      size: 2117
+      nfiles: 3
+  coordenadas:
+    cmd: python -m kingsrace.features.coordenadas
+    deps:
+    - path: data/processed/painel_local.parquet
+      hash: md5
+      md5: ab084a2461e31e5ee0bd73bfcecc5f7f
+      size: 11631748
+    - path: src/kingsrace/features/coordenadas.py
+      hash: md5
+      md5: 5449f38665bbd29c13b244638d2ec8d9
+      size: 1350
+    outs:
+    - path: data/processed/coordenadas_amc.parquet
+      hash: md5
+      md5: 9f61b28526ffce9616b3a00b341c3c1f
+      size: 97360
+    - path: data/processed/coordenadas_municipio.parquet
+      hash: md5
+      md5: 1e823874ebfe90def2f6560692dba28a
+      size: 97510

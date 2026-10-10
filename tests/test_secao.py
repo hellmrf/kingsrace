@@ -108,3 +108,19 @@ def test_casa_locais_exige_o_mesmo_nome_alem_do_numero():
     res = casa_locais(de, para)
 
     assert res.select("nr_local", "votos", "votos_para").rows() == [(10, 5, 7)]
+
+
+def test_centro_eleitoral_pondera_pelos_aptos_e_ignora_local_sem_coordenada():
+    from kingsrace.features.coordenadas import centros
+
+    locais = pl.DataFrame(
+        {
+            "cd_ibge": [1, 1, 1],
+            "aptos": [300, 100, 500],
+            "lat": [-10.0, -12.0, None],
+            "lon": [-40.0, -44.0, -50.0],
+        }
+    )
+    c = centros(locais, "cd_ibge").row(0, named=True)
+    assert c["lat"] == pytest.approx(-10.5) and c["lon"] == pytest.approx(-41.0)
+    assert c["locais_com_coordenada"] == 2

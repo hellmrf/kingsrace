@@ -1,0 +1,32 @@
+[
+    {
+        "instituto": "Datafolha",
+        "campo_fim": "2026-10-07",
+        "s": 47.87234042553192,
+        "corrigido": 46.75237376195981
+    },
+    {
+        "instituto": "PoderData/Aya",
+        "campo_fim": "2026-10-07",
+        "s": 47.0,
+        "corrigido": 46.18858461471176
+    },
+    {
+        "instituto": "Vox",
+        "campo_fim": "2026-10-07",
+        "s": 50.86306098964327,
+        "corrigido": 50.59794846284782
+    },
+    {
+        "instituto": "AtlasIntel",
+        "campo_fim": "2026-10-08",
+        "s": 47.21074380165289,
+        "corrigido": 45.90470447603692
+    },
+    {
+        "instituto": "Ipespe",
+        "campo_fim": "2026-10-08",
+        "s": 47.3,
+        "corrigido": 46.519411420323614
+    }
+]

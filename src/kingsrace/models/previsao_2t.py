@@ -21,6 +21,7 @@ import numpy as np
 import polars as pl
 
 from kingsrace import paths
+from kingsrace.features import pesquisas as fp
 
 LAMBDAS = {"central": 0.5, "sem_correcao": 0.0, "correcao_total": 1.0}
 
@@ -197,7 +198,8 @@ def gera_previsao(versao: str, corte: date) -> None:
         (pl.col("ano") == 2026) & (pl.col("turno") == 1) & pl.col("cd_ibge").is_not_null()
     )
     taxas = pl.read_csv(ref / "transferencias_2t.csv").filter(pl.col("ano") == 2026)
-    pesquisas = pl.read_csv(ref / "pesquisas_2026.csv", try_parse_dates=True)
+    # adendo de 10/10 (hipoteses.md, B4): 2º turno da série da G6, 1º turno de pesquisas_2026
+    pesquisas = fp.para_previsao(*fp.le())
     painel = (
         pl.read_parquet(paths.PROCESSED / "painel_municipio.parquet")
         .filter((pl.col("ano") == 2026) & (pl.col("turno") == 1))
@@ -235,7 +237,13 @@ def gera_previsao(versao: str, corte: date) -> None:
             for nome, a in alvos.items()
         },
         "insumos_sha256": {
-            f: _sha256(ref / f) for f in ("transferencias_2t.csv", "pesquisas_2026.csv")
+            f: _sha256(ref / f)
+            for f in (
+                "transferencias_2t.csv",
+                "pesquisas_2026.csv",
+                "pesquisas_serie_2025_2026.csv",
+                "institutos.csv",
+            )
         },
     }
 
