@@ -51,3 +51,12 @@ pull:
 # Gera e grava a previsão do 2º turno (ex.: just previsao v2 2026-10-24)
 previsao versao corte:
     uv run python -m kingsrace.models.previsao_2t {{versao}} {{corte}}
+
+# Dados do site a partir das saídas do DVC (etapas site_*), depois monta _site/ (D12)
+site:
+    uv run dvc repro site_segundo_turno
+    uv run python -m kingsrace.publica build
+
+# Prévia local do site em http://localhost:8000
+site-serve porta="8000":
+    uv run python -m kingsrace.publica serve {{porta}}

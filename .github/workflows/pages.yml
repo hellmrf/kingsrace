@@ -1,0 +1,58 @@
+# Site público (D12): monta _site/ com os dados do site guardados pelo DVC no R2 e publica no
+# GitHub Pages. Não roda o pipeline: só baixa as saídas das etapas site_* e faz o build.
+# Secrets necessários (chave do R2 *somente leitura*): R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY.
+name: Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "src/kingsrace/publica/**"
+      - "dvc.lock"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          version: "0.13.0"
+      - name: Dependências
+        run: uv sync --frozen
+      - name: Credenciais do R2 (somente leitura)
+        env:
+          R2_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+        run: |
+          uv run dvc remote modify --local r2 access_key_id "$R2_ACCESS_KEY_ID"
+          uv run dvc remote modify --local r2 secret_access_key "$R2_SECRET_ACCESS_KEY"
+      - name: Dados do site (DVC)
+        run: uv run dvc pull site_segundo_turno
+      - name: Build
+        run: uv run python -m kingsrace.publica build
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4

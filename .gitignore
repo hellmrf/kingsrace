@@ -168,8 +168,7 @@ venv.bak/
 # Rope project settings
 .ropeproject
 
-# mkdocs/Zensical documentation
-/site
+# mkdocs/Zensical documentation: /site removido, pois site/ é o site público (D12)
 
 # mypy
 .mypy_cache/
@@ -229,3 +228,6 @@ __marimo__/
 !/data/*/.gitkeep
 # Gráficos gerados por `dvc plots show/diff` (just compara)
 /dvc_plots/
+
+# Site montado (python -m kingsrace.publica build); os dados do site vêm do DVC
+/_site/
