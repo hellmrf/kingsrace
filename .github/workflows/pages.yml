@@ -1,11 +1,19 @@
 # Site público (D12): monta _site/ com os dados do site guardados pelo DVC no R2 e publica no
 # GitHub Pages. Não roda o pipeline: só baixa as saídas das etapas site_* e faz o build.
+# Num PR, só monta (confere a chave, o dvc pull e o build) e guarda o _site como artefato;
+# o deploy é só na main.
 # Secrets necessários (chave do R2 *somente leitura*): R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY.
 name: Site
 
 on:
   push:
     branches: [main]
+    paths:
+      - "site/**"
+      - "src/kingsrace/publica/**"
+      - "dvc.lock"
+      - ".github/workflows/pages.yml"
+  pull_request:
     paths:
       - "site/**"
       - "src/kingsrace/publica/**"
@@ -48,6 +56,7 @@ jobs:
           path: _site
 
   deploy:
+    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-24.04
     environment:
