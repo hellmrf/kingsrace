@@ -74,6 +74,12 @@ stages:
     deps:
       - src/kingsrace/features/religiao.py
       - data/processed/municipios.parquet
+      # coligação presidencial do PT em cada ano (E2d)
+      - data/raw/tse/consulta_cand/consulta_cand_2006.zip
+      - data/raw/tse/consulta_cand/consulta_cand_2010.zip
+      - data/raw/tse/consulta_cand/consulta_cand_2014.zip
+      - data/raw/tse/consulta_cand/consulta_cand_2018.zip
+      - data/raw/tse/consulta_cand/consulta_cand_2022.zip
       - data/interim/tse/candidatos
       - data/interim/tse/votacao_deputado
       - data/interim/tse/detalhe_deputado

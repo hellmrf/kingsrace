@@ -1,7 +1,12 @@
 import polars as pl
 import pytest
 
-from kingsrace.features.religiao import OCUPACAO_RELIGIOSA, eh_religioso, religiosos_amc
+from kingsrace.features.religiao import (
+    OCUPACAO_RELIGIOSA,
+    eh_religioso,
+    partidos_coligacao,
+    religiosos_amc,
+)
 
 
 @pytest.mark.parametrize(
@@ -78,3 +83,37 @@ def test_falha_com_municipio_sem_amc():
 
     with pytest.raises(ValueError, match="3"):
         religiosos_amc(votos, candidatos, detalhe, municipios.filter(pl.col("cd_tse") != 3))
+
+
+def test_partidos_da_coligacao_desfazem_federacoes():
+    comp = (
+        "Federação Brasil da Esperança - FE BRASIL (PT / PC do B / PV) / SOLIDARIEDADE / "
+        "Federação PSOL REDE (PSOL / REDE) / PSB"
+    )
+
+    assert partidos_coligacao(comp) == [
+        "PT",
+        "PC do B",
+        "PV",
+        "SOLIDARIEDADE",
+        "PSOL",
+        "REDE",
+        "PSB",
+    ]
+    assert partidos_coligacao("PT / PRB / PC do B") == ["PT", "PRB", "PC do B"]
+
+
+def test_separa_religiosos_da_coligacao_e_do_prb():
+    votos, candidatos, detalhe, municipios = _entrada()
+    votos = votos.with_columns(sg_partido=pl.Series(["PRB", "PT", "PRB", "PSC"]))
+    coligacao = pl.DataFrame({"ano_eleicao": [2014, 2014], "sg_partido": ["PT", "PRB"]})
+
+    res = religiosos_amc(votos, candidatos, detalhe, municipios, coligacao)
+
+    linha = res.filter(pl.col("amc_id") == 100).row(0, named=True)
+    assert linha["votos_religiosos"] == 35
+    assert linha["votos_religiosos_coligacao"] == 35  # o pastor é do PRB, da coligação
+    assert linha["votos_religiosos_prb"] == 35
+    assert linha["votos_coligacao"] == 105  # todos os nominais de PT e PRB na AMC
+    assert linha["pct_coligacao"] == pytest.approx(100 * 105 / 120)
+    assert res.filter(pl.col("amc_id") == 300)["votos_coligacao"].item() == 0
