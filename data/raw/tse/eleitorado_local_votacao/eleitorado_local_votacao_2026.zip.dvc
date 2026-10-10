@@ -1,0 +1,13 @@
+md5: 09f0828818300d78c6f55f4989f48cc9
+frozen: true
+deps:
+- checksum: '"a7d5739-65d792bb704ed"'
+  size: 175986489
+  hash: md5
+  path: 
+    https://cdn.tse.jus.br/estatistica/sead/odsele/eleitorado_locais_votacao/eleitorado_local_votacao_2026.zip
+outs:
+- md5: b823bf23c9a9c2dfe42ff131b73a031c
+  size: 175986489
+  hash: md5
+  path: eleitorado_local_votacao_2026.zip

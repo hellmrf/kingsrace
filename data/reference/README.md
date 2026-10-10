@@ -18,3 +18,4 @@ Regra prática: se passar de ~1 MB ou puder ser baixado de uma fonte, não é da
 | `pesquisas_serie_2025_2026.csv` | 2º turno simulado Lula × Flávio, jun/2025 a out/2026, da Wikipédia (pt), com ~20% das linhas conferidas na fonte (`conferido`); linhas `divergente` já trazem o valor da fonte. |
 | `aprovacao_lula_2025_2026.csv` | aprovação do trabalho de Lula pela Quaest, jan/2025 a out/2026, lida dos relatórios do instituto. A partir de ago/2026 a pergunta muda um pouco (coluna `pergunta`). |
 | `linha_do_tempo.csv` | eventos de 2006 a 2026 com faixa (`eua`, `brasil`, `urnas`), grau de evidência (`documentado`, `reportado`, `alegado`, `refutado`), fonte e `conferido`. Alimenta a página `reports/conjuntura`. |
+| `grupos_terceiros.csv` | grupo de cada candidato eliminado em 2022 e 2026 (Tebet, Ciro, Cury, Renan, Caiado, Zema, direita, esquerda), para o painel por seção e a inferência ecológica da série G. |

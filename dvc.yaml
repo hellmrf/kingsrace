@@ -56,6 +56,44 @@ stages:
       - data/processed/painel_municipio.parquet
       - data/processed/painel_amc.parquet
 
+  converte_secao:
+    foreach: ${anos_secao}
+    do:
+      cmd: python -m kingsrace.ingest.tse_secao detalhe ${item}
+      deps:
+        - src/kingsrace/ingest/tse.py
+        - src/kingsrace/ingest/tse_secao.py
+        - data/raw/tse/detalhe_votacao_secao/detalhe_votacao_secao_${item}.zip
+      outs:
+        - data/interim/tse/detalhe_secao/ano=${item}:
+            cache: false
+
+  converte_locais:
+    cmd: python -m kingsrace.ingest.tse_secao locais 2026
+    deps:
+      - src/kingsrace/ingest/tse.py
+      - src/kingsrace/ingest/tse_secao.py
+      - data/raw/tse/eleitorado_local_votacao/eleitorado_local_votacao_2026.zip
+    outs:
+      - data/interim/tse/locais/ano=2026:
+          cache: false
+
+  painel_secao:
+    cmd: python -m kingsrace.features.secao
+    deps:
+      - src/kingsrace/features/secao.py
+      - src/kingsrace/features/painel.py
+      - data/reference/candidatos.csv
+      - data/reference/grupos_terceiros.csv
+      - data/processed/municipios.parquet
+      - data/interim/tse/votacao_secao/ano=2022
+      - data/interim/tse/votacao_secao/ano=2026
+      - data/interim/tse/detalhe_secao
+      - data/interim/tse/locais
+    outs:
+      - data/processed/painel_secao.parquet
+      - data/processed/painel_local.parquet
+
   covariaveis:
     cmd: python -m kingsrace.features.covariaveis
     deps:

@@ -3,6 +3,8 @@
 anos: [2006, 2010, 2014, 2018, 2022, 2026]
 # Eleições gerais com votos para deputado federal (medida E2c, candidatos religiosos).
 anos_deputados: [2006, 2010, 2014, 2018, 2022]
+# Pleitos com detalhe por seção e locais de votação (série G).
+anos_secao: [2022, 2026]
 
 # Correção de Holm da série E, como registrada em docs/hipoteses.md. Mudar só com nova
 # entrada no registro, nunca por `dvc exp run -S`.

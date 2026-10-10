@@ -1083,3 +1083,119 @@ stages:
       md5: 226476a4bdadd2d4b064ef3a62f54caf.dir
       size: 431031
       nfiles: 10
+  converte_locais:
+    cmd: python -m kingsrace.ingest.tse_secao locais 2026
+    deps:
+    - path: 
+        data/raw/tse/eleitorado_local_votacao/eleitorado_local_votacao_2026.zip
+      hash: md5
+      md5: b823bf23c9a9c2dfe42ff131b73a031c
+      size: 175986489
+    - path: src/kingsrace/ingest/tse.py
+      hash: md5
+      md5: d8167e8351bba3a9b6513612b85fc73a
+      size: 5797
+    - path: src/kingsrace/ingest/tse_secao.py
+      hash: md5
+      md5: 6d2988c3431e2a1906e407aeca078133
+      size: 2715
+    outs:
+    - path: data/interim/tse/locais/ano=2026
+      hash: md5
+      md5: 1b588acc6be2caf87cb0a53ea6ff3640.dir
+      size: 48769190
+      nfiles: 1
+  converte_secao@2026:
+    cmd: python -m kingsrace.ingest.tse_secao detalhe 2026
+    deps:
+    - path: data/raw/tse/detalhe_votacao_secao/detalhe_votacao_secao_2026.zip
+      hash: md5
+      md5: c33386a9b2e70b1859352ea1cfbb7aa1
+      size: 176923175
+    - path: src/kingsrace/ingest/tse.py
+      hash: md5
+      md5: d8167e8351bba3a9b6513612b85fc73a
+      size: 5797
+    - path: src/kingsrace/ingest/tse_secao.py
+      hash: md5
+      md5: 6d2988c3431e2a1906e407aeca078133
+      size: 2715
+    outs:
+    - path: data/interim/tse/detalhe_secao/ano=2026
+      hash: md5
+      md5: 9d0e5e664f77385f1b2fb30c905ba527.dir
+      size: 16368106
+      nfiles: 1
+  converte_secao@2022:
+    cmd: python -m kingsrace.ingest.tse_secao detalhe 2022
+    deps:
+    - path: data/raw/tse/detalhe_votacao_secao/detalhe_votacao_secao_2022.zip
+      hash: md5
+      md5: e3bc6587358e9721f7ee4b8303d8fad0
+      size: 243822213
+    - path: src/kingsrace/ingest/tse.py
+      hash: md5
+      md5: d8167e8351bba3a9b6513612b85fc73a
+      size: 5797
+    - path: src/kingsrace/ingest/tse_secao.py
+      hash: md5
+      md5: 6d2988c3431e2a1906e407aeca078133
+      size: 2715
+    outs:
+    - path: data/interim/tse/detalhe_secao/ano=2022
+      hash: md5
+      md5: 841efbb9c149700de22a73117e8d8013.dir
+      size: 28640423
+      nfiles: 1
+  painel_secao:
+    cmd: python -m kingsrace.features.secao
+    deps:
+    - path: data/interim/tse/detalhe_secao
+      hash: md5
+      md5: b5979051563637241b637e1dc124c49b.dir
+      size: 45008529
+      nfiles: 2
+    - path: data/interim/tse/locais
+      hash: md5
+      md5: e15853b713a6f095f1e055819f4e37d6.dir
+      size: 48769190
+      nfiles: 1
+    - path: data/interim/tse/votacao_secao/ano=2022
+      hash: md5
+      md5: 1a5fd95225b225a38195fafeea0b7613.dir
+      size: 46603901
+      nfiles: 1
+    - path: data/interim/tse/votacao_secao/ano=2026
+      hash: md5
+      md5: 5dc9963d49ed6b2cab3bf3c515c16d38.dir
+      size: 26991480
+      nfiles: 1
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/reference/candidatos.csv
+      hash: md5
+      md5: fd9ad6e79f1e744102a6956a1bc0c3e5
+      size: 472
+    - path: data/reference/grupos_terceiros.csv
+      hash: md5
+      md5: 9d080697c08f8a8a5c38ba35653b941a
+      size: 718
+    - path: src/kingsrace/features/painel.py
+      hash: md5
+      md5: 202daedce2d52d4d8273486273fc0f06
+      size: 8033
+    - path: src/kingsrace/features/secao.py
+      hash: md5
+      md5: b924facbcb32124dae35546c3907d5e0
+      size: 10072
+    outs:
+    - path: data/processed/painel_local.parquet
+      hash: md5
+      md5: ab084a2461e31e5ee0bd73bfcecc5f7f
+      size: 11631748
+    - path: data/processed/painel_secao.parquet
+      hash: md5
+      md5: f390084115c0f2609c1501628e91ca3a
+      size: 15890064

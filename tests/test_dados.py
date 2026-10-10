@@ -171,3 +171,24 @@ def test_homicidios_quase_todos_atribuidos_a_uma_amc():
         f=pl.col("amc").fill_null(0) / pl.col("sim")
     )
     assert fracao.filter(pl.col("f") < 0.96).height == 0, fracao.sort("ano")
+
+
+@pytest.mark.skipif(
+    not (paths.PROCESSED / "painel_secao.parquet").exists(), reason="painel por seção ausente"
+)
+def test_painel_secao_e_local_somam_o_painel_amc():
+    contagens = ["aptos", "comparecimento", "validos", "votos_pt", "votos_adv", "votos_outros"]
+    amc = pl.read_parquet(paths.PROCESSED / "painel_amc.parquet").filter(
+        pl.col("ano").is_in([2022, 2026])
+    )
+    esperado = (
+        amc.group_by("ano", "turno", "uf").agg(pl.col(contagens).sum()).sort("ano", "turno", "uf")
+    )
+    for arquivo in ("painel_secao", "painel_local"):
+        painel = pl.read_parquet(paths.PROCESSED / f"{arquivo}.parquet")
+        obtido = (
+            painel.group_by("ano", "turno", "uf")
+            .agg(pl.col(contagens).sum())
+            .sort("ano", "turno", "uf")
+        )
+        assert obtido.equals(esperado.select(obtido.columns)), arquivo
