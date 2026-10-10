@@ -39,12 +39,13 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | E2d | A pegada religiosa de 2018 vem das organizações aliadas ao PT em 2014 (troca de lado), não da política religiosa em geral | **testada** | ver [E2d](#e2d--a-troca-de-lado-das-organizações-religiosas) | **Não se sustenta; sinal contrário.** Por pp: coligação −0,005 (IC −0,012 a +0,002), demais −0,015 (IC −0,023 a −0,006); diferença +0,010 (IC −0,001 a +0,021) | `08_mecanismos.ipynb` |
 | E3b | Internet móvel depois de 2018 (acessos por município) prevê o afastamento dos pequenos em 2018→2022 e 2022→2026 | registrada (condicional aos dados) | ver [E3b e E3c](#e3b-e-e3c--duas-medidas-novas-para-o-ambiente-digital) | | |
 | E3c | Celular e internet nos domicílios (Censo 2010) preveem o afastamento do PT em 2014→2018 | registrada (condicional aos dados) | ver [E3b e E3c](#e3b-e-e3c--duas-medidas-novas-para-o-ambiente-digital) | | |
-| G1 | Aritmética do 2º turno de 2026: que combinações de transferência, comparecimento e conversão fecham a diferença | registrada (descritiva) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `09_segundo_turno.ipynb` |
-| G2 | Transferências do 1º para o 2º turno de 2022, por seção (inferência ecológica), e a faixa que elas dão para 2026 | registrada (descritiva; conferida pela B1) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `09_segundo_turno.ipynb` |
-| G3 | Reserva de comparecimento: abstencionistas e votantes perdidos onde Lula lidera, por município e local de votação | registrada (descritiva; conferida pela B2) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `09_segundo_turno.ipynb` |
-| G4 | Ex-eleitores: votos de Lula no 2º turno de 2022 que faltaram no 1º turno de 2026, por lugar | registrada (descritiva) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `09_segundo_turno.ipynb` |
-| G5 | Que tipo de lugar andou para o PT entre os turnos, de 2006 a 2022 | exploratória | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `09_segundo_turno.ipynb` |
-| G6 | Pesquisas do 2º turno de 2026, com o erro do 1º turno descontado, e os cruzamentos por voto no 1º turno | exploratória | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `09_segundo_turno.ipynb` |
+| G1 | Aritmética do 2º turno de 2026: que combinações de transferência, comparecimento e conversão fecham a diferença | registrada (descritiva) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G2 | Transferências do 1º para o 2º turno de 2022, por seção (inferência ecológica), e a faixa que elas dão para 2026 | registrada (descritiva; conferida pela B1) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G3 | Reserva de comparecimento: abstencionistas e votantes perdidos onde Lula lidera, por município e local de votação | registrada (descritiva; conferida pela B2) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G3b | A base de Lula falta mais no 2º turno onde não há governador em disputa | exploratória (vista depois da G2) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G4 | Ex-eleitores: votos de Lula no 2º turno de 2022 que faltaram no 1º turno de 2026, por lugar | registrada (descritiva) | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G5 | Que tipo de lugar andou para o PT entre os turnos, de 2006 a 2022 | exploratória | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
+| G6 | Pesquisas do 2º turno de 2026, com o erro do 1º turno descontado, e os cruzamentos por voto no 1º turno | exploratória | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `models/segundo_turno.py` |
 | G7 | O que está documentado sobre mobilização no dia da eleição e sobre o 2º turno de 2006 | documental | ver [G](#série-g-o-caminho-do-2º-turno-de-2026) | | `linha_do_tempo.csv` |
 
 ---
@@ -648,6 +649,22 @@ não muda: a previsão v2 continua em 24/10.
   da G2 mostra quanto essa suposição errou em 2022.
 - **Conferência depois de 25/10:** a B2 mede onde o comparecimento subiu no 2º turno de 2026 e
   a quem favoreceu.
+
+#### G3b · a base que falta onde não há governador em disputa (exploratória)
+
+**Adendo de 2026-10-10, depois de ver a G2.** É exploratória: a ideia veio do próprio
+resultado, que mostra 2,6% dos eleitores de Lula no 1º turno de 2022 sem votar no 2º, contra
+~0% dos de Bolsonaro.
+
+- **Pergunta:** a perda da base entre os turnos foi maior nas UFs sem 2º turno para
+  governador?
+- **Medida:** a linha "Lula → abstenção" da matriz de cada UF, em média ponderada pelos votos
+  de Lula. É comparada entre as UFs com e sem 2º turno para governador em 2022 (cadastro de
+  candidatos do TSE), e o mesmo é feito para o adversário.
+- **Uso para 2026:** lista das UFs com 2º turno para governador em 2026 e os votos de Lula no
+  1º turno nas que não têm.
+- **Limite:** são 27 unidades, e a diferença se mistura com a região (as UFs do Norte sem
+  2º turno local têm as maiores perdas). Não vira afirmação sem registro próprio.
 
 #### G4 · ex-eleitores
 

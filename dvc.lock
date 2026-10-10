@@ -668,8 +668,8 @@ stages:
       size: 19233
     - path: src/kingsrace/resultados.py
       hash: md5
-      md5: 79c76d7e756cc6441fe647fa201dc943
-      size: 5012
+      md5: ab842b8fa121c44cb870da43873ec923
+      size: 5648
     - path: src/kingsrace/viz/tema.py
       hash: md5
       md5: f82a54c2cc4d73068d33dfabc9c9c10f
@@ -714,8 +714,8 @@ stages:
       size: 2136
     - path: src/kingsrace/resultados.py
       hash: md5
-      md5: 79c76d7e756cc6441fe647fa201dc943
-      size: 5012
+      md5: ab842b8fa121c44cb870da43873ec923
+      size: 5648
     - path: src/kingsrace/viz/tema.py
       hash: md5
       md5: f82a54c2cc4d73068d33dfabc9c9c10f
@@ -774,8 +774,8 @@ stages:
       size: 10375
     - path: src/kingsrace/resultados.py
       hash: md5
-      md5: 79c76d7e756cc6441fe647fa201dc943
-      size: 5012
+      md5: ab842b8fa121c44cb870da43873ec923
+      size: 5648
     - path: src/kingsrace/viz/tema.py
       hash: md5
       md5: f82a54c2cc4d73068d33dfabc9c9c10f
@@ -820,8 +820,8 @@ stages:
       size: 1381
     - path: src/kingsrace/resultados.py
       hash: md5
-      md5: 79c76d7e756cc6441fe647fa201dc943
-      size: 5012
+      md5: ab842b8fa121c44cb870da43873ec923
+      size: 5648
     - path: src/kingsrace/viz/tema.py
       hash: md5
       md5: f82a54c2cc4d73068d33dfabc9c9c10f
@@ -867,8 +867,8 @@ stages:
       size: 2136
     - path: src/kingsrace/resultados.py
       hash: md5
-      md5: 79c76d7e756cc6441fe647fa201dc943
-      size: 5012
+      md5: ab842b8fa121c44cb870da43873ec923
+      size: 5648
     - path: src/kingsrace/viz/tema.py
       hash: md5
       md5: f82a54c2cc4d73068d33dfabc9c9c10f
@@ -918,8 +918,8 @@ stages:
       size: 2136
     - path: src/kingsrace/resultados.py
       hash: md5
-      md5: 79c76d7e756cc6441fe647fa201dc943
-      size: 5012
+      md5: ab842b8fa121c44cb870da43873ec923
+      size: 5648
     - path: src/kingsrace/viz/tema.py
       hash: md5
       md5: f82a54c2cc4d73068d33dfabc9c9c10f
@@ -975,8 +975,8 @@ stages:
       size: 1381
     - path: src/kingsrace/resultados.py
       hash: md5
-      md5: 79c76d7e756cc6441fe647fa201dc943
-      size: 5012
+      md5: ab842b8fa121c44cb870da43873ec923
+      size: 5648
     - path: src/kingsrace/viz/tema.py
       hash: md5
       md5: f82a54c2cc4d73068d33dfabc9c9c10f
@@ -1051,8 +1051,8 @@ stages:
       size: 9138
     - path: src/kingsrace/resultados.py
       hash: md5
-      md5: 79c76d7e756cc6441fe647fa201dc943
-      size: 5012
+      md5: ab842b8fa121c44cb870da43873ec923
+      size: 5648
     - path: src/kingsrace/viz/tema.py
       hash: md5
       md5: f82a54c2cc4d73068d33dfabc9c9c10f
@@ -1199,3 +1199,177 @@ stages:
       hash: md5
       md5: f390084115c0f2609c1501628e91ca3a
       size: 15890064
+  segundo_turno:
+    cmd: python -m kingsrace.models.segundo_turno
+    deps:
+    - path: data/processed/covariaveis_amc.parquet
+      hash: md5
+      md5: 2900484b64fd80d7450e76972fa87b36
+      size: 963530
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/processed/painel_amc.parquet
+      hash: md5
+      md5: 9b6d4016f70cc1666e0e560c2ce9340e
+      size: 4026517
+    - path: data/processed/painel_local.parquet
+      hash: md5
+      md5: ab084a2461e31e5ee0bd73bfcecc5f7f
+      size: 11631748
+    - path: data/processed/painel_municipio.parquet
+      hash: md5
+      md5: 2cb278f11df4f7974363fad152bcb6a3
+      size: 4030992
+    - path: data/processed/painel_secao.parquet
+      hash: md5
+      md5: f390084115c0f2609c1501628e91ca3a
+      size: 15890064
+    - path: data/processed/votos_municipio.parquet
+      hash: md5
+      md5: 4b722c875f390c3c9d15d5b0b681f084
+      size: 1548772
+    - path: data/raw/tse/consulta_cand/consulta_cand_2022.zip
+      hash: md5
+      md5: e45e984d7f3f390ef02a6cdb93dda19b
+      size: 4387268
+    - path: data/raw/tse/consulta_cand/consulta_cand_2026.zip
+      hash: md5
+      md5: 7fd6d395c61364ffb3cacfbe406b7f7e
+      size: 3240881
+    - path: src/kingsrace/features/base.py
+      hash: md5
+      md5: c605e5a3fbaaef0f12cc91da761be482
+      size: 2136
+    - path: src/kingsrace/features/decomposicao.py
+      hash: md5
+      md5: 710c9e5761021540b6814f66b45979e1
+      size: 1381
+    - path: src/kingsrace/features/secao.py
+      hash: md5
+      md5: b924facbcb32124dae35546c3907d5e0
+      size: 10072
+    - path: src/kingsrace/ingest/tse.py
+      hash: md5
+      md5: d8167e8351bba3a9b6513612b85fc73a
+      size: 5797
+    - path: src/kingsrace/models/inferencia_ecologica.py
+      hash: md5
+      md5: 03d5d878033c53a88338c45775a8b774
+      size: 5096
+    - path: src/kingsrace/models/segundo_turno.py
+      hash: md5
+      md5: 30685b5e204c768a71640077243b9803
+      size: 28084
+    - path: src/kingsrace/resultados.py
+      hash: md5
+      md5: ab842b8fa121c44cb870da43873ec923
+      size: 5648
+    params:
+      params.yaml:
+        segundo_turno:
+          reps: 200
+          semente: 0
+    outs:
+    - path: data/processed/segundo_turno
+      hash: md5
+      md5: 8e1bf0f531a8bd4e5764247cba2be9d0.dir
+      size: 10464193
+      nfiles: 9
+    - path: resultados/segundo_turno/metrics.json
+      hash: md5
+      md5: 15d16efb288b0c32b1f2f0f41798d206
+      size: 15652
+    - path: resultados/segundo_turno/plots
+      hash: md5
+      md5: a3e945c0d142374e3e2dafbd93d65be7.dir
+      size: 14467
+      nfiles: 12
+  site_segundo_turno:
+    cmd: python -m kingsrace.publica dados segundo-turno
+    deps:
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/processed/segundo_turno
+      hash: md5
+      md5: 8e1bf0f531a8bd4e5764247cba2be9d0.dir
+      size: 10464193
+      nfiles: 9
+    - path: data/reference/totais_oficiais.csv
+      hash: md5
+      md5: e6fdbf5a7e70aa865e3b81b63511452c
+      size: 1109
+    - path: resultados/03_previsao_2t/metrics.json
+      hash: md5
+      md5: a380642cf095fce179b3ff928bcc7494
+      size: 3148
+    - path: resultados/segundo_turno/metrics.json
+      hash: md5
+      md5: 15d16efb288b0c32b1f2f0f41798d206
+      size: 15652
+    - path: resultados/segundo_turno/plots
+      hash: md5
+      md5: a3e945c0d142374e3e2dafbd93d65be7.dir
+      size: 14467
+      nfiles: 12
+    - path: src/kingsrace/publica/comum.py
+      hash: md5
+      md5: 4c9a50fc77c552e729b560357de9f2e7
+      size: 3181
+    - path: src/kingsrace/publica/segundo_turno.py
+      hash: md5
+      md5: d7978b79c6b535276b21d18a2a08277c
+      size: 6652
+    outs:
+    - path: site/dados/segundo-turno
+      hash: md5
+      md5: 62f89810032e56ce35b9af02984231d6.dir
+      size: 42011578
+      nfiles: 5601
+  nb_09_segundo_turno:
+    cmd: papermill notebooks/09_segundo_turno.ipynb 
+      reports/notebooks/09_segundo_turno.ipynb -k python3 --cwd notebooks 
+      --no-progress-bar --log-level WARNING
+    deps:
+    - path: data/processed/municipios.parquet
+      hash: md5
+      md5: 4826b4242cdbf5aef3cb2c990bde5a46
+      size: 99065
+    - path: data/processed/segundo_turno
+      hash: md5
+      md5: 8e1bf0f531a8bd4e5764247cba2be9d0.dir
+      size: 10464193
+      nfiles: 9
+    - path: notebooks/09_segundo_turno.ipynb
+      hash: md5
+      md5: 22a0a780737cc41815e08d6684b4c570
+      size: 14330
+    - path: resultados/segundo_turno/metrics.json
+      hash: md5
+      md5: 15d16efb288b0c32b1f2f0f41798d206
+      size: 15652
+    - path: src/kingsrace/resultados.py
+      hash: md5
+      md5: ab842b8fa121c44cb870da43873ec923
+      size: 5648
+    - path: src/kingsrace/viz/tema.py
+      hash: md5
+      md5: f82a54c2cc4d73068d33dfabc9c9c10f
+      size: 2005
+    outs:
+    - path: reports/notebooks/09_segundo_turno.ipynb
+      hash: md5
+      md5: 8ba29c1b0b185cca5ad9a127dca5bb7b
+      size: 779123
+    - path: resultados/09_segundo_turno/metrics.json
+      hash: md5
+      md5: 8a80554c91d9fca8acb82f023de02f11
+      size: 3
+    - path: resultados/09_segundo_turno/plots/images
+      hash: md5
+      md5: 368bca3eadf8b134bfa3ae5694514ae7.dir
+      size: 282381
+      nfiles: 4

@@ -55,12 +55,17 @@ def params(secao: str) -> dict[str, Any]:
 
 def abre(notebook: str) -> "Live":
     """`Live` do notebook (nome sem extensão), recomeçando do zero a cada execução."""
-    from dvclive import Live
-
     if not (paths.NOTEBOOKS / f"{notebook}.ipynb").exists():
         raise FileNotFoundError(f"notebooks/{notebook}.ipynb não existe")
+    return abre_etapa(notebook)
+
+
+def abre_etapa(etapa: str) -> "Live":
+    """`Live` de uma etapa do pipeline (módulo ou notebook), em resultados/<etapa>/ (D12)."""
+    from dvclive import Live
+
     return Live(
-        dir=str(DIR / notebook),
+        dir=str(DIR / etapa),
         resume=False,
         report=None,
         save_dvc_exp=False,
@@ -131,6 +136,17 @@ def coeficientes(
         pl.col(ic_sup).cast(pl.Float64).alias("ic_sup"),
     ).to_dicts()
     live.log_plot(nome, linhas, x="rotulo", y="coef", template="coeficientes")
+
+
+def serie(live: "Live", nome: str, df: pl.DataFrame, x: str, y: str | list[str]) -> None:
+    """Dados de um gráfico em plots/custom/<nome>.json, para o `dvc plots` (D12).
+
+    O template, o eixo e os rótulos ficam declarados no dvc.yaml. É também o que a página
+    pública redesenha: mesmo nome, mesmos dados.
+    """
+    if not NOME.match(nome):
+        raise ValueError(f"nome de gráfico inválido: {nome!r}")
+    live.log_plot(nome, df.to_dicts(), x=x, y=y)
 
 
 def grafico(live: "Live", nome: str, chart: alt.TopLevelMixin, escala: float = 2.0):

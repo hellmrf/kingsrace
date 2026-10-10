@@ -94,6 +94,38 @@ stages:
       - data/processed/painel_secao.parquet
       - data/processed/painel_local.parquet
 
+  segundo_turno:
+    # Série G (docs/hipoteses.md): tabelas em processed/segundo_turno/ e as métricas e os
+    # dados de gráfico da própria etapa em resultados/segundo_turno/ (D12). Os gráficos estão
+    # definidos na seção `plots` do fim do arquivo.
+    cmd: python -m kingsrace.models.segundo_turno
+    params:
+      - segundo_turno
+    deps:
+      - src/kingsrace/models/segundo_turno.py
+      - src/kingsrace/models/inferencia_ecologica.py
+      - src/kingsrace/features/decomposicao.py
+      - src/kingsrace/features/secao.py
+      - src/kingsrace/features/base.py
+      - src/kingsrace/ingest/tse.py
+      - src/kingsrace/resultados.py
+      - data/raw/tse/consulta_cand/consulta_cand_2022.zip
+      - data/raw/tse/consulta_cand/consulta_cand_2026.zip
+      - data/processed/painel_secao.parquet
+      - data/processed/painel_local.parquet
+      - data/processed/painel_municipio.parquet
+      - data/processed/painel_amc.parquet
+      - data/processed/votos_municipio.parquet
+      - data/processed/covariaveis_amc.parquet
+      - data/processed/municipios.parquet
+    outs:
+      - data/processed/segundo_turno
+      - resultados/segundo_turno/plots:
+          cache: false
+    metrics:
+      - resultados/segundo_turno/metrics.json:
+          cache: false
+
   covariaveis:
     cmd: python -m kingsrace.features.covariaveis
     deps:
@@ -185,6 +217,21 @@ stages:
     outs:
       - data/processed/emprego_amc.parquet
       - data/processed/homicidios_amc.parquet
+
+  # --- Site público (D12): só lê saídas do DVC; site/dados vai ao R2 e o Actions baixa dali ---
+  site_segundo_turno:
+    cmd: python -m kingsrace.publica dados segundo-turno
+    deps:
+      - src/kingsrace/publica/comum.py
+      - src/kingsrace/publica/segundo_turno.py
+      - resultados/segundo_turno/metrics.json
+      - resultados/segundo_turno/plots
+      - resultados/03_previsao_2t/metrics.json
+      - data/processed/segundo_turno
+      - data/processed/municipios.parquet
+      - data/reference/totais_oficiais.csv
+    outs:
+      - site/dados/segundo-turno
 
   # --- Notebooks (D8) ---
   # Cada notebook roda pelo papermill e registra no DVCLive (kingsrace.resultados):
@@ -409,3 +456,105 @@ stages:
           x_label: transição
           y_label: efeito de 1 dp de X sobre Δ logit do PT
       - resultados/08_mecanismos/plots/images
+
+  nb_09_segundo_turno:
+    cmd: >-
+      papermill notebooks/09_segundo_turno.ipynb reports/notebooks/09_segundo_turno.ipynb
+      -k python3 --cwd notebooks --no-progress-bar --log-level WARNING
+    deps:
+      - notebooks/09_segundo_turno.ipynb
+      - src/kingsrace/resultados.py
+      - src/kingsrace/viz/tema.py
+      - resultados/segundo_turno/metrics.json
+      - data/processed/segundo_turno
+      - data/processed/municipios.parquet
+    outs:
+      - reports/notebooks/09_segundo_turno.ipynb:
+          cache: false
+    metrics:
+      - resultados/09_segundo_turno/metrics.json:
+          cache: false
+    plots:
+      - resultados/09_segundo_turno/plots/images
+
+# --- Gráficos das etapas que não são notebook (D12) ---
+plots:
+  - resultados/segundo_turno/plots/custom/G1_estoques_2026.json:
+      template: bar_horizontal
+      x: mi
+      y: origem
+      title: "G1 · votos fora dos finalistas no 1º turno de 2026"
+      x_label: "milhões"
+  - G1_entre_turnos:
+      template: linear
+      x: ano
+      y:
+        resultados/segundo_turno/plots/custom/G1_entre_turnos.json: [pt_mi, adv_mi]
+      title: "G1 · votos ganhos do 1º para o 2º turno, PT e adversário"
+      y_label: "milhões"
+  - resultados/segundo_turno/plots/custom/G2_transicao_BR.json:
+      template: coeficientes
+      x: rotulo
+      y: coef
+      title: "G2 · para onde foi cada eleitor do 1º turno de 2022 (fração)"
+      x_label: "origem → destino"
+      y_label: "fração (IC 95%)"
+  - resultados/segundo_turno/plots/custom/G2_cenarios.json:
+      template: coeficientes
+      x: rotulo
+      y: coef
+      title: "G2 · margem de Lula no 2º turno de 2026 com as taxas de 2022"
+      x_label: "cenário"
+      y_label: "milhões de votos (IC 95%)"
+  - resultados/segundo_turno/plots/custom/G2_efeito_por_origem.json:
+      template: bar_horizontal
+      x: mi
+      y: origem
+      title: "G2 · quanto cada origem move a margem (cenário perfil)"
+      x_label: "milhões de votos"
+  - resultados/segundo_turno/plots/custom/G3_reserva_uf.json:
+      template: bar_horizontal
+      x: reserva_lula_mil
+      y: uf
+      title: "G3 · reserva líquida nos municípios onde Lula lidera"
+      x_label: "mil votos"
+  - resultados/segundo_turno/plots/custom/G4_fatia_uf.json:
+      template: bar_horizontal
+      x: fatia_mil
+      y: uf
+      title: "G4 · votos de Lula perdidos na fatia, 2T 2022 → 1T 2026"
+      x_label: "mil votos"
+  - resultados/segundo_turno/plots/custom/G4_fatia_faixa.json:
+      template: bar_horizontal
+      x: fatia_mil
+      y: faixa
+      title: "G4 · fatia perdida por tamanho da AMC"
+      x_label: "mil votos"
+  - resultados/segundo_turno/plots/custom/G5_z_evangelica.json:
+      template: coeficientes
+      x: rotulo
+      y: coef
+      title: "G5 · % evangélica e a variação do PT entre os turnos"
+      x_label: "eleição"
+      y_label: "efeito de 1 dp sobre Δ logit"
+  - resultados/segundo_turno/plots/custom/G5_z_log_renda.json:
+      template: coeficientes
+      x: rotulo
+      y: coef
+      title: "G5 · renda (log) e a variação do PT entre os turnos"
+      x_label: "eleição"
+      y_label: "efeito de 1 dp sobre Δ logit"
+  - resultados/segundo_turno/plots/custom/G5_z_aptos.json:
+      template: coeficientes
+      x: rotulo
+      y: coef
+      title: "G5 · eleitorado (log) e a variação do PT entre os turnos"
+      x_label: "eleição"
+      y_label: "efeito de 1 dp sobre Δ logit"
+  - resultados/segundo_turno/plots/custom/G5_z_bolsa.json:
+      template: coeficientes
+      x: rotulo
+      y: coef
+      title: "G5 · Auxílio Brasil e a variação do PT entre os turnos"
+      x_label: "eleição"
+      y_label: "efeito de 1 dp sobre Δ logit"

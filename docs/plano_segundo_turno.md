@@ -73,7 +73,10 @@ onde e quanto, não qual mensagem.
 1. **Análise** (`notebooks/`, `models/`, `features/`): produz `data/processed/` e
    `resultados/`. Nunca escreve no site.
 2. **Dados do site** (`src/kingsrace/publica/<página>.py`):
-   - só lê `processed/`, `resultados/` e `reference/`, sem reestimar modelo;
+   - só lê saídas do DVC (`processed/`, `resultados/`) e `reference/`, sem fazer conta
+     nova, nem "descritiva": **todo número e todo gráfico da página é antes uma saída
+     declarada no `dvc.yaml`** (métrica, gráfico ou tabela de uma etapa), com o mesmo nome;
+   - a ordem é pipeline (o centro) → notebook (análise) → público;
    - grava JSON e CSV determinísticos em `site/dados/<página>/`;
    - confere os totais contra `totais_oficiais.csv`.
    - É uma etapa do DVC, e as saídas vão ao R2.

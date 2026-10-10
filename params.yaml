@@ -23,3 +23,9 @@ previsao_2t:
 exploracao:
   c3_grupos: 4
   c3_semente: 0
+
+# Série G (o caminho do 2º turno; registro em docs/hipoteses.md). Mudar só com nova
+# entrada no registro.
+segundo_turno:
+  reps: 200 # réplicas do bootstrap de municípios da G2
+  semente: 0

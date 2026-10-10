@@ -249,6 +249,55 @@ para `hipoteses.md`; o DVC não via nenhum resultado. Agora:
 - **`just status`:** o `dvc status` sem os ~60 avisos de etapa congelada (cada `dvc
   import-url` é congelado por definição; o DVC não tem opção para silenciá-los).
 
+## D12 — Site público: GitHub Pages, e o centro é o pipeline do DVC
+
+- **Onde:** as páginas públicas saem pelo GitHub Pages do próprio repositório, que é privado
+  (GitHub Pro). Quem publica é o Actions, a cada merge na `main`. Os artifacts do claude.ai
+  ficam só para páginas internas do grupo, como "O que os votos mostram", que depende de
+  votação e comentários.
+- **A ordem é sempre a mesma:**
+  1. **Pipeline (DVC), o centro.** As etapas de `features/` e `models/` gravam tabelas em
+     `data/processed/` e as próprias métricas e dados de gráfico em `resultados/<etapa>/`,
+     declarados em `metrics` e `plots` no `dvc.yaml`. É o que entra no `dvc metrics diff`, no
+     `dvc plots diff` e na aba de experimentos.
+  2. **Análise (notebooks).** Etapas do DVC que leem o pipeline para a análise do autor e dos
+     contribuidores, com as próprias métricas e gráficos. A cópia executada fica no git com
+     as saídas (D14).
+  3. **Público.** `src/kingsrace/publica/<página>.py` só **lê** saídas do DVC (`processed/` e
+     `resultados/`) e grava JSON e CSV em `site/dados/`; é também uma etapa do DVC, com as
+     saídas no R2. `site/` guarda os templates Jinja (`StrictUndefined`: um número que falta
+     derruba o build) e os módulos JS dos gráficos. Nenhum número é digitado no HTML.
+- **Regra:** todo número e todo gráfico de página pública é antes uma saída declarada no
+  `dvc.yaml` (métrica, gráfico ou tabela de uma etapa), com o mesmo nome. O gerador do site
+  não faz conta nova, nem "descritiva". A página redesenha a versão interativa.
+- **Por quê:** a página da conjuntura (branch `heliton/checkpoint-1`) calculou contas novas no
+  próprio gerador, fora do pipeline, e elas ficaram fora do histórico de resultados. Essas
+  contas migram para uma etapa do DVC antes de a página vir para o site.
+- **CI:** o Actions baixa do R2 só os dados do site, com uma chave somente de leitura, e não
+  roda o pipeline.
+
+## D13 — Inferência ecológica entre turnos e casamento de locais (série G)
+
+- **Estimador:** em cada UF, mínimos quadrados ponderados pelos aptos da seção, com a matriz
+  de transição B ≥ 0 e linhas somando 1 (`models/inferencia_ecologica.py`).
+  - **Unidade:** a seção casada entre os turnos (mesmo eleitorado).
+  - **Cálculo:** o problema só depende das matrizes de Gram, então cada município entra
+    pelas suas.
+  - **IC:** bootstrap de municípios, reamostrando somas de matrizes.
+  - **País:** a média das UFs, ponderada pelos votos de cada origem.
+- **Escala:** as somas são divididas pelo peso total antes do SLSQP. Na escala de votos, o
+  otimizador parava no ponto de partida e declarava sucesso; o teste sintético pegou isso.
+- **O que a matriz não diz:** ela mede fluxos **líquidos**. Trocas nos dois sentidos se
+  anulam (Lula→Bolsonaro e Bolsonaro→Lula ficam perto de zero por construção), e a taxa é
+  suposta constante dentro da UF.
+- **Locais entre 2022 e 2026:** o número do local se repete entre pleitos para lugares
+  diferentes. O casamento exige município, zona e número iguais **e** o nome igual depois de
+  normalizado (sem acento, maiúsculo, só letras e dígitos). Os locais sem par ficam sem
+  "votantes perdidos", e a taxa de casamento é informada.
+- **Nomes de local:** vêm do detalhe por seção (o mais frequente no local). Bairro e
+  coordenadas vêm do cadastro de locais de 2026, com a vírgula decimal convertida; as
+  coordenadas fora do Brasil (por exemplo, 0, 0) viram nulas.
+
 ## D14 — Notebooks executados no git, com as saídas
 
 - **Antes (D8):** a cópia executada pelo papermill (`reports/notebooks/`) ia para o cache do

@@ -5,6 +5,56 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-10 · série G: se 2022 se repetir, Flávio vence por ~7,6 milhões
+
+Etapa `segundo_turno` (`models/segundo_turno.py`), notebook
+[`09_segundo_turno.ipynb`](../notebooks/09_segundo_turno.ipynb) e a página pública "Como virar"
+(`site/`, GitHub Pages). O plano está em [plano_segundo_turno.md](plano_segundo_turno.md), e o
+registro, feito antes dos dados, em [hipoteses.md](hipoteses.md) (série G).
+
+**Dados novos:**
+
+- Detalhe por seção de 2022 e 2026 e locais de votação de 2026 (TSE). O painel por seção e o
+  por local somam exatamente o painel por AMC em cada UF e turno.
+- Cadastro de candidatos de 2026, para saber onde há 2º turno para governador.
+
+**Ferramenta nova:** `models/inferencia_ecologica.py`, a matriz de transição entre turnos por
+seção, com restrições e bootstrap de municípios (D13). Serve direto para a B1 depois de 25/10.
+
+**Resultados:**
+
+- **A matriz de 2022 passa nas checagens.** A retenção é de 96,3% para Lula e 99,9% para
+  Bolsonaro, e os totais implicados diferem dos oficiais em menos de 50 mil votos. Os
+  eleitores de Tebet e Ciro se dividiram quase ao meio, com leve vantagem para Bolsonaro, e
+  ~18% votaram branco ou nulo. Os eleitores de Lula que não votaram nele no 2º turno foram
+  3,7%, e os de Bolsonaro, 0,1%.
+- **Com as taxas de 2022, a margem de Lula em 2026 vai de −2,2 para −7,6 milhões** (de −5,7 a
+  −8,5 nos quatro cenários para os eliminados). Bate em ordem de grandeza com a previsão v1
+  (B4), que dá Lula com 46,9% entre os dois.
+- **As maiores parcelas:** a própria base que não volta (−2,0 mi), Renan + Caiado (−1,8 mi),
+  quem não votou no 1º turno (−0,6 mi) e brancos e nulos (−0,6 mi).
+- **Reserva de comparecimento:** onde Lula lidera, cada ponto de comparecimento vale ~187 mil
+  votos líquidos. Com efeito fixo de município, a lição de 2022 é pequena: o comparecimento
+  no 2º turno subiu um pouco menos onde Lula era mais forte (−0,01 pp por pp).
+- **Ex-eleitores (G4):** −7,1 mi na fatia de Lula do 2º turno de 2022 ao 1º de 2026. São 3,0 mi
+  nas AMCs com mais de 100 mil eleitores, e SP lidera (−1,6 mi).
+
+**Exploratório (G3b, visto depois da G2):** a base de Lula faltou mais no 2º turno de 2022 onde
+não havia governador em disputa (3,4% contra 2,0%). Em 2026, só 7 UFs têm 2º turno para
+governador (AC, AM, DF, ES, RJ, RN, TO); nas outras 20 estão 45,7 mi dos votos de Lula.
+
+**Decisões:**
+
+- D12: o site público sai pelo GitHub Pages, e o centro é o pipeline do DVC (pipeline →
+  notebook → público).
+- D13: o método da inferência ecológica e o casamento de locais.
+- D14: os notebooks executados vão ao git com as saídas.
+
+**Próximo:** a G6 (pesquisas de 2º turno e cruzamentos por voto no 1º turno) e a G7
+(documental). Depois, a v2 da página com o mapa e as pesquisas e, em 24/10, a v2 da B4.
+
+---
+
 ## 2026-10-10 · só a religião marca 2018; economia, violência e trabalho, não (série E)
 
 [`notebooks/08_mecanismos.ipynb`](../notebooks/08_mecanismos.ipynb) · registro de 10/10 em
