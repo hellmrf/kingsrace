@@ -188,8 +188,9 @@ stages:
 
   # --- Notebooks (D8) ---
   # Cada notebook roda pelo papermill e registra no DVCLive (kingsrace.resultados):
-  # resultados/<nb>/metrics.json e plots/custom (tabelas de coeficientes) ficam no git;
-  # o notebook executado e os PNGs dos gráficos vão para o cache do DVC (R2).
+  # resultados/<nb>/metrics.json e plots/custom (tabelas de coeficientes) ficam no git, e
+  # o notebook executado também, com as saídas, para ser lido no GitHub (D14); os PNGs dos
+  # gráficos vão para o cache do DVC (R2).
   # Rodar via `just resultados`, que limpa as saídas dos notebooks antes (o hash do .ipynb
   # é calculado com as saídas).
 
@@ -206,7 +207,8 @@ stages:
       - data/processed/painel_amc.parquet
       - data/processed/votos_municipio.parquet
     outs:
-      - reports/notebooks/01_panorama.ipynb
+      - reports/notebooks/01_panorama.ipynb:
+          cache: false
     metrics:
       - resultados/01_panorama/metrics.json:
           cache: false
@@ -226,7 +228,8 @@ stages:
       - data/processed/covariaveis_amc.parquet
       - data/processed/municipios.parquet
     outs:
-      - reports/notebooks/02_tamanho.ipynb
+      - reports/notebooks/02_tamanho.ipynb:
+          cache: false
     metrics:
       - resultados/02_tamanho/metrics.json:
           cache: false
@@ -257,7 +260,8 @@ stages:
       - data/reference/previsoes/previsao_2t_2026_${previsao_2t.versao}.csv
       - data/reference/previsoes/previsao_2t_2026_${previsao_2t.versao}.json
     outs:
-      - reports/notebooks/03_previsao_2t.ipynb
+      - reports/notebooks/03_previsao_2t.ipynb:
+          cache: false
     metrics:
       - resultados/03_previsao_2t/metrics.json:
           cache: false
@@ -276,7 +280,8 @@ stages:
       - data/processed/painel_amc.parquet
       - data/processed/municipios.parquet
     outs:
-      - reports/notebooks/04_decomposicao.ipynb
+      - reports/notebooks/04_decomposicao.ipynb:
+          cache: false
     metrics:
       - resultados/04_decomposicao/metrics.json:
           cache: false
@@ -296,7 +301,8 @@ stages:
       - data/processed/covariaveis_amc.parquet
       - data/processed/municipios.parquet
     outs:
-      - reports/notebooks/05_composicao.ipynb
+      - reports/notebooks/05_composicao.ipynb:
+          cache: false
     metrics:
       - resultados/05_composicao/metrics.json:
           cache: false
@@ -325,7 +331,8 @@ stages:
       - data/processed/covariaveis_amc.parquet
       - data/processed/municipios.parquet
     outs:
-      - reports/notebooks/06_serie.ipynb
+      - reports/notebooks/06_serie.ipynb:
+          cache: false
     metrics:
       - resultados/06_serie/metrics.json:
           cache: false
@@ -352,7 +359,8 @@ stages:
       - data/processed/painel_amc.parquet
       - data/processed/municipios.parquet
     outs:
-      - reports/notebooks/07_virada_2018.ipynb
+      - reports/notebooks/07_virada_2018.ipynb:
+          cache: false
     metrics:
       - resultados/07_virada_2018/metrics.json:
           cache: false
@@ -387,7 +395,8 @@ stages:
       - data/processed/emprego_amc.parquet
       - data/processed/homicidios_amc.parquet
     outs:
-      - reports/notebooks/08_mecanismos.ipynb
+      - reports/notebooks/08_mecanismos.ipynb:
+          cache: false
     metrics:
       - resultados/08_mecanismos/metrics.json:
           cache: false

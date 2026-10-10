@@ -249,6 +249,16 @@ para `hipoteses.md`; o DVC não via nenhum resultado. Agora:
 - **`just status`:** o `dvc status` sem os ~60 avisos de etapa congelada (cada `dvc
   import-url` é congelado por definição; o DVC não tem opção para silenciá-los).
 
+## D14 — Notebooks executados no git, com as saídas
+
+- **Antes (D8):** a cópia executada pelo papermill (`reports/notebooks/`) ia para o cache do
+  DVC, e no GitHub só se via o notebook-fonte, sem saídas.
+- **Agora:** essas cópias são saídas `cache: false` das etapas `nb_*`. Elas vão para o git com
+  as saídas, e o GitHub mostra cada análise renderizada (os gráficos saem em SVG no lote).
+  O `.gitattributes` desliga o nbstripout só em `reports/notebooks/`. O notebook-fonte
+  continua limpo, para o diff ficar legível e o hash do DVC não depender das saídas.
+- **Tamanho:** de 48 kB a 3,2 MB por notebook em 10/10.
+
 ---
 
 ## Armadilhas metodológicas (valem para todas as análises)
