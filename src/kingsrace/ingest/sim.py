@@ -43,10 +43,15 @@ def le_dbf(caminho: Path, campos: list[str]) -> pl.DataFrame:
 
 
 def conta_homicidios(obitos: pl.DataFrame, ano: int) -> pl.DataFrame:
-    """Homicídios por município de residência (código IBGE de 6 dígitos)."""
+    """Homicídios por município de residência (código IBGE de 6 dígitos).
+
+    Até 2005 o SIM grava o código com 7 dígitos (com o verificador); depois, com 6.
+    """
+    codigo = pl.col("CODMUNRES").str.strip_chars()
+    seis = pl.when(codigo.str.len_chars() == 7).then(codigo.str.slice(0, 6)).otherwise(codigo)
     return (
         obitos.filter(pl.col("CAUSABAS").str.strip_chars().str.contains(HOMICIDIO))
-        .group_by(cd_ibge6=pl.col("CODMUNRES").str.strip_chars().cast(pl.Int32, strict=False))
+        .group_by(cd_ibge6=seis.cast(pl.Int32, strict=False))
         .agg(homicidios=pl.len())
         .with_columns(ano=pl.lit(ano, pl.Int32))
     )

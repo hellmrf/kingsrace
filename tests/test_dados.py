@@ -154,3 +154,20 @@ def test_votos_nominais_de_deputado_batem_com_o_detalhe_por_uf():
 
     assert res.height == 27 * 5
     assert res.filter(pl.col("votos_validos") != pl.col("qt_votos_nominais_validos")).is_empty()
+
+
+def test_homicidios_quase_todos_atribuidos_a_uma_amc():
+    """O SIM deixa 1–3% em "município ignorado"; perder mais denuncia código mal lido."""
+    sim = paths.INTERIM / "sim" / "homicidios.parquet"
+    if not sim.exists():
+        pytest.skip("intermediário do SIM ausente")
+    total = pl.read_parquet(sim).group_by("ano").agg(sim=pl.col("homicidios").sum())
+    amc = (
+        pl.read_parquet(paths.PROCESSED / "homicidios_amc.parquet")
+        .group_by("ano")
+        .agg(amc=pl.col("homicidios").sum())
+    )
+    fracao = total.join(amc, on="ano", how="left").with_columns(
+        f=pl.col("amc").fill_null(0) / pl.col("sim")
+    )
+    assert fracao.filter(pl.col("f") < 0.96).height == 0, fracao.sort("ano")

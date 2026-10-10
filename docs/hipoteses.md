@@ -13,7 +13,7 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | A2 | Queda maior onde o agro pesa mais e onde a soja avançou | **testada** | ver [A2–A4](#a2-a3-e-a4) | **Não se sustenta.** Expansão da soja: −0,0007 (IC −0,0017 a +0,0003) | `05_composicao.ipynb` |
 | A3 | Participação evangélica (nível 2022 e Δ 2010–2022) prevê a queda | **testada** | ver [A2–A4](#a2-a3-e-a4) | **Não se sustenta.** Crescimento 2010→22: +0,0002 (IC −0,0009 a +0,0012) | `05_composicao.ipynb` |
 | A4 | Coeficiente da cobertura do Bolsa Família muda de sinal ou cresce entre 2022 e 2026 | **testada** | ver [A2–A4](#a2-a3-e-a4) | **Sustentada.** Associação dobrou: +0,0058 (2022) → +0,0115 (2026); interação IC +0,0036 a +0,0077. A4a também | `05_composicao.ipynb` |
-| A5 | Prefeito do PL/centrão eleito em 2024 aumenta o afastamento de Lula (RDD) | aberta | | | |
+| A5 | Prefeito de direita eleito em 2024 aumenta o afastamento de Lula em 2022→2026 (RDD) | registrada (fundida com a E1b) | ver [módulo RDD](#módulo-rdd-a5--e1b) | | |
 | A6 | Parte relevante da perda de Lula é desmobilização (abstenção), não conversão | **testada** | ver [A6](#a6) | **Não se sustenta.** Comparecimento + válidos = 5,9% da perda; o resto é fatia. A6b (abstenção maior nos redutos do PT) se sustenta, efeito pequeno | `04_decomposicao.ipynb` |
 | A7 | Saldo de empregos formais 2022–2026 associado a queda menor | aberta | | | |
 | A8 | Peso dos municípios pequenos na perda nacional de votos (contribuição) | **testada** | ver [A8](#a8) | **Sustentada.** AMCs < 20 mil eleitores: 21,6% do eleitorado, 28,9% da perda (1,34×); mas 71% da perda veio das maiores | `04_decomposicao.ipynb` |
@@ -29,12 +29,16 @@ Detalhamento de cada hipótese em [plano.md](plano.md), seção 4.
 | D1 | Queda de 2026 concentrada nas periferias evangélicas das capitais | aberta | | | |
 | E0 | Diagnóstico da virada de 2018 (regiões, 2º turno, acumulado, estados de origem, comparecimento, estabilidade do mapa) | exploratória | — | Nacional, presente no 2º turno, mudança de voto; **não é inversão completa** (desde 2014: −0,133 → −0,026); mapa congelado desde 2018 | `07_virada_2018.ipynb` |
 | E1 | Máquinas locais: emendas por habitante e prefeitos de direita explicam o afastamento dos pequenos depois de 2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
-| E2 | Igrejas: presença evangélica (Censo 2010, CNPJ, candidatos religiosos) prevê o afastamento do PT em 2014→2018, e não antes | **E2a, E2c testadas**; E2b registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | **E2a e E2c se sustentam.** % evangélica 2010: −0,091 em 14→18, salto −0,098 (IC −0,122 a −0,075). Candidatos religiosos: −0,027, salto −0,027 (IC −0,044 a −0,010). Placebos nulos | `08_mecanismos.ipynb` |
+| E2 | Igrejas: presença evangélica (Censo 2010, CNPJ, candidatos religiosos) prevê o afastamento do PT em 2014→2018, e não antes | **testada** (E2a, E2b, E2c) | ver [E](#série-e-mecanismos-da-virada-de-2018) | **E2a, E2b e E2c se sustentam**, com Holm garantido. % evangélica 2010: −0,091, salto −0,098. Igrejas no CNPJ: −0,038, salto −0,038 (IC −0,054 a −0,021). Candidatos religiosos: −0,027, salto −0,027. Placebos nulos | `08_mecanismos.ipynb` |
 | E3 | Internet móvel: chegada do 4G antes de 2018 prevê o afastamento do PT em 2014→2018 | registrada (condicional aos dados) | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
-| E4 | Recessão e Lava Jato: perda de emprego formal e exposição a petróleo, naval e obras preveem o afastamento em 2014→2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
-| E5 | Segurança: aumento dos homicídios prevê o afastamento em 2014→2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
-| E7 | Transformação do trabalho (pejotização, uberização): MEIs e trabalho por conta própria preveem o afastamento do PT a partir de 2014→2018 | registrada | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
+| E4 | Recessão e Lava Jato: perda de emprego formal e exposição a petróleo, naval e obras preveem o afastamento em 2014→2018 | **testada** | ver [E](#série-e-mecanismos-da-virada-de-2018) | **Não se sustenta.** E4a: −0,003 (IC −0,010 a +0,005), sinal contrário ao previsto. E4b: −0,002 (IC −0,009 a +0,005) | `08_mecanismos.ipynb` |
+| E5 | Segurança: aumento dos homicídios prevê o afastamento em 2014→2018 | **testada**; aposta do autor: não se sustenta | ver [E](#série-e-mecanismos-da-virada-de-2018) | **Não se sustenta**, como apostado: +0,006 (IC −0,002 a +0,013), sinal contrário ao previsto | `08_mecanismos.ipynb` |
+| E7 | Transformação do trabalho (pejotização, uberização): MEIs e trabalho por conta própria preveem o afastamento do PT a partir de 2014→2018 | **testada** | ver [E](#série-e-mecanismos-da-virada-de-2018) | **E7a não se sustenta** (−0,008, IC −0,024 a +0,007). **E7b: clivagem antiga, não choque de 2018** (−0,016 em 14→18, mas já −0,013 em 10→14; salto −0,004, IC −0,022 a +0,015; −0,030 em 18→22) | `08_mecanismos.ipynb` |
 | E6 | Síntese: quanto do gradiente de tamanho de 2014→2018 e 2018→2022 cada mecanismo absorve | registrada (descritiva) | ver [E](#série-e-mecanismos-da-virada-de-2018) | | |
+| E0b | Passageiro ou persistente: quanto do efeito de 2014→2018 de cada mecanismo ainda está lá em 2022 e 2026 | **testada** | ver [E0b](#e0b--choque-passageiro-ou-realinhamento) | **E2a, E2b e E2c persistentes**: retêm 112%, 113% e 103% em 2022 e 89%, 93% e 81% em 2026 (tamanho: 43% e 19%) | `08_mecanismos.ipynb` |
+| E2d | A pegada religiosa de 2018 vem das organizações aliadas ao PT em 2014 (troca de lado), não da política religiosa em geral | **testada** | ver [E2d](#e2d--a-troca-de-lado-das-organizações-religiosas) | **Não se sustenta; sinal contrário.** Por pp: coligação −0,005 (IC −0,012 a +0,002), demais −0,015 (IC −0,023 a −0,006); diferença +0,010 (IC −0,001 a +0,021) | `08_mecanismos.ipynb` |
+| E3b | Internet móvel depois de 2018 (acessos por município) prevê o afastamento dos pequenos em 2018→2022 e 2022→2026 | registrada (condicional aos dados) | ver [E3b e E3c](#e3b-e-e3c--duas-medidas-novas-para-o-ambiente-digital) | | |
+| E3c | Celular e internet nos domicílios (Censo 2010) preveem o afastamento do PT em 2014→2018 | registrada (condicional aos dados) | ver [E3b e E3c](#e3b-e-e3c--duas-medidas-novas-para-o-ambiente-digital) | | |
 
 ---
 
@@ -394,3 +398,158 @@ como o M0→M3 da A1.
 - **Limite:** pegada consistente com o canal "igreja", não prova causal. Não separa
   mobilização organizada pelas igrejas da pauta de Bolsonaro ou de campanhas digitais
   dirigidas a evangélicos (E3 e E6 ajudam), nem identifica quem organizou ou financiou.
+
+### Registro de 2026-10-10: E0b, E2d, E3b, E3c, módulo RDD e a aposta da E5
+
+**Registrado antes de cruzar qualquer medida nova com o voto.** As propostas vêm do ensaio e
+do plano de ação sobre a virada de 2018 (branch `heliton/report1`), aprovadas em 10/10. Até
+aqui, das medidas novas, só a distribuição dos homicídios por região foi olhada (sem o voto).
+
+**Duas famílias de testes.** A família 1 é a dos 11 testes ★ já registrados (E1a, E1b, E2a,
+E2b, E2c, E3, E4a, E4b, E5, E7a, E7b), com Holm a α = 0,05 sobre os 11. Os testes novos
+formam a **família 2** (A5, E2d, E3b, E3c), com Holm a α = 0,05 sobre os 4. A E0b qualifica
+os mecanismos e fica fora das duas.
+
+**Holm com testes pendentes.** Enquanto faltarem testes numa família, o veredito de cada um
+segue a regra de Holm nos dois extremos possíveis. É **rejeição garantida** se o teste for
+rejeitado mesmo com todos os pendentes no fim da ordem (p = 1). É **não rejeição garantida**
+se ele não for rejeitado nem com todos os pendentes no começo (p = 0). Fora desses casos, o
+veredito fica **pendente**.
+
+**Aposta do autor na E5 (prior; não muda o critério).** A E5 não se sustenta. A razão dada:
+a alta dos homicídios de 2011–13 para 2015–17 se concentrou no Norte e no Nordeste, onde o
+PT resistiu em 2018. Ressalva registrada junto: um nulo rejeita a exposição **local** à
+violência, não a segurança como tema nacional de campanha, que o painel não vê.
+
+#### E0b · choque passageiro ou realinhamento
+
+- **Pergunta:** quanto do efeito de 2014→2018 de cada mecanismo ainda está lá depois. Separa
+  o efeito de contexto e de candidato de 2018 (Lula impedido, Haddad, campo fragmentado) da
+  mudança estrutural.
+- **Modelo:** a base comum da série E com o desfecho **acumulado desde 2014** (Δ logit de
+  2014→2018, 2014→2022 e 2014→2026), o nível e o tamanho de 2014 e a mesma X da transição
+  2014→2018 (para as medidas que variam no tempo, a janela de 2014→2018).
+- **Retenção:** R22 = β(14→22) / β(14→18) e R26 = β(14→26) / β(14→18).
+- **Teste:** painel empilhado dos horizontes 2014→2018 e 2014→2022 (tudo interagido com o
+  horizonte, efeitos fixos de região imediata × horizonte, erros agrupados por região
+  imediata) e a combinação D = β(14→22) − 0,5 · β(14→18):
+  - **persistente** se D tiver o sinal de β(14→18) com IC 95% excluindo zero (retém mais da
+    metade);
+  - **passageiro** se D tiver o sinal oposto com IC 95% excluindo zero (retém menos da
+    metade);
+  - **inconclusivo** se o IC de D contiver zero.
+- **A quem se aplica:** aos mecanismos que se sustentam no critério padrão. R26 é descritiva.
+- **Já conhecidos (descritivos, não confirmatórios):** tamanho (R22 ≈ 0,43, do E0), E2a
+  (≈ 1,12) e E2c (≈ 1,03), calculados na exploração de 09/10 para o ensaio.
+
+#### E2d · a troca de lado das organizações religiosas
+
+- **Ideia:** a pegada da E2c está onde candidatos religiosos já tinham voto em 2014; a
+  infraestrutura existia antes. A hipótese é que a pegada vem de organizações **aliadas ao
+  PT em 2014** que passaram à oposição. O caso mais documentado é o PRB (Igreja Universal),
+  que deixou a base em março de 2016.
+- **Medida:** a mesma regra de religioso da E2c, separada pelo partido do candidato. X_al é
+  a % dos válidos para deputado federal dados a candidatos religiosos de partidos da
+  **coligação presidencial do PT** na eleição inicial da transição; X_out, a dos demais
+  partidos. As medidas ficam em pp, sem padronizar, para que os dois coeficientes sejam
+  comparáveis (efeito de 1 pp de voto para deputado).
+- **Coligações** (cadastro de candidatos do TSE, candidatura presidencial do PT):
+  - 2006: PT, PRB e PCdoB;
+  - 2010: PT, PMDB, PR, PRB, PSB, PSC, PDT, PCdoB, PTC e PTN;
+  - 2014: PT, PMDB, PSD, PP, PR, PROS, PDT, PCdoB e PRB;
+  - 2018 e 2022: lidas do mesmo cadastro na execução.
+- **Modelo por transição:** Δ logit ~ X_al + X_out + log(aptos) + nível inicial + controles
+  estruturais | região imediata, erros agrupados por região imediata.
+- **Critério (2014→2018):** sustenta-se se (i) β_al < 0 com IC 95% excluindo zero **e** (ii)
+  β_al − β_out < 0 com IC 95% excluindo zero. O p do teste é o maior dos dois
+  (interseção-união).
+- **Evidência contra:** diferença ≥ 0 ou IC contendo zero. Nesse caso, a pegada é da
+  política religiosa em geral, não da troca de lado.
+- **Placebo reportado:** 2010→2014, com a coligação de 2010 (espera-se β_al e β_out ≈ 0).
+- **Robustez:** controlar a fatia **total** dos partidos da coligação no voto para deputado
+  (religiosos ou não). Se β_al sobrevive, a pegada é das organizações religiosas, não das
+  máquinas desses partidos, que em boa parte também trocaram de lado em 2016.
+- **Secundária, sem veredito:** o PRB sozinho contra os demais religiosos.
+
+#### E3b e E3c · duas medidas novas para o ambiente digital
+
+A E3 registrada (banda larga fixa) continua como está. As duas medidas novas separam os dois
+fenômenos: TikTok, Kwai e vídeo curto não eram canais de massa em 2018, mas podem fazer parte
+do afastamento dos pequenos depois.
+
+- **E3c (fenômeno a, alvo 2014→2018):** X = % dos domicílios particulares permanentes com
+  telefone celular no Censo 2010. Característica fixa, anterior a 2014, com o mesmo desenho e
+  o mesmo critério padrão da E7b. Secundária, sem veredito: % com microcomputador com acesso
+  à internet. Condicional aos dados: as tabelas do SIDRA serão anotadas antes de cruzar. Sem
+  dado municipal, a E3c é **não testável**.
+- **E3b (fenômeno b, alvo 2018→2022 e 2022→2026):** X = variação dos acessos de banda larga
+  móvel por 100 habitantes no município entre 2019 e 2021 (para 2018→2022) e entre 2022 e
+  2025 (para 2022→2026), pela Anatel, com a população do Censo 2022. Previsão: β < 0 nas duas
+  transições.
+  - **Critério:** β < 0 com IC 95% excluindo zero em 2018→2022 **e** em 2022→2026
+    (interseção-união).
+  - **Limite:** não há série municipal antes de 2019, então não há placebo nem teste de
+    salto. É uma associação dentro da região imediata, mais fraca que o desenho padrão, e
+    será lida assim.
+  - **Robustez:** cobertura 4G por município em 2021.
+  - **Condicional aos dados:** sem acessos móveis por município, a E3b é **não testável**.
+
+#### Módulo RDD (A5 + E1b)
+
+A A5 e a E1b passam a ser **um só desenho** aplicado a três ciclos municipais. A definição de
+direita é a da E1b.
+
+- **Ciclos e desfechos:** prefeito eleito em 2016 → Δ logit(`pt_2p`) em 2014→2018; em 2020 →
+  2018→2022 (**E1b**, ★, família 1); em 2024 → 2022→2026 (**A5**, família 2).
+- **Unidade:** município. Ficam de fora os municípios sem as duas eleições presidenciais da
+  transição e os instalados no período.
+- **Variável de corte:** margem, em % dos válidos, do candidato de direita sobre o candidato
+  que não é de direita, na disputa decisiva (2º turno onde houver), só onde os dois
+  primeiros colocados são um de cada grupo.
+- **Estimação:** `rdrobust`, linear local, banda ótima (MSE), núcleo triangular, IC robusto
+  com correção de viés; o nível inicial do PT como covariável (robustez sem ela).
+- **Critério:** em cada teste principal (E1b em 2020, A5 em 2024), sustenta-se se o efeito de
+  eleger o prefeito de direita for **negativo** com IC robusto abaixo de zero. O ciclo de 2016
+  é reportado sem critério.
+- **Validade:** densidade da variável de corte (`rddensity`); desfecho placebo (a transição
+  presidencial **anterior** ao mandato não pode responder ao prefeito); balanço das
+  covariáveis do Censo no corte.
+- **Robustez:** MDB e PSD dentro da direita; metade e o dobro da banda.
+- **Secundárias da A5, sem veredito:** PL contra não-PL e PT contra não-PT, em 2024.
+- **Magnitude:** o efeito em pp perto de 50% e a fração dos municípios governados pela
+  direita. Uma conta contrafactual nacional, com as hipóteses explícitas, fica para depois,
+  como limite.
+
+### Resultado E2b, E4, E5, E7, E2d e E0b (2026-10-10, `08_mecanismos.ipynb`)
+
+Antes de rodar, duas correções nos dados de homicídios (código de município de 7 dígitos no
+SIM de 2003–2005 e população zero de Nazária em 2004), que afetavam só o placebo de
+2006→2010 da E5 (`decisoes.md`, D10). A validação prévia da E2b passou: correlação de 0,54
+(2010) e 0,51 (2022) com a % evangélica do Censo.
+
+| Teste | 2006→10 | 2010→14 | **2014→18** | 2018→22 | 2022→26 | Salto (IC 95%) | Veredito |
+|---|---|---|---|---|---|---|---|
+| E2b ★ · igrejas evangélicas (CNPJ, estoque) | −0,003 | −0,001 | **−0,038** | −0,017 | +0,005 | −0,038 (−0,054 a −0,021) | **sustenta-se** |
+| E2b · aberturas (secundária) | −0,005 | +0,005 | −0,003 | −0,002 | +0,001 | −0,008 (−0,019 a +0,003) | — |
+| E4a ★ · Δ log emprego formal (prev. β > 0) | +0,009 | +0,008 | −0,003 | −0,000 | +0,001 | −0,011 (−0,023 a +0,001) | não se sustenta |
+| E4b ★ · emprego em petróleo, naval e obras | +0,002 | +0,001 | −0,002 | +0,000 | +0,000 | −0,004 (−0,013 a +0,006) | não se sustenta |
+| E5 ★ · Δ taxa de homicídios | −0,005 | −0,001 | +0,006 | +0,001 | −0,004 | +0,007 (−0,004 a +0,017) | não se sustenta |
+| E7a ★ · aberturas de MEI | — | +0,004 | −0,008 | +0,013 | −0,009 | −0,012 (−0,031 a +0,006) | não se sustenta |
+| E7b ★ · % conta própria (Censo 2010) | +0,001 | −0,013 | **−0,016** | −0,030 | −0,010 | −0,004 (−0,022 a +0,015) | clivagem antiga, não choque de 2018 |
+
+- **Holm, família 1 (8 de 11 calculados):** E2a, E2b e E2c têm rejeição garantida; os outros
+  cinco, não rejeição garantida. Faltam E1a, E1b e E3.
+- **E2d (família 2, 1 de 4):** não se sustenta (tabela acima, na linha da E2d). Robustez com a
+  fatia total da coligação: igual (−0,005; diferença +0,010). Secundária, PRB contra os demais
+  religiosos: −0,003 contra −0,014, diferença +0,011 (IC +0,000 a +0,021). A pegada não está na
+  troca de lado da Universal; pesa mais nos religiosos de partidos fora da coligação de 2014
+  (que inclui o PSC; separá-lo pede registro).
+- **E0b:** E2a, E2b e E2c persistentes (D = −0,057, −0,024 e −0,014, todos com IC excluindo
+  zero). Para E2a e E2c o resultado já era conhecido (exploração de 09/10); a E2b é a primeira
+  confirmatória.
+- **Exploratório:** com as três medidas religiosas juntas em 2014→2018, os templos (E2b) caem
+  para −0,007 (IC −0,021 a +0,006), enquanto a composição (−0,086) e o voto em pastores
+  (−0,018) mantêm o efeito. A E2b confirma a pegada por uma fonte independente, mas não é um
+  canal próprio além da composição.
+- **Limite:** os nulos de E4, E5 e E7a rejeitam a exposição **local**; recessão, Lava Jato e
+  violência também agiram como fatos nacionais, que caem na variação média de cada transição.

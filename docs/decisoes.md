@@ -200,6 +200,38 @@ para `hipoteses.md`; o DVC não via nenhum resultado. Agora:
 
 ---
 
+## D10 — Série E: E2b, E4, E5, E7, E2d e E0b; duas correções nos homicídios
+
+**Data:** 2026-10-10 · **Status:** em vigor
+
+- **SIM de 2003 a 2005 com código de 7 dígitos.** Até 2005 o SIM grava o município de
+  residência com o dígito verificador; a junção por 6 dígitos descartava todos os homicídios
+  desses anos sem erro, e a E5 completava os anos ausentes com zero (placebo de 2006→2010
+  falso). Agora o código é cortado para 6 dígitos na ingestão, e a E5 deixa de fora a
+  transição que tiver algum ano do triênio ausente. O teste `test_dados` exige ≥ 96% dos
+  homicídios de cada ano atribuídos a uma AMC (sobram 1–3% em "município ignorado").
+- **População zero não é população.** Nazária (PI) não tem estimativa própria em 2004 (o
+  SIDRA traz "-", que vira 0); a taxa de homicídios dava 0/0. Na E5, população 0 conta como
+  ausente. O NaN que isso produzia derrubava o kernel dentro do `pyfixest`, sem mensagem: o
+  `base_transicoes` agora descarta qualquer medida não finita.
+- **Coligação presidencial do PT (E2d)** lida na própria etapa `religiosos`, do
+  `consulta_cand_{ano}_BRASIL.csv` (candidatura a presidente do PT, 1º turno,
+  `DS_COMPOSICAO_COLIGACAO`); as federações de 2022 entram pelos partidos que as compõem.
+  O voto religioso é separado em: da coligação, do PRB/Republicanos e o total nominal da
+  coligação (religiosos ou não), sempre sobre os válidos para deputado.
+- **Duas famílias de Holm** (`params.yaml`, `serie_e`): a família 1 são os 11 testes ★; a
+  família 2 (A5, E2d, E3b, E3c) foi registrada em 10/10. Com testes pendentes, cada um sai como
+  "rejeita", "não rejeita" ou "pendente" pela regra de `models/event_study.holm`.
+- **`event_study`** ganhou o painel empilhado genérico (`empilha`), combinações lineares com
+  erro agrupado (`contraste`), medidas sem padronizar e várias medidas no mesmo modelo (E2d), e
+  a persistência da E0b (`persistencia`). O `salto` é o mesmo de antes, escrito com as peças
+  novas.
+- **Intermediários do TSE** (`cache: false`) tinham sumido do disco desta máquina; a
+  reconversão a partir dos zips mudou o hash dos parquets intermediários (a ordem das linhas
+  do DuckDB não é fixa), mas não o de nenhum dado processado.
+
+---
+
 ## Armadilhas metodológicas (valem para todas as análises)
 
 - **Falácia ecológica:** escrever conclusões em nível de lugar ("municípios com X"),

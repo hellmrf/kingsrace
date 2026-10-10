@@ -76,8 +76,8 @@ stages:
       size: 935
     - path: src/kingsrace/harmonize/municipios.py
       hash: md5
-      md5: 72e6d7b82a276f75bc170e072518d698
-      size: 4624
+      md5: 970148064f4e9a596893b17f5fdf79d2
+      size: 4986
     outs:
     - path: data/processed/municipios.parquet
       hash: md5
@@ -93,8 +93,8 @@ stages:
       nfiles: 6
     - path: data/interim/tse/votacao_secao
       hash: md5
-      md5: 0212145e665d5c02cdb06e13767f3c0a.dir
-      size: 156918166
+      md5: f967ae540d113684f71aa03bb0fcb2da.dir
+      size: 156873203
       nfiles: 6
     - path: data/processed/municipios.parquet
       hash: md5
@@ -134,9 +134,9 @@ stages:
       size: 99065
     - path: data/raw/ibge/sidra
       hash: md5
-      md5: 0ede85ea413575725fe09fc95549bed3.dir
-      size: 54107202
-      nfiles: 23
+      md5: ae8d4298cc345cc42b963b340471050e.dir
+      size: 65351204
+      nfiles: 27
     - path: data/raw/mds
       hash: md5
       md5: 889ba6b7952b993abf540ccd70c3939f.dir
@@ -144,12 +144,12 @@ stages:
       nfiles: 5
     - path: src/kingsrace/features/covariaveis.py
       hash: md5
-      md5: e6ba8340a5028232ea45f80bb5aaeef6
-      size: 5908
+      md5: 7e016f9bbdf321d4af8590ae66a6f71e
+      size: 5973
     - path: src/kingsrace/ingest/ibge.py
       hash: md5
-      md5: 4b63afd463d13382a5034475a5e01e33
-      size: 4863
+      md5: ad3a1d072f14fca048bb60eb03945721
+      size: 5386
     - path: src/kingsrace/ingest/mds.py
       hash: md5
       md5: 4e85f29a1820a70d8911696fd04fa7ad
@@ -157,12 +157,12 @@ stages:
     outs:
     - path: data/processed/covariaveis_amc.parquet
       hash: md5
-      md5: f1d1b1f6e3724086cb2b7db075a8aab4
-      size: 848385
+      md5: 2900484b64fd80d7450e76972fa87b36
+      size: 963530
     - path: data/processed/covariaveis_municipio.parquet
       hash: md5
-      md5: c631eebb03330637bfb72dd2dc05b71f
-      size: 816382
+      md5: e472bc5525032d95040d518a7d27776a
+      size: 931055
   converte_tse@2006:
     cmd: python -m kingsrace.ingest.tse 2006
     deps:
@@ -187,8 +187,8 @@ stages:
       nfiles: 1
     - path: data/interim/tse/votacao_secao/ano=2006
       hash: md5
-      md5: a38b3f47cc4e6b33007a948c4c9e4f9e.dir
-      size: 6842495
+      md5: a46d4aad01d2a528fbf9b54a0fa5fc6a.dir
+      size: 6826564
       nfiles: 1
   converte_tse@2010:
     cmd: python -m kingsrace.ingest.tse 2010
@@ -214,8 +214,8 @@ stages:
       nfiles: 1
     - path: data/interim/tse/votacao_secao/ano=2010
       hash: md5
-      md5: 62decdc940ab29ad5169500ca94c4e84.dir
-      size: 7112110
+      md5: 86b55f0e700087d319f6c983394e1b03.dir
+      size: 7101479
       nfiles: 1
   converte_tse@2014:
     cmd: python -m kingsrace.ingest.tse 2014
@@ -268,8 +268,8 @@ stages:
       nfiles: 1
     - path: data/interim/tse/votacao_secao/ano=2018
       hash: md5
-      md5: b9e41f3b3ad572616e3d90c5a8767f84.dir
-      size: 60419136
+      md5: 2769d7a8b17ce3cf648a4aec80525579.dir
+      size: 60400735
       nfiles: 1
   converte_deputados@2006:
     cmd: python -m kingsrace.ingest.tse deputados 2006
@@ -416,8 +416,8 @@ stages:
       nfiles: 1
     - path: data/interim/tse/votacao_deputado/ano=2018
       hash: md5
-      md5: 18ab47430e1be9ff6ce3cb9a87ff86cf.dir
-      size: 17212634
+      md5: 51cfe7a9a5df1667d7e3a6c6dcf2db2b.dir
+      size: 17207568
       nfiles: 1
   converte_deputados@2022:
     cmd: python -m kingsrace.ingest.tse deputados 2022
@@ -471,22 +471,42 @@ stages:
       nfiles: 5
     - path: data/interim/tse/votacao_deputado
       hash: md5
-      md5: c3278a83e76cdf4ad1949c5f5687328b.dir
-      size: 48238040
+      md5: 552925ddb3c19add0903118e062ed134.dir
+      size: 48232974
       nfiles: 5
     - path: data/processed/municipios.parquet
       hash: md5
       md5: 4826b4242cdbf5aef3cb2c990bde5a46
       size: 99065
+    - path: data/raw/tse/consulta_cand/consulta_cand_2006.zip
+      hash: md5
+      md5: 1d9a367a88cfd00c11fe4987521e2e03
+      size: 4044252
+    - path: data/raw/tse/consulta_cand/consulta_cand_2010.zip
+      hash: md5
+      md5: ca8fd70092f71de118fde3528cd789b6
+      size: 4939410
+    - path: data/raw/tse/consulta_cand/consulta_cand_2014.zip
+      hash: md5
+      md5: 61656b3283a355dac77ef42caba84246
+      size: 4530527
+    - path: data/raw/tse/consulta_cand/consulta_cand_2018.zip
+      hash: md5
+      md5: fd4b608dcca15c37c45c949d1b320a4a
+      size: 4722704
+    - path: data/raw/tse/consulta_cand/consulta_cand_2022.zip
+      hash: md5
+      md5: e45e984d7f3f390ef02a6cdb93dda19b
+      size: 4387268
     - path: src/kingsrace/features/religiao.py
       hash: md5
-      md5: 42ca1df111d0bd27f919b8ada0b904fe
-      size: 4585
+      md5: a45510e0ca88f2b5b50b36d46ee5c5ce
+      size: 7655
     outs:
     - path: data/processed/religiosos_amc.parquet
       hash: md5
-      md5: 9f936816d38e5f29f5deda42592a98da
-      size: 395016
+      md5: 726c3be8c03b67f7e2e366e0a230f539
+      size: 815545
   receita:
     cmd: python -m kingsrace.ingest.receita todos
     deps:
@@ -534,13 +554,13 @@ stages:
       nfiles: 37
     - path: src/kingsrace/ingest/sim.py
       hash: md5
-      md5: 5f0f28aba13eb67293f5f946fca0238b
-      size: 2731
+      md5: 5a44b4f5700876e87add52cf20e0e159
+      size: 2937
     outs:
     - path: data/interim/sim/homicidios.parquet
       hash: md5
-      md5: ce017c8bb748239c6e1eb77f37a6df84
-      size: 137632
+      md5: 5bbf32bb0ca1c0ce9200a6086b044630
+      size: 105612
   cnpj:
     cmd: python -m kingsrace.features.cnpj
     deps:
@@ -558,8 +578,8 @@ stages:
       size: 8585841
     - path: data/processed/covariaveis_amc.parquet
       hash: md5
-      md5: f1d1b1f6e3724086cb2b7db075a8aab4
-      size: 848385
+      md5: 2900484b64fd80d7450e76972fa87b36
+      size: 963530
     - path: data/processed/municipios.parquet
       hash: md5
       md5: 4826b4242cdbf5aef3cb2c990bde5a46
@@ -602,16 +622,16 @@ stages:
       size: 202801
     - path: data/interim/sim/homicidios.parquet
       hash: md5
-      md5: ce017c8bb748239c6e1eb77f37a6df84
-      size: 137632
+      md5: 5bbf32bb0ca1c0ce9200a6086b044630
+      size: 105612
     - path: data/processed/municipios.parquet
       hash: md5
       md5: 4826b4242cdbf5aef3cb2c990bde5a46
       size: 99065
     - path: src/kingsrace/features/mecanismos.py
       hash: md5
-      md5: 83556aad663fb0aba1df39fe96fe751b
-      size: 4709
+      md5: 68dd13eb6dbc9f488d50784b2b3922ff
+      size: 5244
     outs:
     - path: data/processed/emprego_amc.parquet
       hash: md5
@@ -619,8 +639,8 @@ stages:
       size: 194355
     - path: data/processed/homicidios_amc.parquet
       hash: md5
-      md5: a1143755ba4d8436d1c71f4dda813dc8
-      size: 85263
+      md5: 4432416494ed2b1e067adb2dbc91e7c3
+      size: 97255
   nb_01_panorama:
     cmd: papermill notebooks/01_panorama.ipynb 
       reports/notebooks/01_panorama.ipynb -k python3 --cwd notebooks 
@@ -674,8 +694,8 @@ stages:
     deps:
     - path: data/processed/covariaveis_amc.parquet
       hash: md5
-      md5: f1d1b1f6e3724086cb2b7db075a8aab4
-      size: 848385
+      md5: 2900484b64fd80d7450e76972fa87b36
+      size: 963530
     - path: data/processed/municipios.parquet
       hash: md5
       md5: 4826b4242cdbf5aef3cb2c990bde5a46
@@ -703,8 +723,8 @@ stages:
     outs:
     - path: reports/notebooks/02_tamanho.ipynb
       hash: md5
-      md5: 54562fe373f5de68b57b19031978e985
-      size: 122850
+      md5: f61a46a8272181cb7d61d22e9f752c28
+      size: 122852
     - path: resultados/02_tamanho/metrics.json
       hash: md5
       md5: 411ade890848688c154107c8001db108
@@ -716,8 +736,8 @@ stages:
       nfiles: 1
     - path: resultados/02_tamanho/plots/images
       hash: md5
-      md5: 3bc93c41ba7faba29f45fa47203843b8.dir
-      size: 209688
+      md5: a68162158d3e943816bf75ed14ee340f.dir
+      size: 209687
       nfiles: 3
   nb_03_previsao_2t:
     cmd: papermill notebooks/03_previsao_2t.ipynb 
@@ -827,8 +847,8 @@ stages:
     deps:
     - path: data/processed/covariaveis_amc.parquet
       hash: md5
-      md5: f1d1b1f6e3724086cb2b7db075a8aab4
-      size: 848385
+      md5: 2900484b64fd80d7450e76972fa87b36
+      size: 963530
     - path: data/processed/municipios.parquet
       hash: md5
       md5: 4826b4242cdbf5aef3cb2c990bde5a46
@@ -856,8 +876,8 @@ stages:
     outs:
     - path: reports/notebooks/05_composicao.ipynb
       hash: md5
-      md5: 7aebe5daba4271e74300864956043956
-      size: 47973
+      md5: e6c11e5bf567a47c31c584b824cc51aa
+      size: 47969
     - path: resultados/05_composicao/metrics.json
       hash: md5
       md5: bffde3f52a4f7ff9f6fba39f209dc9d8
@@ -878,8 +898,8 @@ stages:
     deps:
     - path: data/processed/covariaveis_amc.parquet
       hash: md5
-      md5: f1d1b1f6e3724086cb2b7db075a8aab4
-      size: 848385
+      md5: 2900484b64fd80d7450e76972fa87b36
+      size: 963530
     - path: data/processed/municipios.parquet
       hash: md5
       md5: 4826b4242cdbf5aef3cb2c990bde5a46
@@ -912,8 +932,8 @@ stages:
     outs:
     - path: reports/notebooks/06_serie.ipynb
       hash: md5
-      md5: e066267a15370a88bd5bf9bc7862ff7a
-      size: 195147
+      md5: 0c350f7c2937e66d65e1e2a20d6a2906
+      size: 195143
     - path: resultados/06_serie/metrics.json
       hash: md5
       md5: 67c36da94c8df034368029ed3a431a69
@@ -985,10 +1005,22 @@ stages:
       reports/notebooks/08_mecanismos.ipynb -k python3 --cwd notebooks 
       --no-progress-bar --log-level WARNING
     deps:
+    - path: data/processed/cnpj_amc.parquet
+      hash: md5
+      md5: b367500feb8633d0b9a67837e703f7da
+      size: 1307202
     - path: data/processed/covariaveis_amc.parquet
       hash: md5
-      md5: f1d1b1f6e3724086cb2b7db075a8aab4
-      size: 848385
+      md5: 2900484b64fd80d7450e76972fa87b36
+      size: 963530
+    - path: data/processed/emprego_amc.parquet
+      hash: md5
+      md5: 7689e9bb1758f32ee59624691c7f3db1
+      size: 194355
+    - path: data/processed/homicidios_amc.parquet
+      hash: md5
+      md5: 4432416494ed2b1e067adb2dbc91e7c3
+      size: 97255
     - path: data/processed/municipios.parquet
       hash: md5
       md5: 4826b4242cdbf5aef3cb2c990bde5a46
@@ -999,20 +1031,24 @@ stages:
       size: 4026517
     - path: data/processed/religiosos_amc.parquet
       hash: md5
-      md5: 9f936816d38e5f29f5deda42592a98da
-      size: 395016
+      md5: 726c3be8c03b67f7e2e366e0a230f539
+      size: 815545
     - path: notebooks/08_mecanismos.ipynb
       hash: md5
-      md5: 361a29e778aaa479377dec5da4819de8
-      size: 18793
+      md5: 395cdf02c9ae9292edc985ccb6d59bdc
+      size: 51602
     - path: src/kingsrace/features/base.py
       hash: md5
       md5: c605e5a3fbaaef0f12cc91da761be482
       size: 2136
+    - path: src/kingsrace/features/mecanismos.py
+      hash: md5
+      md5: 68dd13eb6dbc9f488d50784b2b3922ff
+      size: 5244
     - path: src/kingsrace/models/event_study.py
       hash: md5
-      md5: a93c5c0f3adeeede1cd78e4c797bf8fd
-      size: 5203
+      md5: b3c1be4dee02139ab82a6ae532b615ed
+      size: 9138
     - path: src/kingsrace/resultados.py
       hash: md5
       md5: 79c76d7e756cc6441fe647fa201dc943
@@ -1026,22 +1062,24 @@ stages:
         serie_e:
           alfa_holm: 0.05
           testes_holm: 11
+          alfa_holm_2: 0.05
+          testes_holm_2: 4
     outs:
     - path: reports/notebooks/08_mecanismos.ipynb
       hash: md5
-      md5: 2cbf9f8eb1fe3ada60d62a1d3003efa2
-      size: 71500
+      md5: 708e37bb71e057d6642b28c4ca34cdc6
+      size: 289767
     - path: resultados/08_mecanismos/metrics.json
       hash: md5
-      md5: e1a01f180ab62a7ead9c8da9167a9fa3
-      size: 3913
+      md5: 6dd5700c824238fce6fc2cb7507551c5
+      size: 21289
     - path: resultados/08_mecanismos/plots/custom
       hash: md5
-      md5: 522672224e7b50df17b87683e2bd3a64.dir
-      size: 1681
-      nfiles: 2
+      md5: 2972c1b47b55cf3707b40069900afd50.dir
+      size: 9094
+      nfiles: 11
     - path: resultados/08_mecanismos/plots/images
       hash: md5
-      md5: 5cb4b5a424ca7842e38bd2f444d83e82.dir
-      size: 84988
-      nfiles: 2
+      md5: 226476a4bdadd2d4b064ef3a62f54caf.dir
+      size: 431031
+      nfiles: 10

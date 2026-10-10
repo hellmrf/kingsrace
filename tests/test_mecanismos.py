@@ -51,3 +51,26 @@ def test_e7a_aberturas_liquidas_sem_2006():
     res = dict(e7a_mei(cnpj).select("de", "x").iter_rows())
 
     assert res == {2010: 3.0, 2014: 3.0, 2018: 3.0, 2022: 3.0}
+
+
+def test_e5_transicao_sem_dados_do_trienio_fica_de_fora():
+    # só 2011–2017: a transição 2014 tem os dois triênios; a 2010 (2007–09 → 2011–13) não
+    homic = pl.DataFrame(
+        {"amc_id": [1] * 6, "ano": [2011, 2012, 2013, 2015, 2016, 2017], "homicidios": [3] * 6}
+    )
+    cov = pl.DataFrame(
+        {"amc_id": [1], **{f"pop_{a}": [100_000] for a in (2004, 2008, 2012, 2016, 2020, 2024)}}
+    )
+
+    assert e5_homicidios(homic, cov)["de"].to_list() == [2014]
+
+
+def test_e5_populacao_zero_fica_sem_taxa():
+    homic = pl.DataFrame(
+        {"amc_id": [1] * 6, "ano": [2011, 2012, 2013, 2015, 2016, 2017], "homicidios": [0] * 6}
+    )
+    cov = pl.DataFrame(
+        {"amc_id": [1], **{f"pop_{a}": [100_000] for a in (2004, 2008, 2016, 2020, 2024)}}
+    ).with_columns(pop_2012=pl.lit(0))
+
+    assert e5_homicidios(homic, cov).height == 0

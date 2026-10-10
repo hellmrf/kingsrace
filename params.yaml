@@ -9,6 +9,9 @@ anos_deputados: [2006, 2010, 2014, 2018, 2022]
 serie_e:
   alfa_holm: 0.05
   testes_holm: 11 # E1a E1b E2a E2b E2c E3 E4a E4b E5 E7a E7b
+  # família 2, registrada em 2026-10-10
+  alfa_holm_2: 0.05
+  testes_holm_2: 4 # A5 E2d E3b E3c
 
 # Versão congelada da previsão do 2º turno lida pelo 03 (data/reference/previsoes/).
 previsao_2t:
