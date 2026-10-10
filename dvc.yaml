@@ -340,10 +340,14 @@ stages:
       - src/kingsrace/viz/tema.py
       - src/kingsrace/features/base.py
       - src/kingsrace/models/event_study.py
+      - src/kingsrace/features/mecanismos.py
       - data/processed/painel_amc.parquet
       - data/processed/municipios.parquet
       - data/processed/covariaveis_amc.parquet
       - data/processed/religiosos_amc.parquet
+      - data/processed/cnpj_amc.parquet
+      - data/processed/emprego_amc.parquet
+      - data/processed/homicidios_amc.parquet
     outs:
       - reports/notebooks/08_mecanismos.ipynb
     metrics:

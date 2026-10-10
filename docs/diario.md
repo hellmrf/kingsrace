@@ -5,6 +5,44 @@ Achados aqui são exploratórios até passarem pelo registro em [hipoteses.md](h
 
 ---
 
+## 2026-10-10 · só a religião marca 2018; economia, violência e trabalho, não (série E)
+
+[`notebooks/08_mecanismos.ipynb`](../notebooks/08_mecanismos.ipynb) · registro de 10/10 em
+[hipoteses.md](hipoteses.md)
+
+**Registrado antes dos dados:** E0b (passageiro ou persistente), E2d (a troca de lado das
+organizações religiosas), E3b e E3c (duas medidas novas para o ambiente digital), a fusão de
+A5 com E1b num só desenho de RDD e a aposta do autor de que a E5 cairia. Os testes novos
+formam uma segunda família de Holm.
+
+**Resultados:**
+
+- **Igrejas no CNPJ (E2b) se sustentam:** nada antes de 2014, −0,038 em 2014→2018, salto
+  significativo. Com a % evangélica no mesmo modelo, porém, os templos perdem o efeito
+  (exploratório): confirmam a pegada religiosa por outra fonte, mas não são um canal à parte.
+- **Economia, Lava Jato e violência não deixaram pegada local (E4a, E4b, E5).** Onde se perdeu
+  mais emprego formal, onde petróleo, estaleiros e obras pesavam mais e onde os homicídios
+  subiram mais, o PT não perdeu mais em 2018. A aposta na E5 se confirmou.
+- **Trabalho:** o MEI (E7a) não tem efeito com os controles. A conta própria (E7b) tem, mas já
+  aparecia em 2010→2014 e é maior em 2018→2022: clivagem que se aprofunda, não choque de 2018.
+- **A troca de lado da Universal não explica a pegada religiosa (E2d).** O efeito por ponto de
+  voto em pastores é menor nos partidos da coligação de Dilma (−0,005) que nos demais
+  (−0,015); onde o pastor era do PRB, o PT perdeu menos. A pegada está na política religiosa
+  em geral, e mais fora da base de 2014 (onde está o PSC de Bolsonaro e do Pastor Everaldo).
+- **Persistência (E0b):** as três medidas religiosas retêm 81% a 93% do efeito em 2026; o
+  choque urbano, 19%.
+
+**Correções no caminho:** o SIM de 2003–2005 grava o município com 7 dígitos, e esses anos
+sumiam na junção; a população zero de Nazária (PI) em 2004 gerava 0/0, e o NaN derrubava o
+kernel sem mensagem. As duas afetavam só o placebo de 2006→2010 da E5 e foram corrigidas antes
+dos resultados (D10). Os intermediários do TSE foram reconvertidos; nenhum dado processado
+mudou.
+
+**Próximo:** emendas e prefeitos (E1a, módulo RDD com A5 e E1b), Anatel e Censo 2010 (E3, E3b,
+E3c). Candidatos a registro: o PSC na E2d e a conta própria no afastamento dos pequenos.
+
+---
+
 ## 2026-10-09 · igrejas: a pegada aparece exatamente em 2018 (E2a, E2c)
 
 [`notebooks/08_mecanismos.ipynb`](../notebooks/08_mecanismos.ipynb)
